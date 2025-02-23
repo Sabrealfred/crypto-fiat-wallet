@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { 
   BarChart3, 
@@ -33,6 +34,39 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Index() {
+  // Datos dummy para los últimos 6 meses
+  const monthlyData = [
+    { month: "September", earning: 18200, spending: 4800 },
+    { month: "October", earning: 19500, spending: 5100 },
+    { month: "November", earning: 20100, spending: 5300 },
+    { month: "December", earning: 21500, spending: 5392 },
+    { month: "January", earning: 22800, spending: 5450 },
+    { month: "February", earning: 24100, spending: 5600 },
+  ];
+
+  const marketplaceActivity = [
+    { type: "NFT Purchase", time: "2 mins ago", amount: -328, icon: Store },
+    { type: "Token Sale", time: "25 mins ago", amount: 1200, icon: DollarSign },
+    { type: "NFT Sale", time: "2 hours ago", amount: 2500, icon: Store },
+    { type: "Token Purchase", time: "5 hours ago", amount: -850, icon: DollarSign },
+  ];
+
+  const recentTransactions = [
+    { type: "Send to James", time: "Today, 12:30 PM", amount: -150, icon: SendHorizontal },
+    { type: "Received from Sarah", time: "Today, 10:15 AM", amount: 500, icon: Download },
+    { type: "Send to Michael", time: "Yesterday, 3:45 PM", amount: -75, icon: SendHorizontal },
+    { type: "Received from John", time: "Yesterday, 1:30 PM", amount: 300, icon: Download },
+  ];
+
+  // Calcular el último valor y el porcentaje de cambio
+  const currentEarning = monthlyData[monthlyData.length - 1].earning;
+  const previousEarning = monthlyData[monthlyData.length - 2].earning;
+  const earningChange = ((currentEarning - previousEarning) / previousEarning) * 100;
+
+  const currentSpending = monthlyData[monthlyData.length - 1].spending;
+  const previousSpending = monthlyData[monthlyData.length - 2].spending;
+  const spendingChange = ((currentSpending - previousSpending) / previousSpending) * 100;
+
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-pink-50 via-white to-blue-50">
       {/* Sidebar */}
@@ -108,16 +142,20 @@ export default function Index() {
                     <h3 className="text-sm text-muted-foreground">Monthly Earning</h3>
                     <PieChart className="h-5 w-5 text-muted-foreground" />
                   </div>
-                  <p className="text-2xl font-bold mb-2">$21,500.00</p>
-                  <span className="text-sm text-green-600">↑ 12% vs last month</span>
+                  <p className="text-2xl font-bold mb-2">${currentEarning.toLocaleString()}</p>
+                  <span className={`text-sm ${earningChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                    {earningChange >= 0 ? '↑' : '↓'} {Math.abs(earningChange).toFixed(1)}% vs last month
+                  </span>
                 </div>
                 <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-sm text-muted-foreground">Monthly Spending</h3>
                     <BarChart3 className="h-5 w-5 text-muted-foreground" />
                   </div>
-                  <p className="text-2xl font-bold mb-2">$5,392.00</p>
-                  <span className="text-sm text-red-500">↓ 8% vs last month</span>
+                  <p className="text-2xl font-bold mb-2">${currentSpending.toLocaleString()}</p>
+                  <span className={`text-sm ${spendingChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                    {spendingChange >= 0 ? '↑' : '↓'} {Math.abs(spendingChange).toFixed(1)}% vs last month
+                  </span>
                 </div>
               </div>
 
@@ -165,8 +203,18 @@ export default function Index() {
                     </Button>
                   </div>
                 </div>
-                <div className="h-[200px] flex items-end justify-between">
-                  <div className="w-full h-full bg-gradient-to-b from-accent/20 to-transparent rounded-lg"></div>
+                <div className="h-[200px] flex items-end justify-between gap-2">
+                  {monthlyData.map((data, index) => (
+                    <div key={data.month} className="flex-1 flex flex-col items-center">
+                      <div 
+                        className="w-full bg-accent/20 rounded-t-lg transition-all duration-300"
+                        style={{ height: `${(data.earning / 25000) * 100}%` }}
+                      ></div>
+                      <span className="text-xs text-muted-foreground mt-2">
+                        {data.month.slice(0, 3)}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -240,30 +288,28 @@ export default function Index() {
                   </Button>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center py-2">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
-                        <Store className="h-5 w-5 text-purple-500" />
+                  {marketplaceActivity.map((activity, index) => (
+                    <div key={index} className="flex justify-between items-center py-2">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                          activity.amount > 0 ? 'bg-green-100' : 'bg-purple-100'
+                        }`}>
+                          <activity.icon className={`h-5 w-5 ${
+                            activity.amount > 0 ? 'text-green-500' : 'text-purple-500'
+                          }`} />
+                        </div>
+                        <div>
+                          <p className="font-medium">{activity.type}</p>
+                          <p className="text-sm text-muted-foreground">{activity.time}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium">NFT Purchase</p>
-                        <p className="text-sm text-muted-foreground">2 mins ago</p>
-                      </div>
+                      <span className={`font-medium ${
+                        activity.amount > 0 ? 'text-green-500' : 'text-red-500'
+                      }`}>
+                        {activity.amount > 0 ? '+' : ''}{activity.amount.toLocaleString()}
+                      </span>
                     </div>
-                    <span className="text-red-500 font-medium">-$328.00</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <DollarSign className="h-5 w-5 text-green-500" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Token Sale</p>
-                        <p className="text-sm text-muted-foreground">Yesterday</p>
-                      </div>
-                    </div>
-                    <span className="text-green-500 font-medium">+$1,200.00</span>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -277,30 +323,28 @@ export default function Index() {
                   </Button>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center py-2">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center">
-                        <SendHorizontal className="h-5 w-5 text-orange-500" />
+                  {recentTransactions.map((transaction, index) => (
+                    <div key={index} className="flex justify-between items-center py-2">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                          transaction.amount > 0 ? 'bg-green-100' : 'bg-orange-100'
+                        }`}>
+                          <transaction.icon className={`h-5 w-5 ${
+                            transaction.amount > 0 ? 'text-green-500' : 'text-orange-500'
+                          }`} />
+                        </div>
+                        <div>
+                          <p className="font-medium">{transaction.type}</p>
+                          <p className="text-sm text-muted-foreground">{transaction.time}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium">Send to James</p>
-                        <p className="text-sm text-muted-foreground">Today, 12:30 PM</p>
-                      </div>
+                      <span className={`font-medium ${
+                        transaction.amount > 0 ? 'text-green-500' : 'text-red-500'
+                      }`}>
+                        {transaction.amount > 0 ? '+' : ''}{transaction.amount.toLocaleString()}
+                      </span>
                     </div>
-                    <span className="text-red-500 font-medium">-$150.00</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <Download className="h-5 w-5 text-green-500" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Received from Sarah</p>
-                        <p className="text-sm text-muted-foreground">Yesterday</p>
-                      </div>
-                    </div>
-                    <span className="text-green-500 font-medium">+$500.00</span>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
