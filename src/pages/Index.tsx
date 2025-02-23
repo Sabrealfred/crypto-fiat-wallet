@@ -67,7 +67,7 @@ export default function PersonalDashboard() {
     queryFn: async () => {
       const { data: dbNotifications, error } = await supabase
         .from("notifications")
-        .select("*")
+        .select("id, title, description, created_at, type, amount, user_id")
         .order("created_at", { ascending: false })
         .limit(3);
 
@@ -90,8 +90,12 @@ export default function PersonalDashboard() {
       }
 
       return dbNotifications.map(notification => ({
-        ...notification,
-        time: new Date(notification.created_at).toRelativeTimeString() || 'Just now'
+        id: notification.id,
+        title: notification.title,
+        description: notification.description,
+        time: new Date(notification.created_at).toLocaleString(),
+        type: notification.type,
+        amount: notification.amount || 0
       }));
     },
     staleTime: 60000,
