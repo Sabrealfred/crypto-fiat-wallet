@@ -67,14 +67,29 @@ export default function Auth() {
     }
   };
 
-  const handleDemoLogin = async () => {
+  const createAndLoginDemoUser = async () => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // First try to create the demo user
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: "demo@example.com",
+        password: "demo12345",
+        options: {
+          data: {
+            first_name: "Leonardo",
+            last_name: "Cruz",
+          },
+        },
+      });
+
+      // Attempt to sign in regardless of whether sign up succeeded
+      // (in case user already exists)
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: "demo@example.com",
         password: "demo12345",
       });
-      if (error) throw error;
+
+      if (signInError) throw signInError;
       toast.success("Inicio de sesión exitoso!");
     } catch (error: any) {
       toast.error(error.message);
@@ -98,7 +113,7 @@ export default function Auth() {
         </div>
 
         <Button 
-          onClick={handleDemoLogin} 
+          onClick={createAndLoginDemoUser} 
           className="w-full bg-secondary hover:bg-secondary/90"
           disabled={isLoading}
         >
