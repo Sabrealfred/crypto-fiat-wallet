@@ -17,6 +17,7 @@ import DepositsPage from "@/pages/Deposits";
 import BusinessDashboard from "@/pages/business/Dashboard";
 import CommercialDashboard from "@/pages/commercial/Dashboard";
 import PrivateBankingDashboard from "@/pages/private/Dashboard";
+import DeveloperPortal from "@/pages/developers/Dashboard";
 
 export function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ export function AppRoutes() {
       <Route path="/business" element={<BusinessDashboard />} />
       <Route path="/commercial" element={<CommercialDashboard />} />
       <Route path="/private" element={<PrivateBankingDashboard />} />
+      <Route path="/developers" element={<DeveloperPortal />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/wallet" element={<WalletPage />} />
       <Route path="/cards" element={<CardsPage />} />
