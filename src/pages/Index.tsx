@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Bell, Settings, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { TransactionHistory } from "@/components/TransactionHistory";
 
 export default function Index() {
   const navigate = useNavigate();
