@@ -36,7 +36,8 @@ export default function PersonalDashboard() {
       title: "Spending Alert",
       description: "You've spent more than $5,000 this month",
       time: "6h ago",
-      type: "alert"
+      type: "alert",
+      amount: 5000
     }
   ];
 
