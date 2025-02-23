@@ -11,7 +11,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Settings, LogOut, CircleUser, ChevronDown, Menu, ExternalLink, Link2, ChevronUp } from "lucide-react";
+import { 
+  Settings, 
+  LogOut, 
+  CircleUser, 
+  ChevronDown, 
+  Menu, 
+  ExternalLink, 
+  Link2, 
+  ChevronUp,
+  Moon,
+  Sun
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,6 +30,7 @@ import { toast } from "sonner";
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isFooterMenuOpen, setIsFooterMenuOpen] = useState({
     company: true,
     legal: true,
@@ -43,18 +55,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     }));
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-pink-50 via-white to-blue-50">
+    <div className={`min-h-screen flex flex-col ${isDarkMode ? 'dark bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-pink-50 via-white to-blue-50'}`}>
       <div className="flex-1 flex">
-        {/* Sidebar Toggle Button for Mobile */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="fixed top-4 left-4 z-50 md:hidden"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+        {/* Sidebar Toggle and Dark Mode Buttons */}
+        <div className="fixed top-4 left-4 z-50 flex gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleDarkMode}
+            className="text-yellow-500 dark:text-blue-400"
+          >
+            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+        </div>
 
         {/* Sidebar with overlay for mobile */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-0 z-40 md:relative md:translate-x-0 transition-transform duration-200 ease-in-out`}>
@@ -102,13 +129,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Footer */}
-      <footer className="mt-auto bg-white/80 backdrop-blur-md border-t">
+      <footer className="mt-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-t dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Brand Section */}
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-primary">WYMU</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="text-2xl font-bold text-primary dark:text-white">WYMU</h2>
+              <p className="text-sm text-muted-foreground dark:text-gray-400">
                 Simplifying your financial journey with secure and innovative digital banking solutions.
               </p>
               <div className="flex gap-4">
@@ -136,10 +163,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 )}
               </Button>
               <div className={`space-y-2 ${isFooterMenuOpen.company ? 'block' : 'hidden md:block'}`}>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">About Us</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Careers</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Press</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Blog</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">About Us</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Careers</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Press</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Blog</Button>
               </div>
             </div>
 
@@ -158,10 +185,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 )}
               </Button>
               <div className={`space-y-2 ${isFooterMenuOpen.legal ? 'block' : 'hidden md:block'}`}>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Privacy Policy</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Terms of Service</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Cookie Policy</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Licenses</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Privacy Policy</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Terms of Service</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Cookie Policy</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Licenses</Button>
               </div>
             </div>
 
@@ -180,16 +207,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 )}
               </Button>
               <div className={`space-y-2 ${isFooterMenuOpen.support ? 'block' : 'hidden md:block'}`}>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Help Center</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Contact Us</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Security</Button>
-                <Button variant="link" className="text-muted-foreground hover:text-primary">Status</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Help Center</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Contact Us</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Security</Button>
+                <Button variant="link" className="text-muted-foreground hover:text-primary dark:text-gray-400 dark:hover:text-white">Status</Button>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 pt-8 border-t text-center md:text-left">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+          <div className="mt-8 pt-8 border-t dark:border-gray-700 text-center md:text-left">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground dark:text-gray-400">
               <p>© 2024 Wymu. All rights reserved. NMLS ID: 123456</p>
               <p className="md:text-right">
                 Deposits are FDIC insured up to $250,000 per depositor
