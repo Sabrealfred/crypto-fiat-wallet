@@ -41,6 +41,27 @@ const ExpensesPage = () => (
   </div>
 );
 
+const TreasuryPage = () => (
+  <div className="max-w-7xl mx-auto p-6">
+    <h1 className="text-2xl font-semibold mb-4">Treasury Management</h1>
+    <p className="text-muted-foreground">Cash flow and liquidity management tools coming soon...</p>
+  </div>
+);
+
+const TradeFinancePage = () => (
+  <div className="max-w-7xl mx-auto p-6">
+    <h1 className="text-2xl font-semibold mb-4">Trade Finance</h1>
+    <p className="text-muted-foreground">International trade operations and financing tools coming soon...</p>
+  </div>
+);
+
+const RiskManagementPage = () => (
+  <div className="max-w-7xl mx-auto p-6">
+    <h1 className="text-2xl font-semibold mb-4">Risk Management</h1>
+    <p className="text-muted-foreground">Risk analysis and hedging tools coming soon...</p>
+  </div>
+);
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -66,6 +87,9 @@ export function AppRoutes() {
       <Route path="/payroll" element={<PayrollPage />} />
       <Route path="/invoices" element={<InvoicesPage />} />
       <Route path="/expenses" element={<ExpensesPage />} />
+      <Route path="/treasury" element={<TreasuryPage />} />
+      <Route path="/trade-finance" element={<TradeFinancePage />} />
+      <Route path="/risk-management" element={<RiskManagementPage />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
