@@ -21,10 +21,16 @@ export default function PersonalDashboard() {
   const { data: balanceData, isLoading: isBalanceLoading } = useQuery<WalletBalance>({
     queryKey: ["balance"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user?.id) {
+        throw new Error("No authenticated user found");
+      }
+
       const { data: wallets, error } = await supabase
         .from("wallets")
         .select("balance, currency_code")
-        .eq("user_id", (await supabase.auth.getUser()).data.user?.id);
+        .eq("user_id", user.id);
 
       if (error) {
         toast.error("Error loading balance data");
@@ -37,25 +43,34 @@ export default function PersonalDashboard() {
       const cryptoBalance = wallets?.reduce((acc, wallet) => 
         wallet.currency_code === 'CRYPTO' ? acc + (wallet.balance || 0) : acc, 0) || 0;
       
-      const changePercentage = 2.5;
-
       return {
         total: totalBalance,
-        change: changePercentage,
+        change: 2.5,
         fiat: fiatBalance,
         crypto: cryptoBalance
       };
     },
     staleTime: 30000,
     gcTime: 3600000,
+    retry: false,
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Error loading balance data");
+    }
   });
 
   const { data: notifications, isLoading: isNotificationsLoading } = useQuery<DashboardNotification[]>({
     queryKey: ["notifications"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user?.id) {
+        throw new Error("No authenticated user found");
+      }
+
       const { data: dbNotifications, error } = await supabase
         .from("notifications")
         .select("id, title, description, created_at, type, amount, user_id")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(3);
 
@@ -86,6 +101,10 @@ export default function PersonalDashboard() {
     },
     staleTime: 60000,
     gcTime: 3600000,
+    retry: false,
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Error loading notifications");
+    }
   });
 
   if (isBalanceLoading || isNotificationsLoading) {
