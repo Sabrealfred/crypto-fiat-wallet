@@ -1,25 +1,13 @@
-import { Button } from "@/components/ui/button";
 import { AppLayout } from "@/components/layout/app-layout";
+import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
+import { StatisticsCards } from "@/components/dashboard/StatisticsCards";
+import { StatisticsChart } from "@/components/dashboard/StatisticsChart";
+import { QuickActions } from "@/components/dashboard/QuickActions";
+import { NotificationsList } from "@/components/dashboard/NotificationsList";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import {
-  BarChart3,
-  SendHorizontal,
-  Bell,
-  CreditCard,
-  Calendar,
-  Store,
-  History,
-  PieChart,
-  ArrowUpRight,
-  Wallet2,
-  ChevronRight,
-  Search,
-  CircleUser,
-  Timer,
-  Coins,
-  LightbulbIcon,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SendHorizontal, ArrowUpRight, Search, CreditCard } from "lucide-react";
 
 export default function Index() {
   const quickContacts = [
@@ -88,126 +76,24 @@ export default function Index() {
 
   const currentEarning = monthlyData[monthlyData.length - 1].earning;
   const previousEarning = monthlyData[monthlyData.length - 2].earning;
-  const earningChange = ((currentEarning - previousEarning) / previousEarning) * 100;
-
   const currentSpending = monthlyData[monthlyData.length - 1].spending;
   const previousSpending = monthlyData[monthlyData.length - 2].spending;
-  const spendingChange = ((currentSpending - previousSpending) / previousSpending) * 100;
 
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-[1fr,380px] gap-6">
           <div className="space-y-6">
-            <div className="flex justify-between items-center mb-8">
-              <div>
-                <h1 className="text-2xl font-semibold mb-2">Overview</h1>
-                <p className="text-muted-foreground">Good morning Leonardo 👋</p>
-              </div>
-              <div className="flex gap-2">
-                <Link to="/history">
-                  <Button variant="outline" size="sm">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Monthly Report
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-6 rounded-2xl glass-card">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-sm text-muted-foreground">Monthly Earning</h3>
-                  <PieChart className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <p className="text-2xl font-bold mb-2">${currentEarning.toLocaleString()}</p>
-                <span className={`text-sm ${earningChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
-                  {earningChange >= 0 ? '↑' : '↓'} {Math.abs(earningChange).toFixed(1)}% vs last month
-                </span>
-              </div>
-              <div className="p-6 rounded-2xl glass-card">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-sm text-muted-foreground">Monthly Spending</h3>
-                  <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <p className="text-2xl font-bold mb-2">${currentSpending.toLocaleString()}</p>
-                <span className={`text-sm ${spendingChange >= 0 ? 'text-red-500' : 'text-green-600'}`}>
-                  {spendingChange >= 0 ? '↑' : '↓'} {Math.abs(spendingChange).toFixed(1)}% vs last month
-                </span>
-              </div>
-            </div>
-
-            <div className="relative glass-card p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Statistics</h2>
-                <div className="flex gap-2">
-                  <Button variant="secondary" size="sm" className="bg-accent text-white">
-                    Weekly
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Monthly
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Yearly
-                  </Button>
-                </div>
-              </div>
-              <div className="h-[200px] flex items-end justify-between gap-2">
-                {monthlyData.map((data, index) => (
-                  <div key={data.month} className="flex flex-col items-center">
-                    <div className="flex-1 w-full relative">
-                      <div 
-                        className="absolute bottom-0 w-full bg-accent/20 rounded-t-lg transition-all duration-300"
-                        style={{ height: `${(data.earning / 25000) * 100}%` }}
-                      ></div>
-                      <div 
-                        className="absolute bottom-0 w-full bg-red-400/20 rounded-t-lg transition-all duration-300"
-                        style={{ height: `${(data.spending / 25000) * 100}%`, width: '50%', left: '25%' }}
-                      ></div>
-                    </div>
-                    <span className="text-xs text-muted-foreground mt-2">
-                      {data.month.slice(0, 3)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <Link to="/bills" className="glass-card p-6 hover:bg-accent/5 transition-colors">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <LightbulbIcon className="h-5 w-5 text-primary" />
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <h3 className="font-semibold mb-1">Pay Bills</h3>
-                <p className="text-sm text-muted-foreground">Manage utility and service payments</p>
-              </Link>
-
-              <Link to="/time-deposits" className="glass-card p-6 hover:bg-accent/5 transition-colors">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Timer className="h-5 w-5 text-primary" />
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <h3 className="font-semibold mb-1">Time Deposits</h3>
-                <p className="text-sm text-muted-foreground">Earn interest with fixed terms</p>
-              </Link>
-
-              <Link to="/savings" className="glass-card p-6 hover:bg-accent/5 transition-colors">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Coins className="h-5 w-5 text-primary" />
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <h3 className="font-semibold mb-1">Savings Plans</h3>
-                <p className="text-sm text-muted-foreground">Set up automatic savings</p>
-              </Link>
-            </div>
-
+            <WelcomeHeader />
+            <StatisticsCards 
+              currentEarning={currentEarning}
+              previousEarning={previousEarning}
+              currentSpending={currentSpending}
+              previousSpending={previousSpending}
+            />
+            <StatisticsChart monthlyData={monthlyData} />
+            <QuickActions />
+            
             <div className="grid md:grid-cols-2 gap-6">
               <div className="glass-card p-6">
                 <div className="flex justify-between items-center mb-6">
@@ -283,45 +169,7 @@ export default function Index() {
           </div>
 
           <div className="space-y-6">
-            <div className="glass-card p-6">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-2">
-                  <Bell className="h-5 w-5" />
-                  <h2 className="text-lg font-semibold">Notifications</h2>
-                </div>
-                <Button variant="ghost" size="sm" className="text-muted-foreground">
-                  Mark all as read
-                </Button>
-              </div>
-              <div className="space-y-4">
-                {notifications.map((notification) => (
-                  <div key={notification.id} className="flex gap-4 items-start p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                    <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0
-                      ${notification.type === 'income' ? 'bg-green-100 text-green-600' : 
-                        notification.type === 'bill' ? 'bg-amber-100 text-amber-600' : 
-                        'bg-red-100 text-red-600'}`}
-                    >
-                      {notification.type === 'income' ? <ArrowUpRight className="h-5 w-5" /> :
-                       notification.type === 'bill' ? <Calendar className="h-5 w-5" /> :
-                       <BarChart3 className="h-5 w-5" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start gap-2">
-                        <h3 className="font-medium truncate">{notification.title}</h3>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{notification.time}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground truncate">{notification.description}</p>
-                      {notification.type === 'bill' && (
-                        <Button size="sm" className="mt-2 h-8 text-xs">
-                          Pay Now ${notification.amount}
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
+            <NotificationsList notifications={notifications} />
             <div className="glass-card p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Recent Activity</h2>
