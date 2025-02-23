@@ -1,3 +1,4 @@
+
 import { AppLayout } from "@/components/layout/app-layout";
 import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { StatisticsCards } from "@/components/dashboard/StatisticsCards";
