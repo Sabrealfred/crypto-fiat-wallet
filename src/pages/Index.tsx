@@ -58,6 +58,33 @@ export default function Index() {
     { type: "Received from John", time: "Yesterday, 1:30 PM", amount: 300, icon: Download },
   ];
 
+  const cards = [
+    { 
+      type: "Credit Card",
+      number: "**** **** **** 4821",
+      balance: 5240.50,
+      limit: 10000,
+      expiryDate: "12/25",
+      color: "bg-gradient-to-r from-violet-500 to-purple-500"
+    },
+    { 
+      type: "Debit Card",
+      number: "**** **** **** 7643",
+      balance: 3180.25,
+      limit: null,
+      expiryDate: "09/24",
+      color: "bg-gradient-to-r from-blue-500 to-cyan-500"
+    },
+    { 
+      type: "Business Credit",
+      number: "**** **** **** 9276",
+      balance: 15780.90,
+      limit: 20000,
+      expiryDate: "03/26",
+      color: "bg-gradient-to-r from-amber-500 to-orange-500"
+    }
+  ];
+
   // Calcular el último valor y el porcentaje de cambio
   const currentEarning = monthlyData[monthlyData.length - 1].earning;
   const previousEarning = monthlyData[monthlyData.length - 2].earning;
@@ -205,14 +232,62 @@ export default function Index() {
                 </div>
                 <div className="h-[200px] flex items-end justify-between gap-2">
                   {monthlyData.map((data, index) => (
-                    <div key={data.month} className="flex-1 flex flex-col items-center">
-                      <div 
-                        className="w-full bg-accent/20 rounded-t-lg transition-all duration-300"
-                        style={{ height: `${(data.earning / 25000) * 100}%` }}
-                      ></div>
+                    <div key={data.month} className="flex flex-col items-center">
+                      <div className="flex-1 w-full relative">
+                        <div 
+                          className="absolute bottom-0 w-full bg-accent/20 rounded-t-lg transition-all duration-300"
+                          style={{ height: `${(data.earning / 25000) * 100}%` }}
+                        ></div>
+                        <div 
+                          className="absolute bottom-0 w-full bg-red-400/20 rounded-t-lg transition-all duration-300"
+                          style={{ height: `${(data.spending / 25000) * 100}%`, width: '50%', left: '25%' }}
+                        ></div>
+                      </div>
                       <span className="text-xs text-muted-foreground mt-2">
                         {data.month.slice(0, 3)}
                       </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Cards Section */}
+              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
+                <h2 className="text-lg font-semibold mb-4">Your Cards</h2>
+                <div className="grid gap-4">
+                  {cards.map((card, index) => (
+                    <div 
+                      key={index} 
+                      className={`${card.color} p-6 rounded-xl text-white relative overflow-hidden`}
+                    >
+                      <div className="absolute top-0 right-0 p-4">
+                        <CreditCard className="h-6 w-6 text-white/80" />
+                      </div>
+                      <div className="mb-4">
+                        <p className="text-sm opacity-90">{card.type}</p>
+                        <p className="font-mono text-lg mt-1">{card.number}</p>
+                      </div>
+                      <div className="flex justify-between items-end">
+                        <div>
+                          <p className="text-sm opacity-90">Balance</p>
+                          <p className="text-xl font-semibold">${card.balance.toLocaleString()}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm opacity-90">Expires</p>
+                          <p className="font-mono">{card.expiryDate}</p>
+                        </div>
+                      </div>
+                      {card.limit && (
+                        <div className="mt-4">
+                          <p className="text-sm opacity-90">Credit Limit</p>
+                          <div className="h-1.5 bg-white/20 rounded-full mt-1">
+                            <div 
+                              className="h-full bg-white rounded-full"
+                              style={{ width: `${(card.balance / card.limit) * 100}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
