@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { 
   BarChart3, 
@@ -34,7 +33,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Index() {
-  // Datos dummy para los últimos 6 meses
   const monthlyData = [
     { month: "September", earning: 18200, spending: 4800 },
     { month: "October", earning: 19500, spending: 5100 },
@@ -60,32 +58,34 @@ export default function Index() {
 
   const cards = [
     { 
-      type: "Credit Card",
-      number: "**** **** **** 4821",
-      balance: 5240.50,
-      limit: 10000,
-      expiryDate: "12/25",
-      color: "bg-gradient-to-r from-violet-500 to-purple-500"
+      type: "VISA",
+      name: "Leonardo Cap",
+      number: "**** **** **** 1890",
+      balance: 32819.00,
+      expiryDate: "05/26",
+      color: "bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-500",
+      cvv: "***"
     },
     { 
-      type: "Debit Card",
+      type: "Mastercard",
+      name: "Leonardo Cap",
       number: "**** **** **** 7643",
-      balance: 3180.25,
-      limit: null,
+      balance: 28450.75,
       expiryDate: "09/24",
-      color: "bg-gradient-to-r from-blue-500 to-cyan-500"
+      color: "bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700",
+      cvv: "***"
     },
     { 
-      type: "Business Credit",
+      type: "AMEX",
+      name: "Leonardo Cap",
       number: "**** **** **** 9276",
-      balance: 15780.90,
-      limit: 20000,
+      balance: 20640.25,
       expiryDate: "03/26",
-      color: "bg-gradient-to-r from-amber-500 to-orange-500"
+      color: "bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600",
+      cvv: "***"
     }
   ];
 
-  // Calcular el último valor y el porcentaje de cambio
   const currentEarning = monthlyData[monthlyData.length - 1].earning;
   const previousEarning = monthlyData[monthlyData.length - 2].earning;
   const earningChange = ((currentEarning - previousEarning) / previousEarning) * 100;
@@ -96,7 +96,6 @@ export default function Index() {
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-pink-50 via-white to-blue-50">
-      {/* Sidebar */}
       <div className="w-64 bg-white/70 backdrop-blur-sm p-4 border-r hidden md:block">
         <div className="flex items-center gap-2 mb-8">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
@@ -133,18 +132,14 @@ export default function Index() {
         </nav>
       </div>
 
-      {/* Mobile menu button */}
       <Button variant="ghost" size="icon" className="absolute top-4 left-4 md:hidden">
         <Menu className="h-6 w-6" />
       </Button>
 
-      {/* Main content */}
       <div className="flex-1 p-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-[1fr,400px] gap-6">
-            {/* Columna izquierda */}
             <div className="space-y-6">
-              {/* Header y bienvenida */}
               <div className="flex justify-between items-center mb-8">
                 <div>
                   <h1 className="text-2xl font-semibold mb-2">Overview</h1>
@@ -162,7 +157,6 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Estadísticas principales */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
                   <div className="flex justify-between items-start mb-4">
@@ -186,7 +180,6 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Quick Transfer Section */}
               <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
                 <h2 className="text-lg font-semibold mb-4">Quick Transfer</h2>
                 <div className="grid grid-cols-4 gap-4">
@@ -217,7 +210,6 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Gráfico de pagos mensuales */}
               <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-lg font-semibold">Monthly Payments</h2>
@@ -251,52 +243,148 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Cards Section */}
-              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-                <h2 className="text-lg font-semibold mb-4">Your Cards</h2>
-                <div className="grid gap-4">
+              <div className="relative">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold">Your Cards</h2>
+                  <Button variant="outline" size="sm">Add Card +</Button>
+                </div>
+                <div className="flex gap-4 overflow-x-auto pb-4">
                   {cards.map((card, index) => (
                     <div 
                       key={index} 
-                      className={`${card.color} p-6 rounded-xl text-white relative overflow-hidden`}
+                      className={`${card.color} p-6 rounded-2xl text-white relative min-w-[320px] shadow-lg transform transition-transform hover:scale-105`}
                     >
-                      <div className="absolute top-0 right-0 p-4">
-                        <CreditCard className="h-6 w-6 text-white/80" />
-                      </div>
-                      <div className="mb-4">
-                        <p className="text-sm opacity-90">{card.type}</p>
-                        <p className="font-mono text-lg mt-1">{card.number}</p>
-                      </div>
-                      <div className="flex justify-between items-end">
-                        <div>
-                          <p className="text-sm opacity-90">Balance</p>
-                          <p className="text-xl font-semibold">${card.balance.toLocaleString()}</p>
+                      <div className="mb-8">
+                        <div className="flex justify-between items-start">
+                          <p className="text-xl font-semibold">Card Balance</p>
+                          <CreditCard className="h-6 w-6 text-white/80" />
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm opacity-90">Expires</p>
-                          <p className="font-mono">{card.expiryDate}</p>
-                        </div>
+                        <p className="text-3xl font-bold mt-2">${card.balance.toLocaleString()}</p>
                       </div>
-                      {card.limit && (
-                        <div className="mt-4">
-                          <p className="text-sm opacity-90">Credit Limit</p>
-                          <div className="h-1.5 bg-white/20 rounded-full mt-1">
-                            <div 
-                              className="h-full bg-white rounded-full"
-                              style={{ width: `${(card.balance / card.limit) * 100}%` }}
-                            ></div>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-white/70">Card Name</p>
+                            <p className="font-medium">{card.name}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-white/70">Card No.</p>
+                            <p className="font-medium">{card.number}</p>
                           </div>
                         </div>
-                      )}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-white/70">CVV</p>
+                            <p className="font-medium">{card.cvv}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-white/70">Valid until</p>
+                            <p className="font-medium">{card.expiryDate}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute top-6 right-6">
+                        <div className="flex gap-1">
+                          <div className="w-4 h-4 bg-white/30 rounded-full"></div>
+                          <div className="w-4 h-4 bg-white rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
+                <h2 className="text-lg font-semibold mb-4">Your Card Section</h2>
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <p className="text-sm opacity-90 mb-1">Your Balance</p>
+                    <h3 className="text-3xl font-bold">$81,910.00</h3>
+                    <p className="text-sm opacity-90">↑ 12.81% this month</p>
+                  </div>
+                  <CreditCard className="h-6 w-6 text-white/80" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button className="bg-white/20 hover:bg-white/30 text-white">
+                    <Wallet className="mr-2 h-4 w-4" />
+                    Add Money
+                  </Button>
+                  <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    My Cards
+                  </Button>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold">Marketplace Activity</h2>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                    View All
+                  </Button>
+                </div>
+                <div className="space-y-4">
+                  {marketplaceActivity.map((activity, index) => (
+                    <div key={index} className="flex justify-between items-center py-2">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                          activity.amount > 0 ? 'bg-green-100' : 'bg-purple-100'
+                        }`}>
+                          <activity.icon className={`h-5 w-5 ${
+                            activity.amount > 0 ? 'text-green-500' : 'text-purple-500'
+                          }`} />
+                        </div>
+                        <div>
+                          <p className="font-medium">{activity.type}</p>
+                          <p className="text-sm text-muted-foreground">{activity.time}</p>
+                        </div>
+                      </div>
+                      <span className={`font-medium ${
+                        activity.amount > 0 ? 'text-green-500' : 'text-red-500'
+                      }`}>
+                        {activity.amount > 0 ? '+' : ''}{activity.amount.toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold">Recent Transactions</h2>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                    <History className="h-4 w-4 mr-2" />
+                    History
+                  </Button>
+                </div>
+                <div className="space-y-4">
+                  {recentTransactions.map((transaction, index) => (
+                    <div key={index} className="flex justify-between items-center py-2">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                          transaction.amount > 0 ? 'bg-green-100' : 'bg-orange-100'
+                        }`}>
+                          <transaction.icon className={`h-5 w-5 ${
+                            transaction.amount > 0 ? 'text-green-500' : 'text-orange-500'
+                          }`} />
+                        </div>
+                        <div>
+                          <p className="font-medium">{transaction.type}</p>
+                          <p className="text-sm text-muted-foreground">{transaction.time}</p>
+                        </div>
+                      </div>
+                      <span className={`font-medium ${
+                        transaction.amount > 0 ? 'text-green-500' : 'text-red-500'
+                      }`}>
+                        {transaction.amount > 0 ? '+' : ''}{transaction.amount.toLocaleString()}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Columna derecha */}
             <div className="space-y-6">
-              {/* Header con notificaciones y menú de usuario */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2">
@@ -332,7 +420,6 @@ export default function Index() {
                 <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
               </Button>
 
-              {/* Your Card Section */}
               <div className="card-gradient p-6">
                 <div className="flex justify-between items-start mb-6">
                   <div>
@@ -351,75 +438,6 @@ export default function Index() {
                     <CreditCard className="mr-2 h-4 w-4" />
                     My Cards
                   </Button>
-                </div>
-              </div>
-
-              {/* Marketplace Activity */}
-              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold">Marketplace Activity</h2>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground">
-                    View All
-                  </Button>
-                </div>
-                <div className="space-y-4">
-                  {marketplaceActivity.map((activity, index) => (
-                    <div key={index} className="flex justify-between items-center py-2">
-                      <div className="flex items-center gap-3">
-                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                          activity.amount > 0 ? 'bg-green-100' : 'bg-purple-100'
-                        }`}>
-                          <activity.icon className={`h-5 w-5 ${
-                            activity.amount > 0 ? 'text-green-500' : 'text-purple-500'
-                          }`} />
-                        </div>
-                        <div>
-                          <p className="font-medium">{activity.type}</p>
-                          <p className="text-sm text-muted-foreground">{activity.time}</p>
-                        </div>
-                      </div>
-                      <span className={`font-medium ${
-                        activity.amount > 0 ? 'text-green-500' : 'text-red-500'
-                      }`}>
-                        {activity.amount > 0 ? '+' : ''}{activity.amount.toLocaleString()}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Recent Transactions */}
-              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold">Recent Transactions</h2>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground">
-                    <History className="h-4 w-4 mr-2" />
-                    History
-                  </Button>
-                </div>
-                <div className="space-y-4">
-                  {recentTransactions.map((transaction, index) => (
-                    <div key={index} className="flex justify-between items-center py-2">
-                      <div className="flex items-center gap-3">
-                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                          transaction.amount > 0 ? 'bg-green-100' : 'bg-orange-100'
-                        }`}>
-                          <transaction.icon className={`h-5 w-5 ${
-                            transaction.amount > 0 ? 'text-green-500' : 'text-orange-500'
-                          }`} />
-                        </div>
-                        <div>
-                          <p className="font-medium">{transaction.type}</p>
-                          <p className="text-sm text-muted-foreground">{transaction.time}</p>
-                        </div>
-                      </div>
-                      <span className={`font-medium ${
-                        transaction.amount > 0 ? 'text-green-500' : 'text-red-500'
-                      }`}>
-                        {transaction.amount > 0 ? '+' : ''}{transaction.amount.toLocaleString()}
-                      </span>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>
