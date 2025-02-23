@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import WalletPage from "@/pages/Wallet";
 import CardsPage from "@/pages/Cards";
 import HistoryPage from "@/pages/History";
@@ -29,30 +30,36 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
-      <Route path="/business" element={<BusinessDashboard />} />
-      <Route path="/commercial" element={<CommercialDashboard />} />
-      <Route path="/private" element={<PrivateBankingDashboard />} />
-      <Route path="/developers" element={<DeveloperPortal />} />
       <Route path="/auth" element={<Auth />} />
-      <Route path="/wallet" element={<WalletPage />} />
-      <Route path="/cards" element={<CardsPage />} />
-      <Route path="/history" element={<HistoryPage />} />
-      <Route path="/marketplace" element={<MarketplacePage />} />
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/transfer" element={<TransferPage />} />
-      <Route path="/bills" element={<BillsPage />} />
-      <Route path="/time-deposits" element={<TimeDepositsPage />} />
-      <Route path="/savings" element={<SavingsPage />} />
-      <Route path="/investments" element={<InvestmentsPage />} />
-      <Route path="/deposits" element={<DepositsPage />} />
+      
+      {/* Rutas protegidas */}
+      <Route element={<ProtectedRoute>
+        <Routes>
+          <Route path="/business" element={<BusinessDashboard />} />
+          <Route path="/commercial" element={<CommercialDashboard />} />
+          <Route path="/private" element={<PrivateBankingDashboard />} />
+          <Route path="/developers" element={<DeveloperPortal />} />
+          <Route path="/wallet" element={<WalletPage />} />
+          <Route path="/cards" element={<CardsPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/marketplace" element={<MarketplacePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/transfer" element={<TransferPage />} />
+          <Route path="/bills" element={<BillsPage />} />
+          <Route path="/time-deposits" element={<TimeDepositsPage />} />
+          <Route path="/savings" element={<SavingsPage />} />
+          <Route path="/investments" element={<InvestmentsPage />} />
+          <Route path="/deposits" element={<DepositsPage />} />
 
-      {/* Rutas comerciales */}
-      <Route path="/payroll" element={<PayrollPage />} />
-      <Route path="/invoices" element={<InvoicesPage />} />
-      <Route path="/expenses" element={<ExpensesPage />} />
-      <Route path="/treasury" element={<TreasuryPage />} />
-      <Route path="/trade-finance" element={<TradeFinancePage />} />
-      <Route path="/risk-management" element={<RiskManagementPage />} />
+          {/* Rutas comerciales */}
+          <Route path="/payroll" element={<PayrollPage />} />
+          <Route path="/invoices" element={<InvoicesPage />} />
+          <Route path="/expenses" element={<ExpensesPage />} />
+          <Route path="/treasury" element={<TreasuryPage />} />
+          <Route path="/trade-finance" element={<TradeFinancePage />} />
+          <Route path="/risk-management" element={<RiskManagementPage />} />
+        </Routes>
+      </ProtectedRoute>} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

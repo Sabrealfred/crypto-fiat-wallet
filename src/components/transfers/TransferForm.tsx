@@ -11,6 +11,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { SendHorizontal } from "lucide-react";
 import { TransferType, Currency } from "@/types/transfers";
+import { toast } from "sonner";
+import { z } from "zod";
+
+// Schema de validación
+const transferSchema = z.object({
+  amount: z.string().min(1, "Amount is required")
+    .refine((val) => !isNaN(Number(val)), "Must be a valid number")
+    .refine((val) => Number(val) > 0, "Amount must be greater than 0"),
+  transferType: z.string().min(1, "Transfer type is required"),
+  sourceCurrency: z.string().min(1, "Currency is required"),
+  details: z.record(z.string()).optional(),
+});
 
 interface TransferFormProps {
   transferTypes?: TransferType[];
@@ -23,17 +35,51 @@ export function TransferForm({ transferTypes, currencies, onSubmit }: TransferFo
   const [sourceCurrency, setSourceCurrency] = useState("USD");
   const [selectedTransferType, setSelectedTransferType] = useState<string>("");
   const [transferDetails, setTransferDetails] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const currentTransferType = transferTypes?.find(t => t.id === selectedTransferType);
 
+  const validateForm = () => {
+    try {
+      transferSchema.parse({
+        amount,
+        transferType: selectedTransferType,
+        sourceCurrency,
+        details: transferDetails
+      });
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          newErrors[err.path[0].toString()] = err.message;
+        });
+        setErrors(newErrors);
+        toast.error("Please check the form for errors");
+      }
+      return false;
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      amount,
-      sourceCurrency,
-      transferType: selectedTransferType,
-      details: transferDetails
-    });
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      onSubmit({
+        amount,
+        sourceCurrency,
+        transferType: selectedTransferType,
+        details: transferDetails
+      });
+      toast.success("Transfer initiated successfully");
+    } catch (error) {
+      toast.error("Failed to process transfer");
+    }
   };
 
   return (
@@ -44,7 +90,7 @@ export function TransferForm({ transferTypes, currencies, onSubmit }: TransferFo
           <div>
             <label className="text-sm font-medium mb-2 block">Transfer Type</label>
             <Select value={selectedTransferType} onValueChange={setSelectedTransferType}>
-              <SelectTrigger>
+              <SelectTrigger className={errors.transferType ? "border-red-500" : ""}>
                 <SelectValue placeholder="Select transfer type" />
               </SelectTrigger>
               <SelectContent>
@@ -55,6 +101,9 @@ export function TransferForm({ transferTypes, currencies, onSubmit }: TransferFo
                 ))}
               </SelectContent>
             </Select>
+            {errors.transferType && (
+              <p className="text-sm text-red-500 mt-1">{errors.transferType}</p>
+            )}
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -66,18 +115,21 @@ export function TransferForm({ transferTypes, currencies, onSubmit }: TransferFo
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Enter amount"
-                  className="pl-8"
+                  className={`pl-8 ${errors.amount ? "border-red-500" : ""}`}
                 />
                 <span className="absolute left-3 top-3 text-muted-foreground">
                   {currencies?.find(c => c.code === sourceCurrency)?.symbol}
                 </span>
               </div>
+              {errors.amount && (
+                <p className="text-sm text-red-500 mt-1">{errors.amount}</p>
+              )}
             </div>
 
             <div>
               <label className="text-sm font-medium mb-2 block">Currency</label>
               <Select value={sourceCurrency} onValueChange={setSourceCurrency}>
-                <SelectTrigger>
+                <SelectTrigger className={errors.sourceCurrency ? "border-red-500" : ""}>
                   <SelectValue placeholder="Select currency" />
                 </SelectTrigger>
                 <SelectContent>
@@ -88,6 +140,9 @@ export function TransferForm({ transferTypes, currencies, onSubmit }: TransferFo
                   ))}
                 </SelectContent>
               </Select>
+              {errors.sourceCurrency && (
+                <p className="text-sm text-red-500 mt-1">{errors.sourceCurrency}</p>
+              )}
             </div>
           </div>
 
@@ -106,7 +161,11 @@ export function TransferForm({ transferTypes, currencies, onSubmit }: TransferFo
                       [field]: e.target.value
                     }))}
                     required={required === 'required'}
+                    className={errors[`details.${field}`] ? "border-red-500" : ""}
                   />
+                  {errors[`details.${field}`] && (
+                    <p className="text-sm text-red-500 mt-1">{errors[`details.${field}`]}</p>
+                  )}
                 </div>
               ))}
             </div>
