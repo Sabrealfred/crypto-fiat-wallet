@@ -1,4 +1,5 @@
 
+
 import { Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -25,3 +26,4 @@ export function AppRoutes() {
     </Routes>
   );
 }
+
