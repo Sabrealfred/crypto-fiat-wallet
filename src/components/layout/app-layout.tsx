@@ -6,7 +6,6 @@ import { Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { DarkModeToggle } from "./dark-mode-toggle";
 import { UserMenu } from "./user-menu";
 import { AppFooter } from "./app-footer";
 
@@ -46,23 +45,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={`min-h-screen flex flex-col ${isDarkMode ? 'dark bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-pink-50 via-white to-blue-50'}`}>
       <div className="flex-1 flex">
-        {/* Sidebar Toggle and Dark Mode Buttons */}
-        <div className="fixed top-4 left-4 z-50 flex gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <DarkModeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
-        </div>
+        {/* Mobile menu button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fixed top-4 left-4 z-50 md:hidden"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
 
         {/* Sidebar with overlay for mobile */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-0 z-40 md:relative md:translate-x-0 transition-transform duration-200 ease-in-out`}>
           <div className="absolute inset-0 bg-black/50 md:hidden" onClick={() => setIsSidebarOpen(false)} />
-          <SidebarNav className="relative z-50" />
+          <SidebarNav 
+            className="relative z-50" 
+            isDarkMode={isDarkMode}
+            onToggleDarkMode={toggleDarkMode}
+          />
         </div>
 
         <div className="flex-1">
