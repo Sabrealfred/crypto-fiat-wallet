@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,9 +6,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Bell, Settings, ArrowUpRight, ArrowDownLeft } from "lucide-react";
-import { BalanceCard } from "@/components/BalanceCard";
-import { TransactionHistory } from "@/components/TransactionHistory";
-import { QuickActions } from "@/components/QuickActions";
 
 export default function Index() {
   const navigate = useNavigate();
