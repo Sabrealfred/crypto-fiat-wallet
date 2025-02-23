@@ -1,53 +1,47 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 export default function Auth() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       if (isSignUp) {
         const { error } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
+          email,
+          password,
           options: {
             data: {
-              first_name: formData.firstName,
-              last_name: formData.lastName,
-              phone_number: formData.phoneNumber,
+              first_name: firstName,
+              last_name: lastName,
             },
           },
         });
-
         if (error) throw error;
-        toast.success("Registro exitoso. Por favor verifica tu email.");
+        toast.success("Registro exitoso! Por favor inicia sesión.");
+        setIsSignUp(false);
       } else {
         const { error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
+          email,
+          password,
         });
-
         if (error) throw error;
-        navigate('/');
+        navigate("/");
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -57,84 +51,95 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-blue-50 p-6">
-      <Card className="w-full max-w-md p-6 glass-card">
-        <h1 className="text-2xl font-bold text-center mb-6">
-          {isSignUp ? "Crear cuenta" : "Iniciar sesión"}
-        </h1>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <Card className="w-full max-w-md p-6 space-y-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">
+            {isSignUp ? "Crear cuenta" : "Iniciar sesión"}
+          </h1>
+          <p className="text-muted-foreground">
+            {isSignUp
+              ? "Ingresa tus datos para registrarte"
+              : "Bienvenido de vuelta"}
+          </p>
+        </div>
+
+        <form onSubmit={handleAuth} className="space-y-4">
           {isSignUp && (
             <>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Nombre</Label>
-                  <Input
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    required={isSignUp}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Apellido</Label>
-                  <Input
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    required={isSignUp}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber">Teléfono</Label>
+              <div>
+                <label htmlFor="firstName" className="text-sm font-medium">
+                  Nombre
+                </label>
                 <Input
-                  id="phoneNumber"
-                  type="tel"
-                  value={formData.phoneNumber}
-                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                  required={isSignUp}
+                  id="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="lastName" className="text-sm font-medium">
+                  Apellido
+                </label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
                 />
               </div>
             </>
           )}
-          
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+          <div>
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
             <Input
               id="email"
               type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
+          <div>
+            <label htmlFor="password" className="text-sm font-medium">
+              Contraseña
+            </label>
             <Input
               id="password"
               type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-
-          <Button className="w-full" type="submit" disabled={isLoading}>
-            {isLoading ? "Procesando..." : isSignUp ? "Registrarse" : "Iniciar sesión"}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading
+              ? "Cargando..."
+              : isSignUp
+              ? "Registrarse"
+              : "Iniciar sesión"}
           </Button>
         </form>
 
-        <div className="mt-4 text-center">
-          <button
+        <div className="text-center">
+          <Button
+            variant="link"
+            className="text-sm"
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-sm text-muted-foreground hover:text-primary"
           >
             {isSignUp
               ? "¿Ya tienes una cuenta? Inicia sesión"
               : "¿No tienes una cuenta? Regístrate"}
-          </button>
+          </Button>
         </div>
       </Card>
     </div>
