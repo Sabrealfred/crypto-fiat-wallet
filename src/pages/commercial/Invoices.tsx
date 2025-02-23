@@ -3,6 +3,7 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, FileText, TrendingUp, BarChart, Calendar, DollarSign } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function InvoicesPage() {
   const invoiceMetrics = [
@@ -113,9 +114,11 @@ export default function InvoicesPage() {
                 <p className="text-sm text-primary mb-4">
                   {service.status}
                 </p>
-                <Button variant="outline" className="w-full">
-                  Access
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to={`/invoices/${service.title.toLowerCase().replace(/\s+/g, '-')}`}>
+                    Access
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
