@@ -218,6 +218,42 @@ export type Database = {
         }
         Relationships: []
       }
+      developer_keys: {
+        Row: {
+          api_key: string
+          created_at: string | null
+          environment: string
+          id: string
+          is_active: boolean | null
+          last_used: string | null
+          name: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          api_key: string
+          created_at?: string | null
+          environment: string
+          id?: string
+          is_active?: boolean | null
+          last_used?: string | null
+          name: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          api_key?: string
+          created_at?: string | null
+          environment?: string
+          id?: string
+          is_active?: boolean | null
+          last_used?: string | null
+          name?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       kyc_documents: {
         Row: {
           created_at: string
@@ -621,6 +657,45 @@ export type Database = {
           },
         ]
       }
+      user_profiles: {
+        Row: {
+          business_name: string | null
+          company_size: string | null
+          created_at: string | null
+          id: string
+          industry: string | null
+          is_active: boolean | null
+          profile_type: Database["public"]["Enums"]["profile_type"]
+          tax_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          company_size?: string | null
+          created_at?: string | null
+          id?: string
+          industry?: string | null
+          is_active?: boolean | null
+          profile_type: Database["public"]["Enums"]["profile_type"]
+          tax_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          company_size?: string | null
+          created_at?: string | null
+          id?: string
+          industry?: string | null
+          is_active?: boolean | null
+          profile_type?: Database["public"]["Enums"]["profile_type"]
+          tax_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       wallets: {
         Row: {
           address: string | null
@@ -680,7 +755,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      profile_type:
+        | "personal"
+        | "business"
+        | "commercial"
+        | "private_banking"
+        | "developer"
     }
     CompositeTypes: {
       [_ in never]: never

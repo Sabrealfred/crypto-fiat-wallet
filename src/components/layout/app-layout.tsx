@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { UserMenu } from "./user-menu";
 import { AppFooter } from "./app-footer";
+import { ProfileSelector } from "../profile/ProfileSelector";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -45,7 +46,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={`min-h-screen flex flex-col bg-background transition-colors duration-300`}>
       <div className="flex-1 flex">
-        {/* Mobile menu button */}
         <Button
           variant="ghost"
           size="icon"
@@ -55,7 +55,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <Menu className="h-5 w-5" />
         </Button>
 
-        {/* Sidebar with overlay for mobile */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-0 z-40 md:relative md:translate-x-0 transition-transform duration-200 ease-in-out`}>
           <div className="absolute inset-0 bg-black/50 md:hidden" onClick={() => setIsSidebarOpen(false)} />
           <SidebarNav 
@@ -66,7 +65,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="flex-1">
-          <div className="p-4 flex justify-end">
+          <div className="p-4 flex items-center justify-between border-b">
+            <ProfileSelector />
             <UserMenu onLogout={handleLogout} />
           </div>
           <div className="p-4">
