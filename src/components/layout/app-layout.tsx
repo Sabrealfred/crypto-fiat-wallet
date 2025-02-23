@@ -43,7 +43,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${isDarkMode ? 'dark bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-pink-50 via-white to-blue-50'}`}>
+    <div className={`min-h-screen flex flex-col bg-background transition-colors duration-300`}>
       <div className="flex-1 flex">
         {/* Mobile menu button */}
         <Button

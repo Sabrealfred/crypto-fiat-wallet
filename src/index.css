@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -25,6 +26,28 @@
     --ring: 262 83% 58%;
     --radius: 1.5rem;
   }
+
+  .dark {
+    --background: 20 14% 4%;
+    --foreground: 60 9.1% 97.8%;
+    --card: 20 14% 4%;
+    --card-foreground: 60 9.1% 97.8%;
+    --popover: 20 14% 4%;
+    --popover-foreground: 60 9.1% 97.8%;
+    --primary: 47 95% 78%;
+    --primary-foreground: 20 14% 4%;
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 35.5 91.7% 32.9%;
+  }
 }
  
 @layer base {
@@ -32,16 +55,16 @@
     @apply border-border;
   }
   body {
-    @apply bg-gradient-to-br from-pink-50 via-white to-blue-50;
+    @apply bg-background text-foreground transition-colors duration-300;
   }
 }
 
 .glass-card {
-  @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg rounded-3xl;
+  @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg rounded-3xl dark:bg-black/20 dark:border-white/10;
 }
 
 .card-gradient {
-  @apply bg-gradient-to-br from-accent to-purple-400 text-white rounded-3xl;
+  @apply bg-gradient-to-br from-accent to-purple-400 text-white rounded-3xl dark:from-amber-700 dark:to-amber-950;
 }
 
 .fade-in {
