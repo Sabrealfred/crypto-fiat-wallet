@@ -267,20 +267,20 @@ export default function MarketplacePage() {
 
   return (
     <AppLayout>
-      <div className="p-6 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-semibold mb-2">Business Integrations</h1>
-            <p className="text-muted-foreground">Connect your business with powerful third-party services</p>
+            <h1 className="text-xl sm:text-2xl font-semibold mb-2">Business Integrations</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Connect your business with powerful third-party services</p>
           </div>
-          <Button>
+          <Button className="w-full sm:w-auto">
             <ArrowUpRight className="h-4 w-4 mr-2" />
             View Connected Apps
           </Button>
         </div>
 
-        <div className="mb-6">
-          <div className="flex gap-4 mb-6">
+        <div className="mb-6 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="h-4 w-4 absolute left-3 top-3 text-muted-foreground" />
               <Input 
@@ -288,18 +288,18 @@ export default function MarketplacePage() {
                 placeholder="Search integrations..." 
               />
             </div>
-            <Button variant="outline">
+            <Button variant="outline" className="w-full sm:w-auto">
               <Filter className="h-4 w-4 mr-2" />
               Filters
             </Button>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
             {categories.map((category) => (
               <Button
                 key={category}
                 variant="outline"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap flex-shrink-0"
               >
                 {category}
               </Button>
@@ -307,13 +307,13 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {services.map((service) => (
             <div
               key={service.id}
               className="bg-white/70 backdrop-blur-sm rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="p-2 bg-primary/10 rounded-lg">
                     <ArrowUpRight className="h-6 w-6 text-primary" />
@@ -322,13 +322,13 @@ export default function MarketplacePage() {
                     {service.price}
                   </span>
                 </div>
-                <h3 className="font-semibold text-lg mb-1">{service.name}</h3>
-                <p className="text-sm text-muted-foreground mb-2">by {service.provider}</p>
-                <p className="text-sm text-muted-foreground mb-4">
+                <h3 className="font-semibold text-base sm:text-lg mb-1">{service.name}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-2">by {service.provider}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-4">
                   {service.description}
                 </p>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm px-2 py-1 bg-secondary rounded-full">
+                  <span className="text-xs sm:text-sm px-2 py-1 bg-secondary rounded-full">
                     {service.category}
                   </span>
                   <Button size="sm">
