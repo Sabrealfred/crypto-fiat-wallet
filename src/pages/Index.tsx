@@ -7,7 +7,7 @@ import { NotificationsList } from "@/components/dashboard/NotificationsList";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SendHorizontal, ArrowUpRight, Search, CreditCard } from "lucide-react";
+import { SendHorizontal, ArrowUpRight, Search, CreditCard, History } from "lucide-react";
 
 export default function Index() {
   const quickContacts = [

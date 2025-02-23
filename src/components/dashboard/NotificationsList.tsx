@@ -1,5 +1,5 @@
 
-import { ArrowUpRight, BarChart3, Calendar } from "lucide-react";
+import { ArrowUpRight, BarChart3, Calendar, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Notification {
