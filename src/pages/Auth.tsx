@@ -4,17 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { AuthForm } from "@/components/auth/AuthForm";
+import { DemoLogin } from "@/components/auth/DemoLogin";
+import { AuthHeader } from "@/components/auth/AuthHeader";
 
 export default function Auth() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
 
   useEffect(() => {
     // Check if user is already logged in
@@ -33,8 +31,7 @@ export default function Auth() {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAuth = async (email: string, password: string, firstName?: string, lastName?: string) => {
     setIsLoading(true);
 
     try {
@@ -101,102 +98,13 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-6 space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">
-            {isSignUp ? "Crear cuenta" : "Iniciar sesión"}
-          </h1>
-          <p className="text-muted-foreground">
-            {isSignUp
-              ? "Ingresa tus datos para registrarte"
-              : "Bienvenido de vuelta"}
-          </p>
-        </div>
-
-        <Button 
-          onClick={createAndLoginDemoUser} 
-          className="w-full bg-secondary hover:bg-secondary/90"
-          disabled={isLoading}
-        >
-          Acceder como usuario Demo
-        </Button>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              O continúa con
-            </span>
-          </div>
-        </div>
-
-        <form onSubmit={handleAuth} className="space-y-4">
-          {isSignUp && (
-            <>
-              <div>
-                <label htmlFor="firstName" className="text-sm font-medium">
-                  Nombre
-                </label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="text-sm font-medium">
-                  Apellido
-                </label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div>
-            </>
-          )}
-          <div>
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="text-sm font-medium">
-              Contraseña
-            </label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading
-              ? "Cargando..."
-              : isSignUp
-              ? "Registrarse"
-              : "Iniciar sesión"}
-          </Button>
-        </form>
-
+        <AuthHeader isSignUp={isSignUp} />
+        <DemoLogin onDemoLogin={createAndLoginDemoUser} isLoading={isLoading} />
+        <AuthForm 
+          isSignUp={isSignUp} 
+          isLoading={isLoading} 
+          onSubmit={handleAuth} 
+        />
         <div className="text-center">
           <Button
             variant="link"
