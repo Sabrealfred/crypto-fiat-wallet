@@ -19,6 +19,28 @@ import CommercialDashboard from "@/pages/commercial/Dashboard";
 import PrivateBankingDashboard from "@/pages/private/Dashboard";
 import DeveloperPortal from "@/pages/developers/Dashboard";
 
+// Páginas comerciales
+const PayrollPage = () => (
+  <div className="max-w-7xl mx-auto p-6">
+    <h1 className="text-2xl font-semibold mb-4">Payroll Management</h1>
+    <p className="text-muted-foreground">Coming soon...</p>
+  </div>
+);
+
+const InvoicesPage = () => (
+  <div className="max-w-7xl mx-auto p-6">
+    <h1 className="text-2xl font-semibold mb-4">Invoice Management</h1>
+    <p className="text-muted-foreground">Coming soon...</p>
+  </div>
+);
+
+const ExpensesPage = () => (
+  <div className="max-w-7xl mx-auto p-6">
+    <h1 className="text-2xl font-semibold mb-4">Expense Tracking</h1>
+    <p className="text-muted-foreground">Coming soon...</p>
+  </div>
+);
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -39,6 +61,12 @@ export function AppRoutes() {
       <Route path="/savings" element={<SavingsPage />} />
       <Route path="/investments" element={<InvestmentsPage />} />
       <Route path="/deposits" element={<DepositsPage />} />
+
+      {/* Rutas comerciales */}
+      <Route path="/payroll" element={<PayrollPage />} />
+      <Route path="/invoices" element={<InvoicesPage />} />
+      <Route path="/expenses" element={<ExpensesPage />} />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
