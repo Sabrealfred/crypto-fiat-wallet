@@ -67,6 +67,22 @@ export default function Auth() {
     }
   };
 
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: "demo@example.com",
+        password: "demo12345",
+      });
+      if (error) throw error;
+      toast.success("Inicio de sesión exitoso!");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-6 space-y-6">
@@ -79,6 +95,25 @@ export default function Auth() {
               ? "Ingresa tus datos para registrarte"
               : "Bienvenido de vuelta"}
           </p>
+        </div>
+
+        <Button 
+          onClick={handleDemoLogin} 
+          className="w-full bg-secondary hover:bg-secondary/90"
+          disabled={isLoading}
+        >
+          Acceder como usuario Demo
+        </Button>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              O continúa con
+            </span>
+          </div>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-4">
