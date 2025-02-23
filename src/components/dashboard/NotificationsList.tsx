@@ -2,17 +2,17 @@
 import { ArrowUpRight, BarChart3, Calendar, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface Notification {
-  id: number;
+interface DashboardNotification {
+  id: string;
   title: string;
   description: string;
   time: string;
-  amount: number;
   type: string;
+  amount: number;
 }
 
 interface NotificationsListProps {
-  notifications: Notification[];
+  notifications: DashboardNotification[];
 }
 
 export function NotificationsList({ notifications }: NotificationsListProps) {
