@@ -21,14 +21,7 @@ import DeveloperPortal from "@/pages/developers/Dashboard";
 import TreasuryPage from "@/pages/commercial/Treasury";
 import TradeFinancePage from "@/pages/commercial/TradeFinance";
 import RiskManagementPage from "@/pages/commercial/RiskManagement";
-
-// Páginas comerciales
-const PayrollPage = () => (
-  <div className="max-w-7xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-4">Payroll Management</h1>
-    <p className="text-muted-foreground">Coming soon...</p>
-  </div>
-);
+import PayrollPage from "@/pages/commercial/Payroll";
 
 const InvoicesPage = () => (
   <div className="max-w-7xl mx-auto p-6">
