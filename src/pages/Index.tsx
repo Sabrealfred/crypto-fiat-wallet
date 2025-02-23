@@ -22,6 +22,7 @@ import {
   CircleUser,
   ChevronDown
 } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +34,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Index() {
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   const monthlyData = [
     { month: "September", earning: 18200, spending: 4800 },
     { month: "October", earning: 19500, spending: 5100 },
@@ -105,30 +109,60 @@ export default function Index() {
         </div>
         
         <nav className="space-y-1">
-          <Button variant="ghost" className="w-full justify-start">
-            <Home className="mr-2 h-4 w-4" />
-            Dashboard
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            <Wallet className="mr-2 h-4 w-4" />
-            My Wallet
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            <CreditCard className="mr-2 h-4 w-4" />
-            Cards
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            <History className="mr-2 h-4 w-4" />
-            History
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            <Store className="mr-2 h-4 w-4" />
-            Marketplace
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </Button>
+          <Link to="/">
+            <Button 
+              variant={isActive('/') ? 'secondary' : 'ghost'} 
+              className="w-full justify-start"
+            >
+              <Home className="mr-2 h-4 w-4" />
+              Dashboard
+            </Button>
+          </Link>
+          <Link to="/wallet">
+            <Button 
+              variant={isActive('/wallet') ? 'secondary' : 'ghost'} 
+              className="w-full justify-start"
+            >
+              <Wallet className="mr-2 h-4 w-4" />
+              My Wallet
+            </Button>
+          </Link>
+          <Link to="/cards">
+            <Button 
+              variant={isActive('/cards') ? 'secondary' : 'ghost'} 
+              className="w-full justify-start"
+            >
+              <CreditCard className="mr-2 h-4 w-4" />
+              Cards
+            </Button>
+          </Link>
+          <Link to="/history">
+            <Button 
+              variant={isActive('/history') ? 'secondary' : 'ghost'} 
+              className="w-full justify-start"
+            >
+              <History className="mr-2 h-4 w-4" />
+              History
+            </Button>
+          </Link>
+          <Link to="/marketplace">
+            <Button 
+              variant={isActive('/marketplace') ? 'secondary' : 'ghost'} 
+              className="w-full justify-start"
+            >
+              <Store className="mr-2 h-4 w-4" />
+              Marketplace
+            </Button>
+          </Link>
+          <Link to="/settings">
+            <Button 
+              variant={isActive('/settings') ? 'secondary' : 'ghost'} 
+              className="w-full justify-start"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </Button>
+          </Link>
         </nav>
       </div>
 
@@ -210,8 +244,8 @@ export default function Index() {
                 </div>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-                <div className="flex justify-between items-center mb-6">
+              <div className="relative">
+                <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold">Monthly Payments</h2>
                   <div className="flex gap-2">
                     <Button variant="secondary" size="sm" className="bg-accent text-white">
