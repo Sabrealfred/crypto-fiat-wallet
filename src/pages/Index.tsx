@@ -1,20 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { AppLayout } from "@/components/layout/app-layout";
-import { 
-  BarChart3, 
-  SendHorizontal, 
-  Download, 
-  Bell, 
-  CreditCard, 
-  Calendar, 
-  ShoppingCart, 
-  History, 
+import { useLocation } from "react-router-dom";
+import {
+  BarChart3,
+  SendHorizontal,
+  Download,
+  Bell,
+  CreditCard,
+  Calendar,
+  ShoppingCart,
+  History,
   PieChart,
   DollarSign,
   ArrowUpRight,
   ArrowDownLeft,
   Store,
+  Wallet2,
+  ChevronDown,
+  CircleUser,
+  Settings,
+  LogOut,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Index() {
   const location = useLocation();
@@ -252,7 +267,7 @@ export default function Index() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Button className="bg-white/20 hover:bg-white/30 text-white">
-                  <Wallet className="mr-2 h-4 w-4" />
+                  <Wallet2 className="mr-2 h-4 w-4" />
                   Add Money
                 </Button>
                 <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
@@ -377,7 +392,7 @@ export default function Index() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Button className="bg-white/20 hover:bg-white/30 text-white">
-                  <Wallet className="mr-2 h-4 w-4" />
+                  <Wallet2 className="mr-2 h-4 w-4" />
                   Add Money
                 </Button>
                 <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
