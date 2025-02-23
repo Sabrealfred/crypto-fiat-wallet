@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Home, Wallet, CreditCard, History, Store, Settings, Wallet2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, Wallet, CreditCard, History, Store, Settings, Wallet2, ChevronLeft, ChevronRight, Building2, Receipt } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { DarkModeToggle } from "@/components/layout/dark-mode-toggle";
 import { useState } from "react";
@@ -58,6 +58,22 @@ export function SidebarNav({
               <CreditCard className="h-4 w-4" />
               <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
                 Cards
+              </span>
+            </Button>
+          </Link>
+          <Link to="/transfer">
+            <Button variant={isActive('/transfer') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
+              <Building2 className="h-4 w-4" />
+              <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+                Transfer
+              </span>
+            </Button>
+          </Link>
+          <Link to="/bills">
+            <Button variant={isActive('/bills') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
+              <Receipt className="h-4 w-4" />
+              <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+                Bill Pay
               </span>
             </Button>
           </Link>
