@@ -119,6 +119,78 @@ export type Database = {
           },
         ]
       }
+      check_deposits: {
+        Row: {
+          account_number: string | null
+          amount: number
+          back_image_url: string | null
+          bank_name: string | null
+          check_number: string | null
+          created_at: string | null
+          currency: string | null
+          deposit_date: string | null
+          front_image_url: string | null
+          id: string
+          notes: string | null
+          review_date: string | null
+          routing_number: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          account_number?: string | null
+          amount: number
+          back_image_url?: string | null
+          bank_name?: string | null
+          check_number?: string | null
+          created_at?: string | null
+          currency?: string | null
+          deposit_date?: string | null
+          front_image_url?: string | null
+          id?: string
+          notes?: string | null
+          review_date?: string | null
+          routing_number?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          account_number?: string | null
+          amount?: number
+          back_image_url?: string | null
+          bank_name?: string | null
+          check_number?: string | null
+          created_at?: string | null
+          currency?: string | null
+          deposit_date?: string | null
+          front_image_url?: string | null
+          id?: string
+          notes?: string | null
+          review_date?: string | null
+          routing_number?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "check_deposits_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "check_deposits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       currencies: {
         Row: {
           code: string

@@ -13,6 +13,7 @@ import BillsPage from "@/pages/Bills";
 import TimeDepositsPage from "@/pages/TimeDeposits";
 import SavingsPage from "@/pages/Savings";
 import InvestmentsPage from "@/pages/Investments";
+import DepositsPage from "@/pages/Deposits";
 
 export function AppRoutes() {
   return (
@@ -29,6 +30,7 @@ export function AppRoutes() {
       <Route path="/time-deposits" element={<TimeDepositsPage />} />
       <Route path="/savings" element={<SavingsPage />} />
       <Route path="/investments" element={<InvestmentsPage />} />
+      <Route path="/deposits" element={<DepositsPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
