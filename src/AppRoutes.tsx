@@ -23,13 +23,7 @@ import TradeFinancePage from "@/pages/commercial/TradeFinance";
 import RiskManagementPage from "@/pages/commercial/RiskManagement";
 import PayrollPage from "@/pages/commercial/Payroll";
 import InvoicesPage from "@/pages/commercial/Invoices";
-
-const ExpensesPage = () => (
-  <div className="max-w-7xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-4">Expense Tracking</h1>
-    <p className="text-muted-foreground">Coming soon...</p>
-  </div>
-);
+import ExpensesPage from "@/pages/commercial/Expenses";
 
 export function AppRoutes() {
   return (
