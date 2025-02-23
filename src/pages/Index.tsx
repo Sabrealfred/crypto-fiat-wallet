@@ -94,9 +94,9 @@ export default function PersonalDashboard() {
         title: notification.title,
         description: notification.description,
         time: new Date(notification.created_at).toLocaleString(),
-        type: notification.type,
-        amount: notification.amount || 0
-      }));
+        type: notification.type || 'info',
+        amount: Number(notification.amount) || 0
+      })) as Notification[];
     },
     staleTime: 60000,
     gcTime: 3600000,
