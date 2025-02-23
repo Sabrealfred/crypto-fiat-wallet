@@ -17,8 +17,9 @@ interface WalletBalance {
   crypto: number;
 }
 
-interface Notification {
-  id: number | string;
+// Cambiamos el nombre de la interfaz para evitar conflictos
+interface DashboardNotification {
+  id: string;
   title: string;
   description: string;
   time: string;
@@ -62,7 +63,7 @@ export default function PersonalDashboard() {
   });
 
   // Optimizar consulta de notificaciones
-  const { data: notifications, isLoading: isNotificationsLoading } = useQuery<Notification[]>({
+  const { data: notifications, isLoading: isNotificationsLoading } = useQuery<DashboardNotification[]>({
     queryKey: ["notifications"],
     queryFn: async () => {
       const { data: dbNotifications, error } = await supabase
@@ -77,16 +78,14 @@ export default function PersonalDashboard() {
       }
 
       if (!dbNotifications?.length) {
-        return [
-          {
-            id: 1,
-            title: "Welcome!",
-            description: "Welcome to your new banking dashboard",
-            time: "Just now",
-            type: "info",
-            amount: 0
-          }
-        ];
+        return [{
+          id: "welcome",
+          title: "Welcome!",
+          description: "Welcome to your new banking dashboard",
+          time: "Just now",
+          type: "info",
+          amount: 0
+        }];
       }
 
       return dbNotifications.map(notification => ({
@@ -96,7 +95,7 @@ export default function PersonalDashboard() {
         time: new Date(notification.created_at).toLocaleString(),
         type: notification.type || 'info',
         amount: Number(notification.amount) || 0
-      })) as Notification[];
+      }));
     },
     staleTime: 60000,
     gcTime: 3600000,
