@@ -14,11 +14,13 @@ import TimeDepositsPage from "@/pages/TimeDeposits";
 import SavingsPage from "@/pages/Savings";
 import InvestmentsPage from "@/pages/Investments";
 import DepositsPage from "@/pages/Deposits";
+import BusinessDashboard from "@/pages/business/Dashboard";
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/business" element={<BusinessDashboard />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/wallet" element={<WalletPage />} />
       <Route path="/cards" element={<CardsPage />} />
