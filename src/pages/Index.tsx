@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AppLayout } from "@/components/layout/app-layout";
-import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   BarChart3,
   SendHorizontal,
@@ -16,25 +16,9 @@ import {
   ArrowDownLeft,
   Store,
   Wallet2,
-  ChevronDown,
-  CircleUser,
-  Settings,
-  LogOut,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export default function Index() {
-  const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
-
   const monthlyData = [
     { month: "September", earning: 18200, spending: 4800 },
     { month: "October", earning: 19500, spending: 5100 },
@@ -107,14 +91,18 @@ export default function Index() {
                 <p className="text-muted-foreground">Good morning Leonardo 👋</p>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Monthly Report
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Store className="h-4 w-4 mr-2" />
-                  Marketplace
-                </Button>
+                <Link to="/history">
+                  <Button variant="outline" size="sm">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Monthly Report
+                  </Button>
+                </Link>
+                <Link to="/marketplace">
+                  <Button variant="outline" size="sm">
+                    <Store className="h-4 w-4 mr-2" />
+                    Marketplace
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -144,30 +132,38 @@ export default function Index() {
             <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
               <h2 className="text-lg font-semibold mb-4">Quick Transfer</h2>
               <div className="grid grid-cols-4 gap-4">
-                <Button variant="outline" className="flex flex-col items-center p-4 h-auto">
-                  <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
-                    <ArrowUpRight className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <span className="text-sm">Send</span>
-                </Button>
-                <Button variant="outline" className="flex flex-col items-center p-4 h-auto">
-                  <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-2">
-                    <ArrowDownLeft className="h-6 w-6 text-green-600" />
-                  </div>
-                  <span className="text-sm">Receive</span>
-                </Button>
-                <Button variant="outline" className="flex flex-col items-center p-4 h-auto">
-                  <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-                    <CreditCard className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <span className="text-sm">Cards</span>
-                </Button>
-                <Button variant="outline" className="flex flex-col items-center p-4 h-auto">
-                  <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center mb-2">
-                    <ShoppingCart className="h-6 w-6 text-orange-600" />
-                  </div>
-                  <span className="text-sm">Shop</span>
-                </Button>
+                <Link to="/wallet">
+                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
+                    <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
+                      <ArrowUpRight className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <span className="text-sm">Send</span>
+                  </Button>
+                </Link>
+                <Link to="/wallet">
+                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
+                    <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                      <ArrowDownLeft className="h-6 w-6 text-green-600" />
+                    </div>
+                    <span className="text-sm">Receive</span>
+                  </Button>
+                </Link>
+                <Link to="/cards">
+                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
+                    <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                      <CreditCard className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <span className="text-sm">Cards</span>
+                  </Button>
+                </Link>
+                <Link to="/marketplace">
+                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
+                    <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center mb-2">
+                      <ShoppingCart className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <span className="text-sm">Shop</span>
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -207,7 +203,9 @@ export default function Index() {
             <div className="relative">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Your Cards</h2>
-                <Button variant="outline" size="sm">Add Card +</Button>
+                <Link to="/cards">
+                  <Button variant="outline" size="sm">Add Card +</Button>
+                </Link>
               </div>
               <div className="flex gap-4 overflow-x-auto pb-4">
                 {cards.map((card, index) => (
@@ -266,23 +264,29 @@ export default function Index() {
                 <CreditCard className="h-6 w-6 text-white/80" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Button className="bg-white/20 hover:bg-white/30 text-white">
-                  <Wallet2 className="mr-2 h-4 w-4" />
-                  Add Money
-                </Button>
-                <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  My Cards
-                </Button>
+                <Link to="/wallet">
+                  <Button className="bg-white/20 hover:bg-white/30 text-white">
+                    <Wallet2 className="mr-2 h-4 w-4" />
+                    Add Money
+                  </Button>
+                </Link>
+                <Link to="/cards">
+                  <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    My Cards
+                  </Button>
+                </Link>
               </div>
             </div>
 
             <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Marketplace Activity</h2>
-                <Button variant="ghost" size="sm" className="text-muted-foreground">
-                  View All
-                </Button>
+                <Link to="/marketplace">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                    View All
+                  </Button>
+                </Link>
               </div>
               <div className="space-y-4">
                 {marketplaceActivity.map((activity, index) => (
@@ -313,10 +317,12 @@ export default function Index() {
             <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Recent Transactions</h2>
-                <Button variant="ghost" size="sm" className="text-muted-foreground">
-                  <History className="h-4 w-4 mr-2" />
-                  History
-                </Button>
+                <Link to="/history">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                    <History className="h-4 w-4 mr-2" />
+                    History
+                  </Button>
+                </Link>
               </div>
               <div className="space-y-4">
                 {recentTransactions.map((transaction, index) => (
@@ -346,36 +352,6 @@ export default function Index() {
           </div>
 
           <div className="space-y-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2">
-                  <div>
-                    <h2 className="text-xl font-semibold text-left">Leonardo C</h2>
-                    <p className="text-sm text-muted-foreground text-left">leonardo@gmail.com</p>
-                  </div>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <CircleUser className="mr-2 h-4 w-4" />
-                    <span>Perfil</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Configuración</span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Cerrar sesión</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <Button variant="outline" size="icon" className="relative">
               <Bell className="h-5 w-5" />
               <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
@@ -391,14 +367,18 @@ export default function Index() {
                 <CreditCard className="h-6 w-6 text-white/80" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Button className="bg-white/20 hover:bg-white/30 text-white">
-                  <Wallet2 className="mr-2 h-4 w-4" />
-                  Add Money
-                </Button>
-                <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  My Cards
-                </Button>
+                <Link to="/wallet">
+                  <Button className="w-full bg-white/20 hover:bg-white/30 text-white">
+                    <Wallet2 className="mr-2 h-4 w-4" />
+                    Add Money
+                  </Button>
+                </Link>
+                <Link to="/cards">
+                  <Button variant="outline" className="w-full bg-white/10 hover:bg-white/20 text-white border-white/20">
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    My Cards
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
