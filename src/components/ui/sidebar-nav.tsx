@@ -11,12 +11,12 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
-export function SidebarNav() {
+export function SidebarNav({ className = "" }: { className?: string }) {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="w-64 bg-white/70 backdrop-blur-sm p-4 border-r hidden md:block">
+    <div className={`w-64 bg-white/70 backdrop-blur-sm p-4 border-r h-full ${className}`}>
       <div className="flex items-center gap-2 mb-8">
         <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
           <Wallet2 className="h-5 w-5 text-white" />
