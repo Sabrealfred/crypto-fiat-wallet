@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { 
   Download, 
@@ -61,11 +62,11 @@ export default function HistoryPage() {
 
   return (
     <AppLayout>
-      <div className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
+      <div className="flex-1 p-4 sm:p-6 max-w-7xl mx-auto w-full">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-2xl font-semibold mb-2">Transaction History</h1>
-            <p className="text-muted-foreground">View and manage your transactions</p>
+            <h1 className="text-xl sm:text-2xl font-semibold mb-2">Transaction History</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">View and manage your transactions</p>
           </div>
           <div className="flex gap-2 w-full md:w-auto">
             <Button variant="outline" className="flex-1 md:flex-none">
@@ -87,7 +88,7 @@ export default function HistoryPage() {
               placeholder="Search transactions..." 
             />
           </div>
-          <Button variant="outline" className="md:w-auto">
+          <Button variant="outline" className="w-full md:w-auto">
             <Filter className="h-4 w-4 mr-2" />
             Filters
           </Button>

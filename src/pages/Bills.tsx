@@ -71,10 +71,10 @@ export default function BillsPage() {
 
   return (
     <AppLayout>
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="p-4 sm:p-6 max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Pay Bills</h1>
-          <p className="text-muted-foreground">Manage and pay your utility bills</p>
+          <h1 className="text-xl sm:text-2xl font-semibold mb-2">Pay Bills</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Manage and pay your utility bills</p>
         </div>
 
         <div className="grid md:grid-cols-[1fr,1fr] gap-6">
@@ -90,7 +90,7 @@ export default function BillsPage() {
                     <SelectTrigger>
                       <SelectValue placeholder="Select provider" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="min-w-[200px]">
                       <SelectItem value="electricity">Electricity Company</SelectItem>
                       <SelectItem value="water">Water Service</SelectItem>
                       <SelectItem value="gas">Gas Company</SelectItem>
@@ -135,10 +135,12 @@ export default function BillsPage() {
                 {billPayments?.map((bill) => (
                   <div
                     key={bill.id}
-                    className="flex items-center justify-between p-4 rounded-lg border"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border gap-2"
                   >
                     <div>
-                      <p className="font-medium">{bill.provider_name}</p>
+                      <p className="font-medium">
+                        ${Number(bill.amount).toLocaleString()}
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         Account: {bill.account_number}
                       </p>
@@ -146,16 +148,17 @@ export default function BillsPage() {
                         Due: {new Date(bill.due_date).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium">
-                        {bill.amount} {bill.currency}
-                      </p>
-                      <p className="text-sm text-muted-foreground capitalize">
-                        {bill.status}
-                      </p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm capitalize">{bill.status}</span>
                     </div>
                   </div>
                 ))}
+
+                {billPayments?.length === 0 && (
+                  <div className="text-center py-6 text-muted-foreground">
+                    No bills yet
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
