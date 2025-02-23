@@ -1,5 +1,4 @@
 
-
 import { Routes, Route } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -10,6 +9,9 @@ import HistoryPage from "@/pages/History";
 import MarketplacePage from "@/pages/Marketplace";
 import SettingsPage from "@/pages/Settings";
 import TransferPage from "@/pages/Transfer";
+import BillsPage from "@/pages/Bills";
+import TimeDepositsPage from "@/pages/TimeDeposits";
+import SavingsPage from "@/pages/Savings";
 
 export function AppRoutes() {
   return (
@@ -22,8 +24,10 @@ export function AppRoutes() {
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/transfer" element={<TransferPage />} />
+      <Route path="/bills" element={<BillsPage />} />
+      <Route path="/time-deposits" element={<TimeDepositsPage />} />
+      <Route path="/savings" element={<SavingsPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
-
