@@ -2,8 +2,8 @@
 import { AppLayout } from "@/components/layout/app-layout";
 import { StatisticsCards } from "@/components/dashboard/StatisticsCards";
 import { StatisticsChart } from "@/components/dashboard/StatisticsChart";
-import { BusinessMetrics } from "./components/BusinessMetrics";
-import { QuickActions } from "./components/QuickActions";
+import { BusinessMetrics } from "@/pages/commercial/components/BusinessMetrics";
+import { QuickActions } from "@/pages/commercial/components/QuickActions";
 
 export default function BusinessDashboard() {
   const monthlyData = [
