@@ -5,28 +5,18 @@ import { Input } from "@/components/ui/input";
 import {
   BarChart3,
   SendHorizontal,
-  Download,
   Bell,
   CreditCard,
   Calendar,
-  ShoppingCart,
+  Store,
   History,
   PieChart,
-  DollarSign,
   ArrowUpRight,
-  ArrowDownLeft,
-  Store,
   Wallet2,
   ChevronRight,
   Search,
-  CircleUser
+  CircleUser,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export default function Index() {
   const quickContacts = [
@@ -42,21 +32,24 @@ export default function Index() {
       title: "Money Received", 
       description: "You received $500.00 from Sarah Smith",
       time: "2 min ago",
-      read: false
+      amount: 500,
+      type: "income"
     },
     { 
       id: 2, 
-      title: "Card Payment", 
-      description: "Your payment to Netflix was successful",
-      time: "1 hour ago",
-      read: false
+      title: "Water Bill", 
+      description: "Pay before 25 July",
+      time: "15 min ago",
+      amount: 15,
+      type: "bill"
     },
     { 
       id: 3, 
-      title: "Security Alert", 
-      description: "New login detected from Chrome browser",
-      time: "2 hours ago",
-      read: true
+      title: "Spending Alert", 
+      description: "You spent more than $5,000",
+      time: "6h ago",
+      amount: 5000,
+      type: "spending"
     },
   ];
 
@@ -69,20 +62,6 @@ export default function Index() {
     { month: "February", earning: 24100, spending: 5600 },
   ];
 
-  const marketplaceActivity = [
-    { type: "NFT Purchase", time: "2 mins ago", amount: -328, icon: Store },
-    { type: "Token Sale", time: "25 mins ago", amount: 1200, icon: DollarSign },
-    { type: "NFT Sale", time: "2 hours ago", amount: 2500, icon: Store },
-    { type: "Token Purchase", time: "5 hours ago", amount: -850, icon: DollarSign },
-  ];
-
-  const recentTransactions = [
-    { type: "Send to James", time: "Today, 12:30 PM", amount: -150, icon: SendHorizontal },
-    { type: "Received from Sarah", time: "Today, 10:15 AM", amount: 500, icon: Download },
-    { type: "Send to Michael", time: "Yesterday, 3:45 PM", amount: -75, icon: SendHorizontal },
-    { type: "Received from John", time: "Yesterday, 1:30 PM", amount: 300, icon: Download },
-  ];
-
   const cards = [
     { 
       type: "VISA",
@@ -90,7 +69,7 @@ export default function Index() {
       number: "**** **** **** 1890",
       balance: 32819.00,
       expiryDate: "05/26",
-      color: "bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-500",
+      color: "bg-gradient-to-br from-violet-500 to-purple-500",
       cvv: "***"
     },
     { 
@@ -99,16 +78,7 @@ export default function Index() {
       number: "**** **** **** 7643",
       balance: 28450.75,
       expiryDate: "09/24",
-      color: "bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700",
-      cvv: "***"
-    },
-    { 
-      type: "AMEX",
-      name: "Leonardo Cap",
-      number: "**** **** **** 9276",
-      balance: 20640.25,
-      expiryDate: "03/26",
-      color: "bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600",
+      color: "bg-gradient-to-br from-blue-500 to-blue-700",
       cvv: "***"
     }
   ];
@@ -124,7 +94,7 @@ export default function Index() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-[1fr,400px] gap-6">
+        <div className="grid lg:grid-cols-[1fr,380px] gap-6">
           <div className="space-y-6">
             <div className="flex justify-between items-center mb-8">
               <div>
@@ -138,17 +108,11 @@ export default function Index() {
                     Monthly Report
                   </Button>
                 </Link>
-                <Link to="/marketplace">
-                  <Button variant="outline" size="sm">
-                    <Store className="h-4 w-4 mr-2" />
-                    Marketplace
-                  </Button>
-                </Link>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="p-6 rounded-2xl glass-card">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-sm text-muted-foreground">Monthly Earning</h3>
                   <PieChart className="h-5 w-5 text-muted-foreground" />
@@ -158,68 +122,30 @@ export default function Index() {
                   {earningChange >= 0 ? '↑' : '↓'} {Math.abs(earningChange).toFixed(1)}% vs last month
                 </span>
               </div>
-              <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
+              <div className="p-6 rounded-2xl glass-card">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-sm text-muted-foreground">Monthly Spending</h3>
                   <BarChart3 className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <p className="text-2xl font-bold mb-2">${currentSpending.toLocaleString()}</p>
-                <span className={`text-sm ${spendingChange >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                <span className={`text-sm ${spendingChange >= 0 ? 'text-red-500' : 'text-green-600'}`}>
                   {spendingChange >= 0 ? '↑' : '↓'} {Math.abs(spendingChange).toFixed(1)}% vs last month
                 </span>
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold">Quick Transfer</h2>
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Search contacts..."
-                    className="pl-8 text-sm"
-                  />
-                  <Search className="h-4 w-4 absolute left-2 top-3 text-muted-foreground" />
-                </div>
-              </div>
-              <div className="flex gap-3 mb-6 overflow-x-auto pb-2">
-                {quickContacts.map((contact) => (
-                  <Button
-                    key={contact.id}
-                    variant="outline"
-                    className="flex flex-col items-center p-4 h-auto min-w-[100px]"
-                  >
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-lg font-semibold mb-2">
-                      {contact.avatar}
-                    </div>
-                    <span className="text-sm whitespace-nowrap">{contact.name}</span>
-                    {contact.recent && (
-                      <span className="text-xs text-muted-foreground mt-1">Recent</span>
-                    )}
-                  </Button>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Button className="bg-primary">
-                  <SendHorizontal className="mr-2 h-4 w-4" />
-                  Send Money
-                </Button>
-                <Button variant="outline">
-                  <Download className="mr-2 h-4 w-4" />
-                  Request
-                </Button>
-              </div>
-            </div>
-
-            <div className="relative">
+            <div className="relative glass-card p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Monthly Payments</h2>
+                <h2 className="text-lg font-semibold">Statistics</h2>
                 <div className="flex gap-2">
                   <Button variant="secondary" size="sm" className="bg-accent text-white">
-                    Income
+                    Weekly
                   </Button>
                   <Button variant="outline" size="sm">
-                    Expenses
+                    Monthly
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    Yearly
                   </Button>
                 </div>
               </div>
@@ -244,197 +170,132 @@ export default function Index() {
               </div>
             </div>
 
-            <div className="relative">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Your Cards</h2>
-                <Link to="/cards">
-                  <Button variant="outline" size="sm">Add Card +</Button>
-                </Link>
-              </div>
-              <div className="flex gap-4 overflow-x-auto pb-4">
-                {cards.map((card, index) => (
-                  <div 
-                    key={index} 
-                    className={`${card.color} p-6 rounded-2xl text-white relative min-w-[320px] shadow-lg transform transition-transform hover:scale-105`}
-                  >
-                    <div className="mb-8">
-                      <div className="flex justify-between items-start">
-                        <p className="text-xl font-semibold">Card Balance</p>
-                        <CreditCard className="h-6 w-6 text-white/80" />
-                      </div>
-                      <p className="text-3xl font-bold mt-2">${card.balance.toLocaleString()}</p>
-                    </div>
-
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="w-12 h-10 bg-yellow-300/90 rounded-md relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-200 to-yellow-400">
-                          <div className="w-full h-[1px] bg-black/10 absolute top-2" />
-                          <div className="w-full h-[1px] bg-black/10 absolute top-4" />
-                          <div className="w-full h-[1px] bg-black/10 absolute top-6" />
-                          <div className="w-full h-[1px] bg-black/10 absolute top-8" />
-                        </div>
-                      </div>
-                      <span className="text-lg font-bold">{card.type}</span>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-white/70">Card Name</p>
-                          <p className="font-medium">{card.name}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-white/70">Card No.</p>
-                          <p className="font-medium">{card.number}</p>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-white/70">CVV</p>
-                          <p className="font-medium">{card.cvv}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-white/70">Valid until</p>
-                          <p className="font-medium">{card.expiryDate}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute top-6 right-6">
-                      <div className="flex gap-1">
-                        <div className="w-4 h-4 bg-white/30 rounded-full"></div>
-                        <div className="w-4 h-4 bg-white rounded-full"></div>
-                      </div>
-                    </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="glass-card p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-lg font-semibold">Quick Transfer</h2>
+                  <div className="relative w-48">
+                    <Input
+                      type="text"
+                      placeholder="Search contacts..."
+                      className="pl-8 text-sm"
+                    />
+                    <Search className="h-4 w-4 absolute left-2 top-3 text-muted-foreground" />
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Marketplace Activity</h2>
-                <Link to="/marketplace">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground">
-                    View All
+                </div>
+                <div className="flex gap-3 mb-6 overflow-x-auto pb-2">
+                  {quickContacts.map((contact) => (
+                    <Button
+                      key={contact.id}
+                      variant="outline"
+                      className="flex flex-col items-center p-4 h-auto min-w-[100px]"
+                    >
+                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-lg font-semibold mb-2">
+                        {contact.avatar}
+                      </div>
+                      <span className="text-sm whitespace-nowrap">{contact.name}</span>
+                      {contact.recent && (
+                        <span className="text-xs text-muted-foreground mt-1">Recent</span>
+                      )}
+                    </Button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button className="bg-primary">
+                    <SendHorizontal className="mr-2 h-4 w-4" />
+                    Send Money
                   </Button>
-                </Link>
-              </div>
-              <div className="space-y-4">
-                {marketplaceActivity.map((activity, index) => (
-                  <div key={index} className="flex justify-between items-center py-2">
-                    <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                        activity.amount > 0 ? 'bg-green-100' : 'bg-purple-100'
-                      }`}>
-                        <activity.icon className={`h-5 w-5 ${
-                          activity.amount > 0 ? 'text-green-500' : 'text-purple-500'
-                        }`} />
-                      </div>
-                      <div>
-                        <p className="font-medium">{activity.type}</p>
-                        <p className="text-sm text-muted-foreground">{activity.time}</p>
-                      </div>
-                    </div>
-                    <span className={`font-medium ${
-                      activity.amount > 0 ? 'text-green-500' : 'text-red-500'
-                    }`}>
-                      {activity.amount > 0 ? '+' : ''}{activity.amount.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Recent Transactions</h2>
-                <Link to="/history">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground">
-                    <History className="h-4 w-4 mr-2" />
-                    History
+                  <Button variant="outline">
+                    <ArrowUpRight className="mr-2 h-4 w-4" />
+                    Request
                   </Button>
-                </Link>
+                </div>
               </div>
-              <div className="space-y-4">
-                {recentTransactions.map((transaction, index) => (
-                  <div key={index} className="flex justify-between items-center py-2">
-                    <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                        transaction.amount > 0 ? 'bg-green-100' : 'bg-orange-100'
-                      }`}>
-                        <transaction.icon className={`h-5 w-5 ${
-                          transaction.amount > 0 ? 'text-green-500' : 'text-orange-500'
-                        }`} />
+
+              <div className="glass-card p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-lg font-semibold">Your Cards</h2>
+                  <Link to="/cards">
+                    <Button variant="outline" size="sm">View All</Button>
+                  </Link>
+                </div>
+                <div className="space-y-4">
+                  {cards.slice(0, 1).map((card, index) => (
+                    <div 
+                      key={index} 
+                      className={`${card.color} p-4 rounded-xl text-white relative shadow-lg`}
+                    >
+                      <div className="mb-4">
+                        <div className="flex justify-between items-start">
+                          <p className="text-sm text-white/90">Balance</p>
+                          <CreditCard className="h-5 w-5 text-white/80" />
+                        </div>
+                        <p className="text-xl font-bold mt-1">${card.balance.toLocaleString()}</p>
                       </div>
-                      <div>
-                        <p className="font-medium">{transaction.type}</p>
-                        <p className="text-sm text-muted-foreground">{transaction.time}</p>
+
+                      <div className="flex items-center justify-between text-sm">
+                        <span>{card.number}</span>
+                        <span>{card.expiryDate}</span>
                       </div>
                     </div>
-                    <span className={`font-medium ${
-                      transaction.amount > 0 ? 'text-green-500' : 'text-red-500'
-                    }`}>
-                      {transaction.amount > 0 ? '+' : ''}{transaction.amount.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
           <div className="space-y-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
+            <div className="glass-card p-6">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-2">
                   <Bell className="h-5 w-5" />
-                  {notifications.some(n => !n.read) && (
-                    <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-                  )}
+                  <h2 className="text-lg font-semibold">Notifications</h2>
+                </div>
+                <Button variant="ghost" size="sm" className="text-muted-foreground">
+                  Mark all as read
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <div className="flex justify-between items-center px-4 py-2 border-b">
-                  <span className="font-semibold">Notifications</span>
-                  <Button variant="ghost" size="sm" className="text-xs">
-                    Mark all as read
-                  </Button>
-                </div>
-                <div className="max-h-[400px] overflow-y-auto">
-                  {notifications.map((notification) => (
-                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-4 space-y-1">
-                      <div className="flex justify-between items-start w-full">
-                        <span className="font-medium">{notification.title}</span>
-                        <span className="text-xs text-muted-foreground">{notification.time}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{notification.description}</p>
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <div className="card-gradient p-6 rounded-2xl text-white">
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <p className="text-sm opacity-90 mb-1">Your Balance</p>
-                  <h3 className="text-3xl font-bold">$81,910.00</h3>
-                  <p className="text-sm opacity-90">↑ 12.81% this month</p>
-                </div>
-                <CreditCard className="h-6 w-6 text-white/80" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Link to="/wallet">
-                  <Button className="w-full bg-white/20 hover:bg-white/30 text-white">
-                    <Wallet2 className="mr-2 h-4 w-4" />
-                    Add Money
+              <div className="space-y-4">
+                {notifications.map((notification) => (
+                  <div key={notification.id} className="flex gap-4 items-start p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0
+                      ${notification.type === 'income' ? 'bg-green-100 text-green-600' : 
+                        notification.type === 'bill' ? 'bg-amber-100 text-amber-600' : 
+                        'bg-red-100 text-red-600'}`}
+                    >
+                      {notification.type === 'income' ? <ArrowUpRight className="h-5 w-5" /> :
+                       notification.type === 'bill' ? <Calendar className="h-5 w-5" /> :
+                       <BarChart3 className="h-5 w-5" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start gap-2">
+                        <h3 className="font-medium truncate">{notification.title}</h3>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{notification.time}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground truncate">{notification.description}</p>
+                      {notification.type === 'bill' && (
+                        <Button size="sm" className="mt-2 h-8 text-xs">
+                          Pay Now ${notification.amount}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass-card p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Recent Activity</h2>
+                <Link to="/history">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                    <History className="h-4 w-4 mr-2" />
+                    View All
                   </Button>
                 </Link>
-                <Link to="/cards">
-                  <Button variant="outline" className="w-full bg-white/10 hover:bg-white/20 text-white border-white/20">
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    My Cards
-                  </Button>
-                </Link>
+              </div>
+              <div className="space-y-4">
+                {/* Recent activity items */}
               </div>
             </div>
           </div>
