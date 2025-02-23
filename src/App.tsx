@@ -9,6 +9,7 @@ import CardsPage from "@/pages/Cards";
 import HistoryPage from "@/pages/History";
 import MarketplacePage from "@/pages/Marketplace";
 import SettingsPage from "@/pages/Settings";
+import TransferPage from "@/pages/Transfer";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/transfer" element={<TransferPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />

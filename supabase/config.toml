@@ -1,1 +1,5 @@
+
 project_id = "lhmdjdukkwoxznovlonp"
+
+[functions.update-exchange-rates]
+verify_jwt = false

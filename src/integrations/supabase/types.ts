@@ -56,6 +56,33 @@ export type Database = {
           },
         ]
       }
+      currencies: {
+        Row: {
+          code: string
+          exchange_rate: number | null
+          is_active: boolean | null
+          last_updated: string | null
+          name: string
+          symbol: string
+        }
+        Insert: {
+          code: string
+          exchange_rate?: number | null
+          is_active?: boolean | null
+          last_updated?: string | null
+          name: string
+          symbol: string
+        }
+        Update: {
+          code?: string
+          exchange_rate?: number | null
+          is_active?: boolean | null
+          last_updated?: string | null
+          name?: string
+          symbol?: string
+        }
+        Relationships: []
+      }
       kyc_documents: {
         Row: {
           created_at: string
@@ -187,12 +214,130 @@ export type Database = {
           },
         ]
       }
+      transfer_types: {
+        Row: {
+          code: string
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          requirements: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          requirements?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          requirements?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      transfers: {
+        Row: {
+          amount: number
+          created_at: string | null
+          destination_currency: string
+          destination_details: Json
+          destination_type: string
+          exchange_rate: number
+          id: string
+          source_currency: string
+          source_wallet_id: string
+          status: string | null
+          transfer_type_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          destination_currency: string
+          destination_details: Json
+          destination_type: string
+          exchange_rate: number
+          id?: string
+          source_currency: string
+          source_wallet_id: string
+          status?: string | null
+          transfer_type_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          destination_currency?: string
+          destination_details?: Json
+          destination_type?: string
+          exchange_rate?: number
+          id?: string
+          source_currency?: string
+          source_wallet_id?: string
+          status?: string | null
+          transfer_type_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transfers_destination_currency_fkey"
+            columns: ["destination_currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "transfers_source_currency_fkey"
+            columns: ["source_currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "transfers_source_wallet_id_fkey"
+            columns: ["source_wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transfers_transfer_type_id_fkey"
+            columns: ["transfer_type_id"]
+            isOneToOne: false
+            referencedRelation: "transfer_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transfers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wallets: {
         Row: {
           address: string | null
           balance: number | null
           created_at: string
           currency: string
+          currency_code: string | null
           id: string
           updated_at: string
           user_id: string
@@ -203,6 +348,7 @@ export type Database = {
           balance?: number | null
           created_at?: string
           currency: string
+          currency_code?: string | null
           id?: string
           updated_at?: string
           user_id: string
@@ -213,12 +359,20 @@ export type Database = {
           balance?: number | null
           created_at?: string
           currency?: string
+          currency_code?: string | null
           id?: string
           updated_at?: string
           user_id?: string
           wallet_type?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "wallets_currency_code_fkey"
+            columns: ["currency_code"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
           {
             foreignKeyName: "wallets_user_id_fkey"
             columns: ["user_id"]
