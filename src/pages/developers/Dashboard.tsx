@@ -189,9 +189,9 @@ const payment = await client.payments.create({
 console.log(payment.id);
                   `.trim()}</code>
                 </pre>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </AppLayout>
