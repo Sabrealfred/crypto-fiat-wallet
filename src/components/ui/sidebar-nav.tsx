@@ -1,6 +1,20 @@
 
 import { Button } from "@/components/ui/button";
-import { Home, Wallet, CreditCard, History, Store, Settings, Wallet2, ChevronLeft, ChevronRight, Building2, Receipt } from "lucide-react";
+import { 
+  Home, 
+  Wallet, 
+  CreditCard, 
+  History, 
+  Store, 
+  Settings, 
+  Wallet2, 
+  ChevronLeft, 
+  ChevronRight, 
+  Building2, 
+  Receipt, 
+  LineChart,
+  BadgeDollarSign
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { DarkModeToggle } from "@/components/layout/dark-mode-toggle";
 import { useState } from "react";
@@ -45,6 +59,8 @@ export function SidebarNav({
               </span>
             </Button>
           </Link>
+
+          {/* Wallet and Money Management */}
           <Link to="/wallet">
             <Button variant={isActive('/wallet') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
               <Wallet className="h-4 w-4" />
@@ -61,6 +77,18 @@ export function SidebarNav({
               </span>
             </Button>
           </Link>
+          
+          {/* Investments Section */}
+          <Link to="/investments">
+            <Button variant={isActive('/investments') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
+              <LineChart className="h-4 w-4" />
+              <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+                Investments
+              </span>
+            </Button>
+          </Link>
+
+          {/* Transfers and Payments */}
           <Link to="/transfer">
             <Button variant={isActive('/transfer') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
               <Building2 className="h-4 w-4" />
@@ -77,6 +105,16 @@ export function SidebarNav({
               </span>
             </Button>
           </Link>
+          <Link to="/deposits">
+            <Button variant={isActive('/deposits') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
+              <BadgeDollarSign className="h-4 w-4" />
+              <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+                Check Deposit
+              </span>
+            </Button>
+          </Link>
+
+          {/* History and Additional Features */}
           <Link to="/history">
             <Button variant={isActive('/history') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
               <History className="h-4 w-4" />
