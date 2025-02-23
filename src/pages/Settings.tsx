@@ -82,13 +82,27 @@ export default function SettingsPage() {
 
   // Update profile mutation
   const updateProfile = useMutation({
-    mutationFn: async (updates: Partial<typeof formData>) => {
+    mutationFn: async (updates: { 
+      first_name?: string;
+      last_name?: string;
+      phone_number?: string;
+      preferred_language?: string;
+      preferred_currency?: string;
+    }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('No user found');
 
+      const formattedUpdates = {
+        ...(updates.first_name && { first_name: updates.first_name }),
+        ...(updates.last_name && { last_name: updates.last_name }),
+        ...(updates.phone_number && { phone_number: updates.phone_number }),
+        ...(updates.preferred_language && { preferred_language: updates.preferred_language }),
+        ...(updates.preferred_currency && { preferred_currency: updates.preferred_currency })
+      };
+
       const { error } = await supabase
         .from('profiles')
-        .update(updates)
+        .update(formattedUpdates)
         .eq('id', user.id);
 
       if (error) throw error;
