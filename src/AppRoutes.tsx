@@ -18,6 +18,9 @@ import BusinessDashboard from "@/pages/business/Dashboard";
 import CommercialDashboard from "@/pages/commercial/Dashboard";
 import PrivateBankingDashboard from "@/pages/private/Dashboard";
 import DeveloperPortal from "@/pages/developers/Dashboard";
+import TreasuryPage from "@/pages/commercial/Treasury";
+import TradeFinancePage from "@/pages/commercial/TradeFinance";
+import RiskManagementPage from "@/pages/commercial/RiskManagement";
 
 // Páginas comerciales
 const PayrollPage = () => (
@@ -38,27 +41,6 @@ const ExpensesPage = () => (
   <div className="max-w-7xl mx-auto p-6">
     <h1 className="text-2xl font-semibold mb-4">Expense Tracking</h1>
     <p className="text-muted-foreground">Coming soon...</p>
-  </div>
-);
-
-const TreasuryPage = () => (
-  <div className="max-w-7xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-4">Treasury Management</h1>
-    <p className="text-muted-foreground">Cash flow and liquidity management tools coming soon...</p>
-  </div>
-);
-
-const TradeFinancePage = () => (
-  <div className="max-w-7xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-4">Trade Finance</h1>
-    <p className="text-muted-foreground">International trade operations and financing tools coming soon...</p>
-  </div>
-);
-
-const RiskManagementPage = () => (
-  <div className="max-w-7xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-4">Risk Management</h1>
-    <p className="text-muted-foreground">Risk analysis and hedging tools coming soon...</p>
   </div>
 );
 
