@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 import {
   BarChart3,
   SendHorizontal,
@@ -16,9 +17,49 @@ import {
   ArrowDownLeft,
   Store,
   Wallet2,
+  ChevronRight,
+  Search,
+  CircleUser
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Index() {
+  const quickContacts = [
+    { id: 1, name: "Sarah Smith", avatar: "S", recent: true },
+    { id: 2, name: "John Doe", avatar: "J", recent: true },
+    { id: 3, name: "Michael Brown", avatar: "M", recent: false },
+    { id: 4, name: "Emma Wilson", avatar: "E", recent: false },
+  ];
+
+  const notifications = [
+    { 
+      id: 1, 
+      title: "Money Received", 
+      description: "You received $500.00 from Sarah Smith",
+      time: "2 min ago",
+      read: false
+    },
+    { 
+      id: 2, 
+      title: "Card Payment", 
+      description: "Your payment to Netflix was successful",
+      time: "1 hour ago",
+      read: false
+    },
+    { 
+      id: 3, 
+      title: "Security Alert", 
+      description: "New login detected from Chrome browser",
+      time: "2 hours ago",
+      read: true
+    },
+  ];
+
   const monthlyData = [
     { month: "September", earning: 18200, spending: 4800 },
     { month: "October", earning: 19500, spending: 5100 },
@@ -130,40 +171,43 @@ export default function Index() {
             </div>
 
             <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-              <h2 className="text-lg font-semibold mb-4">Quick Transfer</h2>
-              <div className="grid grid-cols-4 gap-4">
-                <Link to="/wallet">
-                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
-                    <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
-                      <ArrowUpRight className="h-6 w-6 text-purple-600" />
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-semibold">Quick Transfer</h2>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Search contacts..."
+                    className="pl-8 text-sm"
+                  />
+                  <Search className="h-4 w-4 absolute left-2 top-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="flex gap-3 mb-6 overflow-x-auto pb-2">
+                {quickContacts.map((contact) => (
+                  <Button
+                    key={contact.id}
+                    variant="outline"
+                    className="flex flex-col items-center p-4 h-auto min-w-[100px]"
+                  >
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-lg font-semibold mb-2">
+                      {contact.avatar}
                     </div>
-                    <span className="text-sm">Send</span>
+                    <span className="text-sm whitespace-nowrap">{contact.name}</span>
+                    {contact.recent && (
+                      <span className="text-xs text-muted-foreground mt-1">Recent</span>
+                    )}
                   </Button>
-                </Link>
-                <Link to="/wallet">
-                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
-                    <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-2">
-                      <ArrowDownLeft className="h-6 w-6 text-green-600" />
-                    </div>
-                    <span className="text-sm">Receive</span>
-                  </Button>
-                </Link>
-                <Link to="/cards">
-                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
-                    <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-                      <CreditCard className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <span className="text-sm">Cards</span>
-                  </Button>
-                </Link>
-                <Link to="/marketplace">
-                  <Button variant="outline" className="flex flex-col items-center p-4 h-auto w-full">
-                    <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center mb-2">
-                      <ShoppingCart className="h-6 w-6 text-orange-600" />
-                    </div>
-                    <span className="text-sm">Shop</span>
-                  </Button>
-                </Link>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Button className="bg-primary">
+                  <SendHorizontal className="mr-2 h-4 w-4" />
+                  Send Money
+                </Button>
+                <Button variant="outline">
+                  <Download className="mr-2 h-4 w-4" />
+                  Request
+                </Button>
               </div>
             </div>
 
@@ -220,6 +264,19 @@ export default function Index() {
                       </div>
                       <p className="text-3xl font-bold mt-2">${card.balance.toLocaleString()}</p>
                     </div>
+
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="w-12 h-10 bg-yellow-300/90 rounded-md relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-200 to-yellow-400">
+                          <div className="w-full h-[1px] bg-black/10 absolute top-2" />
+                          <div className="w-full h-[1px] bg-black/10 absolute top-4" />
+                          <div className="w-full h-[1px] bg-black/10 absolute top-6" />
+                          <div className="w-full h-[1px] bg-black/10 absolute top-8" />
+                        </div>
+                      </div>
+                      <span className="text-lg font-bold">{card.type}</span>
+                    </div>
+
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
@@ -250,32 +307,6 @@ export default function Index() {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-sm">
-              <h2 className="text-lg font-semibold mb-4">Your Card Section</h2>
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <p className="text-sm opacity-90 mb-1">Your Balance</p>
-                  <h3 className="text-3xl font-bold">$81,910.00</h3>
-                  <p className="text-sm opacity-90">↑ 12.81% this month</p>
-                </div>
-                <CreditCard className="h-6 w-6 text-white/80" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Link to="/wallet">
-                  <Button className="bg-white/20 hover:bg-white/30 text-white">
-                    <Wallet2 className="mr-2 h-4 w-4" />
-                    Add Money
-                  </Button>
-                </Link>
-                <Link to="/cards">
-                  <Button variant="outline" className="bg-white/10 hover:bg-white/20 text-white border-white/20">
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    My Cards
-                  </Button>
-                </Link>
               </div>
             </div>
 
@@ -352,12 +383,37 @@ export default function Index() {
           </div>
 
           <div className="space-y-6">
-            <Button variant="outline" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="relative">
+                  <Bell className="h-5 w-5" />
+                  {notifications.some(n => !n.read) && (
+                    <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <div className="flex justify-between items-center px-4 py-2 border-b">
+                  <span className="font-semibold">Notifications</span>
+                  <Button variant="ghost" size="sm" className="text-xs">
+                    Mark all as read
+                  </Button>
+                </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                  {notifications.map((notification) => (
+                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-4 space-y-1">
+                      <div className="flex justify-between items-start w-full">
+                        <span className="font-medium">{notification.title}</span>
+                        <span className="text-xs text-muted-foreground">{notification.time}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{notification.description}</p>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-            <div className="card-gradient p-6">
+            <div className="card-gradient p-6 rounded-2xl text-white">
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <p className="text-sm opacity-90 mb-1">Your Balance</p>
