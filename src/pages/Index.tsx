@@ -1,69 +1,51 @@
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { LogOut } from "lucide-react";
 
 export default function Index() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // Check initial auth state
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error("Error al cerrar sesión");
-    } else {
-      toast.success("Sesión cerrada exitosamente");
-    }
-  };
-
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Crypto-Fiat Wallet</h1>
-          {user ? (
-            <Button onClick={handleLogout} variant="outline">
-              <LogOut className="mr-2 h-4 w-4" />
-              Cerrar sesión
-            </Button>
-          ) : (
-            <Button onClick={() => navigate('/auth')}>
-              Iniciar sesión
-            </Button>
-          )}
         </div>
-        {!user ? (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold mb-4">
-              ¡Bienvenido a Crypto-Fiat Wallet!
-            </h2>
-            <p className="text-muted-foreground mb-8">
-              Inicia sesión para empezar a gestionar tus transacciones.
-            </p>
-            <Button onClick={() => navigate('/auth')} size="lg">
-              Comenzar
+        <div className="grid gap-6">
+          {/* Panel de balance */}
+          <div className="p-6 rounded-lg bg-card border shadow-sm">
+            <h2 className="text-lg font-semibold mb-2">Balance Total</h2>
+            <div className="text-3xl font-bold">$1,234.56</div>
+          </div>
+
+          {/* Acciones rápidas */}
+          <div className="grid grid-cols-2 gap-4">
+            <Button className="h-24 text-lg">
+              Depositar
+            </Button>
+            <Button className="h-24 text-lg" variant="outline">
+              Retirar
             </Button>
           </div>
-        ) : (
-          <p className="text-xl">¡Bienvenido de vuelta!</p>
-        )}
+
+          {/* Últimas transacciones */}
+          <div className="p-6 rounded-lg bg-card border shadow-sm">
+            <h2 className="text-lg font-semibold mb-4">Últimas Transacciones</h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b">
+                <div>
+                  <div className="font-medium">Depósito</div>
+                  <div className="text-sm text-muted-foreground">23 Feb 2024</div>
+                </div>
+                <div className="text-green-600">+$500.00</div>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <div>
+                  <div className="font-medium">Retiro</div>
+                  <div className="text-sm text-muted-foreground">22 Feb 2024</div>
+                </div>
+                <div className="text-red-600">-$150.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
