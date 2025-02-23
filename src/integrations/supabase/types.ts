@@ -9,7 +9,225 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      cards: {
+        Row: {
+          card_number: string | null
+          card_status: string | null
+          card_type: string
+          created_at: string
+          cvv: string | null
+          expiry_date: string | null
+          id: string
+          is_virtual: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_number?: string | null
+          card_status?: string | null
+          card_type: string
+          created_at?: string
+          cvv?: string | null
+          expiry_date?: string | null
+          id?: string
+          is_virtual?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          card_number?: string | null
+          card_status?: string | null
+          card_type?: string
+          created_at?: string
+          cvv?: string | null
+          expiry_date?: string | null
+          id?: string
+          is_virtual?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cards_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kyc_documents: {
+        Row: {
+          created_at: string
+          document_status: string | null
+          document_type: string
+          document_url: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_status?: string | null
+          document_type: string
+          document_url?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_status?: string | null
+          document_type?: string
+          document_url?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kyc_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          first_name: string | null
+          id: string
+          kyc_status: string | null
+          last_name: string | null
+          phone_number: string | null
+          preferred_currency: string | null
+          preferred_language: string | null
+          two_fa_enabled: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          first_name?: string | null
+          id: string
+          kyc_status?: string | null
+          last_name?: string | null
+          phone_number?: string | null
+          preferred_currency?: string | null
+          preferred_language?: string | null
+          two_fa_enabled?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          kyc_status?: string | null
+          last_name?: string | null
+          phone_number?: string | null
+          preferred_currency?: string | null
+          preferred_language?: string | null
+          two_fa_enabled?: boolean | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          recipient_address: string | null
+          status: string | null
+          transaction_type: string
+          updated_at: string
+          user_id: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency: string
+          id?: string
+          recipient_address?: string | null
+          status?: string | null
+          transaction_type: string
+          updated_at?: string
+          user_id: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          recipient_address?: string | null
+          status?: string | null
+          transaction_type?: string
+          updated_at?: string
+          user_id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallets: {
+        Row: {
+          address: string | null
+          balance: number | null
+          created_at: string
+          currency: string
+          id: string
+          updated_at: string
+          user_id: string
+          wallet_type: string
+        }
+        Insert: {
+          address?: string | null
+          balance?: number | null
+          created_at?: string
+          currency: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          wallet_type: string
+        }
+        Update: {
+          address?: string | null
+          balance?: number | null
+          created_at?: string
+          currency?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+          wallet_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
