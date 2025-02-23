@@ -2,12 +2,12 @@
 import { ArrowUpRight, BarChart3, Calendar, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface DashboardNotification {
+export interface DashboardNotification {
   id: string;
   title: string;
   description: string;
   time: string;
-  type: string;
+  type: "income" | "bill" | "info" | string;
   amount: number;
 }
 

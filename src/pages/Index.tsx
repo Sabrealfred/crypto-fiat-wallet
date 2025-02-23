@@ -4,7 +4,7 @@ import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
 import { BalanceCard } from "@/components/BalanceCard";
 import { QuickActions } from "@/components/QuickActions";
 import { TransactionHistory } from "@/components/TransactionHistory";
-import { NotificationsList } from "@/components/dashboard/NotificationsList";
+import { NotificationsList, DashboardNotification } from "@/components/dashboard/NotificationsList";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
@@ -17,18 +17,7 @@ interface WalletBalance {
   crypto: number;
 }
 
-// Cambiamos el nombre de la interfaz para evitar conflictos
-interface DashboardNotification {
-  id: string;
-  title: string;
-  description: string;
-  time: string;
-  type: string;
-  amount: number;
-}
-
 export default function PersonalDashboard() {
-  // Optimizar consulta de balance con React Query
   const { data: balanceData, isLoading: isBalanceLoading } = useQuery<WalletBalance>({
     queryKey: ["balance"],
     queryFn: async () => {
@@ -48,7 +37,6 @@ export default function PersonalDashboard() {
       const cryptoBalance = wallets?.reduce((acc, wallet) => 
         wallet.currency_code === 'CRYPTO' ? acc + (wallet.balance || 0) : acc, 0) || 0;
       
-      // Calcular el cambio porcentual (mock por ahora)
       const changePercentage = 2.5;
 
       return {
@@ -62,7 +50,6 @@ export default function PersonalDashboard() {
     gcTime: 3600000,
   });
 
-  // Optimizar consulta de notificaciones
   const { data: notifications, isLoading: isNotificationsLoading } = useQuery<DashboardNotification[]>({
     queryKey: ["notifications"],
     queryFn: async () => {
