@@ -9,6 +9,69 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      bill_payments: {
+        Row: {
+          account_number: string | null
+          amount: number
+          created_at: string | null
+          currency: string | null
+          due_date: string | null
+          id: string
+          is_recurring: boolean | null
+          payment_date: string | null
+          provider_name: string
+          service_type: string
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_number?: string | null
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          due_date?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          payment_date?: string | null
+          provider_name: string
+          service_type: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_number?: string | null
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          due_date?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          payment_date?: string | null
+          provider_name?: string
+          service_type?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_payments_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "bill_payments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cards: {
         Row: {
           card_number: string | null
@@ -160,6 +223,149 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_savings: {
+        Row: {
+          amount_per_frequency: number
+          created_at: string | null
+          currency: string | null
+          current_amount: number | null
+          destination_wallet_id: string | null
+          end_date: string | null
+          frequency: string
+          id: string
+          name: string
+          source_wallet_id: string | null
+          start_date: string | null
+          status: string | null
+          target_amount: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount_per_frequency: number
+          created_at?: string | null
+          currency?: string | null
+          current_amount?: number | null
+          destination_wallet_id?: string | null
+          end_date?: string | null
+          frequency: string
+          id?: string
+          name: string
+          source_wallet_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          target_amount?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount_per_frequency?: number
+          created_at?: string | null
+          currency?: string | null
+          current_amount?: number | null
+          destination_wallet_id?: string | null
+          end_date?: string | null
+          frequency?: string
+          id?: string
+          name?: string
+          source_wallet_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          target_amount?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_savings_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "scheduled_savings_destination_wallet_id_fkey"
+            columns: ["destination_wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_savings_source_wallet_id_fkey"
+            columns: ["source_wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_savings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      time_deposits: {
+        Row: {
+          amount: number
+          auto_renew: boolean | null
+          created_at: string | null
+          currency: string | null
+          id: string
+          interest_rate: number
+          maturity_date: string | null
+          start_date: string | null
+          status: string | null
+          term_months: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          auto_renew?: boolean | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          interest_rate: number
+          maturity_date?: string | null
+          start_date?: string | null
+          status?: string | null
+          term_months: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          auto_renew?: boolean | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          interest_rate?: number
+          maturity_date?: string | null
+          start_date?: string | null
+          status?: string | null
+          term_months?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "time_deposits_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "time_deposits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transactions: {
         Row: {
           amount: number
@@ -256,9 +462,13 @@ export type Database = {
           destination_type: string
           exchange_rate: number
           id: string
+          is_recurring: boolean | null
+          recipient_bank_info: Json | null
+          scheduled_date: string | null
           source_currency: string
           source_wallet_id: string
           status: string | null
+          transfer_method: string
           transfer_type_id: string | null
           updated_at: string | null
           user_id: string
@@ -271,9 +481,13 @@ export type Database = {
           destination_type: string
           exchange_rate: number
           id?: string
+          is_recurring?: boolean | null
+          recipient_bank_info?: Json | null
+          scheduled_date?: string | null
           source_currency: string
           source_wallet_id: string
           status?: string | null
+          transfer_method?: string
           transfer_type_id?: string | null
           updated_at?: string | null
           user_id: string
@@ -286,9 +500,13 @@ export type Database = {
           destination_type?: string
           exchange_rate?: number
           id?: string
+          is_recurring?: boolean | null
+          recipient_bank_info?: Json | null
+          scheduled_date?: string | null
           source_currency?: string
           source_wallet_id?: string
           status?: string | null
+          transfer_method?: string
           transfer_type_id?: string | null
           updated_at?: string | null
           user_id?: string
