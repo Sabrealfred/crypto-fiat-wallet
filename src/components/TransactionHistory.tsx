@@ -1,31 +1,33 @@
 
 import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 export function TransactionHistory() {
   const transactions = [
     {
       id: 1,
-      name: "José Akbar",
+      name: "Josep Akbar",
       amount: 510.00,
       type: "received",
-      date: "Justo ahora",
+      date: "Just now",
       avatar: "/placeholder.svg"
     },
     {
       id: 2,
-      name: "Factura de Agua",
+      name: "Water bill",
       amount: 15.00,
       type: "pending",
-      date: "Hace 15m",
+      date: "15m ago",
       avatar: "/placeholder.svg"
     },
     {
       id: 3,
-      name: "Mercado",
+      name: "Spending",
       amount: 85.00,
       type: "sent",
-      date: "Hace 6h",
-      avatar: "/placeholder.svg"
+      date: "6h ago",
+      avatar: "/placeholder.svg",
+      description: "You spent more than $5,000"
     }
   ];
 
@@ -34,25 +36,37 @@ export function TransactionHistory() {
       {transactions.map((transaction) => (
         <div
           key={transaction.id}
-          className="flex items-center justify-between p-4 rounded-lg hover:bg-secondary/50 transition-colors"
+          className="flex items-center justify-between p-4 rounded-2xl hover:bg-secondary/50 transition-colors"
         >
           <div className="flex items-center gap-4">
-            <Avatar>
+            <Avatar className="h-12 w-12">
               <img src={transaction.avatar} alt={transaction.name} />
             </Avatar>
             <div>
-              <p className="font-medium">{transaction.name}</p>
-              <p className="text-sm text-muted-foreground">{transaction.date}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-medium">{transaction.name}</p>
+                <span className="text-xs text-muted-foreground">{transaction.date}</span>
+              </div>
+              {transaction.description && (
+                <p className="text-sm text-muted-foreground">{transaction.description}</p>
+              )}
             </div>
           </div>
-          <p className={`font-semibold ${
-            transaction.type === "received" ? "text-accent" :
-            transaction.type === "sent" ? "text-destructive" :
-            "text-muted-foreground"
-          }`}>
-            {transaction.type === "received" ? "+" : "-"}
-            ${transaction.amount.toFixed(2)}
-          </p>
+          <div className="text-right">
+            <p className={`font-semibold ${
+              transaction.type === "received" ? "text-accent" :
+              transaction.type === "sent" ? "text-destructive" :
+              "text-muted-foreground"
+            }`}>
+              {transaction.type === "received" ? "+" : "-"}
+              ${transaction.amount.toFixed(2)}
+            </p>
+            {transaction.type === "pending" && (
+              <Button size="sm" className="mt-1 h-8 rounded-full text-xs">
+                Pay now
+              </Button>
+            )}
+          </div>
         </div>
       ))}
     </div>
