@@ -12,19 +12,55 @@ import {
   LineChart,
   BadgeDollarSign,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NavigationItemsProps {
   isCollapsed: boolean;
 }
 
+const dashboardRoutes = {
+  personal: "/personal",
+  business: "/business/dashboard",
+  commercial: "/commercial/dashboard",
+  private_banking: "/private/dashboard",
+  developer: "/developer/dashboard",
+};
+
 export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
+  const { data: currentOrg } = useQuery({
+    queryKey: ['current-organization'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
+      const { data: userOrgs, error } = await supabase
+        .from('user_organizations')
+        .select(`
+          organization:organizations (
+            id,
+            name,
+            type
+          )
+        `)
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .single();
+
+      if (error) throw error;
+      return userOrgs?.organization;
+    },
+  });
+
+  const dashboardPath = currentOrg ? dashboardRoutes[currentOrg.type] : '/personal';
+
   return (
     <nav className="space-y-1">
-      <Link to={location.pathname.split('/')[1]}>
-        <Button variant={isActive(location.pathname) ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
+      <Link to={dashboardPath}>
+        <Button variant={isActive(dashboardPath) ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
           <Home className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
             Dashboard
