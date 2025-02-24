@@ -29,11 +29,20 @@ interface Account {
   user_id: string;
 }
 
+interface AccountFormData {
+  account_number: string;
+  account_type: AccountType;
+  business_type: BusinessType;
+  user_id?: string;
+  currency: string;
+}
+
 export default function AccountsPage() {
   const [search, setSearch] = useState("");
   const [accountTypeFilter, setAccountTypeFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
 
   const { data: accounts, isLoading, refetch } = useQuery({
     queryKey: ["admin-accounts"],
@@ -51,6 +60,18 @@ export default function AccountsPage() {
 
       if (error) throw error;
       return (data || []) as unknown as Account[];
+    },
+  });
+
+  const { data: users } = useQuery({
+    queryKey: ["admin-users"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, first_name, last_name");
+      
+      if (error) throw error;
+      return data;
     },
   });
 
@@ -82,114 +103,177 @@ export default function AccountsPage() {
     }
   };
 
-  const handleCreateAccount = async (formData: FormData) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    
+    const accountData: AccountFormData = {
+      account_number: formData.get("account_number") as string,
+      account_type: formData.get("account_type") as AccountType,
+      business_type: formData.get("business_type") as BusinessType,
+      user_id: formData.get("user_id") as string,
+      currency: formData.get("currency") as string || "USD",
+    };
+
     try {
-      const accountData = {
-        account_number: formData.get("account_number"),
-        account_type: formData.get("account_type"),
-        business_type: formData.get("business_type"),
-        user_id: formData.get("user_id"),
-        currency: formData.get("currency") || "USD",
-        balance: 0,
-        is_active: true
-      };
+      if (selectedAccount) {
+        // Actualizar cuenta existente
+        const { error } = await supabase
+          .from("accounts")
+          .update(accountData)
+          .eq("id", selectedAccount.id);
 
-      const { error } = await supabase
-        .from("accounts")
-        .insert(accountData);
+        if (error) throw error;
+        toast.success("Cuenta actualizada exitosamente");
+      } else {
+        // Crear nueva cuenta
+        const { error } = await supabase
+          .from("accounts")
+          .insert({
+            ...accountData,
+            balance: 0,
+            is_active: true,
+          });
 
-      if (error) throw error;
+        if (error) throw error;
+        toast.success("Cuenta creada exitosamente");
+      }
 
-      setIsCreateDialogOpen(false);
+      setIsDialogOpen(false);
+      setSelectedAccount(null);
       await refetch();
-      toast.success("Cuenta creada exitosamente");
     } catch (error) {
-      toast.error("Error al crear la cuenta");
+      toast.error(selectedAccount ? "Error al actualizar la cuenta" : "Error al crear la cuenta");
     }
+  };
+
+  const handleEdit = (account: Account) => {
+    setSelectedAccount(account);
+    setIsDialogOpen(true);
   };
 
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Gestión de Cuentas</h1>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Nueva Cuenta
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Crear Nueva Cuenta</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              handleCreateAccount(new FormData(e.currentTarget));
-            }} className="space-y-4">
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <label htmlFor="account_number">Número de Cuenta</label>
-                  <Input id="account_number" name="account_number" required />
-                </div>
-                
-                <div className="space-y-2">
-                  <label htmlFor="account_type">Tipo de Cuenta</label>
-                  <Select name="account_type" required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="savings">Ahorros</SelectItem>
-                      <SelectItem value="checking">Corriente</SelectItem>
-                      <SelectItem value="investment">Inversión</SelectItem>
-                      <SelectItem value="credit">Crédito</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="business_type">Tipo de Negocio</label>
-                  <Select name="business_type" required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="personal">Personal</SelectItem>
-                      <SelectItem value="business">Negocio</SelectItem>
-                      <SelectItem value="commercial">Comercial</SelectItem>
-                      <SelectItem value="private_banking">Banca Privada</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="currency">Moneda</label>
-                  <Select name="currency" defaultValue="USD">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar moneda" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">USD</SelectItem>
-                      <SelectItem value="EUR">EUR</SelectItem>
-                      <SelectItem value="GBP">GBP</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-4 mt-4">
-                <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit">
-                  Crear Cuenta
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button onClick={() => {
+          setSelectedAccount(null);
+          setIsDialogOpen(true);
+        }}>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Nueva Cuenta
+        </Button>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedAccount ? 'Editar Cuenta' : 'Crear Nueva Cuenta'}
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <label htmlFor="account_number">Número de Cuenta</label>
+                <Input 
+                  id="account_number" 
+                  name="account_number" 
+                  defaultValue={selectedAccount?.account_number}
+                  required 
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="account_type">Tipo de Cuenta</label>
+                <Select 
+                  name="account_type" 
+                  defaultValue={selectedAccount?.account_type}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="savings">Ahorros</SelectItem>
+                    <SelectItem value="checking">Corriente</SelectItem>
+                    <SelectItem value="investment">Inversión</SelectItem>
+                    <SelectItem value="credit">Crédito</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="business_type">Tipo de Negocio</label>
+                <Select 
+                  name="business_type"
+                  defaultValue={selectedAccount?.business_type}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="personal">Personal</SelectItem>
+                    <SelectItem value="business">Negocio</SelectItem>
+                    <SelectItem value="commercial">Comercial</SelectItem>
+                    <SelectItem value="private_banking">Banca Privada</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="user_id">Usuario</label>
+                <Select 
+                  name="user_id"
+                  defaultValue={selectedAccount?.user_id}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar usuario" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {users?.map((user) => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.first_name} {user.last_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="currency">Moneda</label>
+                <Select 
+                  name="currency" 
+                  defaultValue={selectedAccount?.currency || "USD"}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar moneda" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD</SelectItem>
+                    <SelectItem value="EUR">EUR</SelectItem>
+                    <SelectItem value="GBP">GBP</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-4 mt-4">
+              <Button type="button" variant="outline" onClick={() => {
+                setIsDialogOpen(false);
+                setSelectedAccount(null);
+              }}>
+                Cancelar
+              </Button>
+              <Button type="submit">
+                {selectedAccount ? 'Guardar Cambios' : 'Crear Cuenta'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Card className="p-4">
         <div className="flex gap-4 mb-6">
@@ -265,7 +349,12 @@ export default function AccountsPage() {
                   </td>
                   <td className="p-2">
                     <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" title="Editar">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        title="Editar"
+                        onClick={() => handleEdit(account)}
+                      >
                         <Edit2 className="h-4 w-4" />
                       </Button>
                       <Button 
