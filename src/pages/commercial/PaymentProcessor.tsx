@@ -7,17 +7,27 @@ import {
   ArrowRight,
   Globe,
   ShieldCheck,
-  BarChart3
+  BarChart3,
+  ArrowLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function PaymentProcessorPage() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Payment Processor</h1>
-          <p className="text-muted-foreground">Manage your business payments and transactions efficiently</p>
+        <div className="flex items-center gap-4 mb-8">
+          <Link to="/commercial/dashboard">
+            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-semibold mb-2">Payment Processor</h1>
+            <p className="text-muted-foreground">Manage your business payments and transactions efficiently</p>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
