@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -8,7 +9,7 @@ import AdminDashboard from "@/pages/admin/Dashboard";
 import UsersPage from "@/pages/admin/Users";
 import UserProfilesPage from "@/pages/admin/UserProfiles";
 import AccountsPage from "@/pages/admin/Accounts";
-import TransactionsPage from "@/pages/admin/Transactions";
+import AdminTransactionsPage from "@/pages/admin/Transactions";
 import ProductsPage from "@/pages/admin/Products";
 import SupportPage from "@/pages/admin/Support";
 import AdminSettingsPage from "@/pages/admin/Settings";
@@ -34,7 +35,7 @@ import PayrollPage from "@/pages/commercial/Payroll";
 import InvoicesPage from "@/pages/commercial/Invoices";
 import ExpensesPage from "@/pages/commercial/Expenses";
 import PaymentProcessorPage from "@/pages/commercial/PaymentProcessor";
-import TransactionsPage from "@/pages/commercial/treasury/transactions/TransactionsPage";
+import TreasuryTransactionsPage from "@/pages/commercial/treasury/transactions/TransactionsPage";
 
 export function AppRoutes() {
   return (
@@ -49,7 +50,7 @@ export function AppRoutes() {
           <Route path="users" element={<UsersPage />} />
           <Route path="user-profiles" element={<UserProfilesPage />} />
           <Route path="accounts" element={<AccountsPage />} />
-          <Route path="transactions" element={<TransactionsPage />} />
+          <Route path="transactions" element={<AdminTransactionsPage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="support" element={<SupportPage />} />
           <Route path="settings" element={<AdminSettingsPage />} />
@@ -73,7 +74,7 @@ export function AppRoutes() {
           <Route path="treasury">
             <Route path="" element={<TreasuryDashboard />} />
             <Route path="cash-flow" element={<div>Cash Flow - Coming Soon</div>} />
-            <Route path="transactions" element={<TransactionsPage />} />
+            <Route path="transactions" element={<TreasuryTransactionsPage />} />
             <Route path="investments" element={<div>Investments - Coming Soon</div>} />
             <Route path="fx" element={<div>FX Operations - Coming Soon</div>} />
           </Route>
