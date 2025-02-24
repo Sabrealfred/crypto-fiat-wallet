@@ -1,9 +1,10 @@
-
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import AdminLayout from "@/components/admin/AdminLayout";
+import AdminDashboard from "@/pages/admin/Dashboard";
 import WalletPage from "@/pages/Wallet";
 import CardsPage from "@/pages/Cards";
 import HistoryPage from "@/pages/History";
@@ -32,6 +33,13 @@ export function AppRoutes() {
       <Route path="/auth" element={<Auth />} />
       
       <Route element={<ProtectedRoute />}>
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          {/* Otras rutas admin se añadirán aquí */}
+        </Route>
+
+        {/* Regular User Routes */}
         <Route path="/" element={<PersonalDashboard />} />
         <Route path="/business" element={<BusinessDashboard />} />
         <Route path="/commercial" element={<CommercialDashboard />} />
