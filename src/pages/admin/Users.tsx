@@ -7,36 +7,43 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { UserPlus, Search, Edit, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { AdminUser } from "@/types/admin";
 
-type ProfileWithRoles = {
+interface User {
   id: string;
   first_name: string | null;
   last_name: string | null;
   phone_number: string | null;
   kyc_status: string | null;
-  user_roles: { role: string }[] | null;
 }
 
 export default function UsersPage() {
-  const { data: users, isLoading } = useQuery<ProfileWithRoles[]>({
+  const { data: users, isLoading } = useQuery<User[]>({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select(`
           id,
           first_name,
           last_name,
           phone_number,
-          kyc_status,
-          user_roles (
-            role
-          )
+          kyc_status
         `);
 
-      if (error) throw error;
-      return data as ProfileWithRoles[];
+      if (profilesError) throw profilesError;
+
+      // Fetch roles separately
+      const { data: userRoles, error: rolesError } = await supabase
+        .from("user_roles")
+        .select("*");
+
+      if (rolesError) throw rolesError;
+
+      // Combine the data
+      return profiles.map(profile => ({
+        ...profile,
+        role: userRoles?.find(r => r.user_id === profile.id)?.role || 'N/A'
+      }));
     },
   });
 
@@ -101,7 +108,7 @@ export default function UsersPage() {
                 <tr key={user.id} className="border-b">
                   <td className="p-2">{user.first_name} {user.last_name}</td>
                   <td className="p-2">{user.phone_number}</td>
-                  <td className="p-2">{user.user_roles?.[0]?.role || 'N/A'}</td>
+                  <td className="p-2">{user.role}</td>
                   <td className="p-2">{user.kyc_status}</td>
                   <td className="p-2">
                     <div className="flex gap-2">
