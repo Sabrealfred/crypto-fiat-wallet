@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
@@ -80,8 +79,8 @@ export default function AccountsPage() {
       account.account_number.toLowerCase().includes(search.toLowerCase()) ||
       `${account.profiles?.first_name} ${account.profiles?.last_name}`.toLowerCase().includes(search.toLowerCase());
     
-    const matchesType = accountTypeFilter === "" || account.account_type === accountTypeFilter;
-    const matchesStatus = statusFilter === "" || 
+    const matchesType = accountTypeFilter === "all" || account.account_type === accountTypeFilter;
+    const matchesStatus = statusFilter === "all" || 
       (statusFilter === "active" ? account.is_active : !account.is_active);
 
     return matchesSearch && matchesType && matchesStatus;
@@ -291,7 +290,7 @@ export default function AccountsPage() {
               <SelectValue placeholder="Tipo de cuenta" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="savings">Ahorros</SelectItem>
               <SelectItem value="checking">Corriente</SelectItem>
               <SelectItem value="investment">Inversión</SelectItem>
@@ -303,7 +302,7 @@ export default function AccountsPage() {
               <SelectValue placeholder="Estado" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="active">Activa</SelectItem>
               <SelectItem value="inactive">Inactiva</SelectItem>
             </SelectContent>
