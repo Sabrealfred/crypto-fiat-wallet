@@ -1,129 +1,131 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line
+} from "recharts";
+import { Users, CreditCard, Building2, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function AdminDashboard() {
-  const { data: accountsData, isLoading: isLoadingAccounts } = useQuery({
-    queryKey: ["accounts"],
+  const { data: stats } = useQuery({
+    queryKey: ["admin-dashboard-stats"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("accounts")
-        .select("*");
-      if (error) throw error;
-      return data;
-    },
+      // En un caso real, estos datos vendrían de la base de datos
+      return {
+        totalUsers: 1234,
+        totalAccounts: 2345,
+        totalTransactions: 5678,
+        pendingKYC: 45
+      };
+    }
   });
 
-  const { data: usersData, isLoading: isLoadingUsers } = useQuery({
-    queryKey: ["profiles"],
+  const { data: transactionStats } = useQuery({
+    queryKey: ["admin-transaction-stats"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*");
-      if (error) throw error;
-      return data;
-    },
+      // Datos de ejemplo para los gráficos
+      return [
+        { name: "Ene", transactions: 400, amount: 2400 },
+        { name: "Feb", transactions: 300, amount: 1398 },
+        { name: "Mar", transactions: 500, amount: 9800 },
+        { name: "Abr", transactions: 278, amount: 3908 },
+        { name: "May", transactions: 189, amount: 4800 },
+        { name: "Jun", transactions: 239, amount: 3800 }
+      ];
+    }
   });
-
-  if (isLoadingAccounts || isLoadingUsers) {
-    return (
-      <div className="h-full w-full flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
+      <h1 className="text-3xl font-bold mb-6">Panel de Control</h1>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Vista General</TabsTrigger>
-          <TabsTrigger value="users">Usuarios</TabsTrigger>
-          <TabsTrigger value="accounts">Cuentas</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="p-4">
-              <h3 className="font-semibold text-lg mb-2">Total de Usuarios</h3>
-              <p className="text-3xl font-bold">{usersData?.length || 0}</p>
-            </Card>
-            <Card className="p-4">
-              <h3 className="font-semibold text-lg mb-2">Total de Cuentas</h3>
-              <p className="text-3xl font-bold">{accountsData?.length || 0}</p>
-            </Card>
-            <Card className="p-4">
-              <h3 className="font-semibold text-lg mb-2">Balance Total</h3>
-              <p className="text-3xl font-bold">
-                ${accountsData?.reduce((acc, curr) => acc + (curr.balance || 0), 0).toLocaleString()}
-              </p>
-            </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <Users className="h-10 w-10 text-primary" />
+            <div>
+              <p className="text-sm text-muted-foreground">Total Usuarios</p>
+              <h3 className="text-2xl font-bold">{stats?.totalUsers}</h3>
+            </div>
           </div>
-        </TabsContent>
+        </Card>
 
-        <TabsContent value="users" className="space-y-4">
-          <Card className="p-4">
-            <h3 className="font-semibold text-lg mb-4">Listado de Usuarios</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-2">Nombre</th>
-                    <th className="text-left p-2">Apellido</th>
-                    <th className="text-left p-2">Estado KYC</th>
-                    <th className="text-left p-2">Moneda</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {usersData?.map((user) => (
-                    <tr key={user.id} className="border-b">
-                      <td className="p-2">{user.first_name}</td>
-                      <td className="p-2">{user.last_name}</td>
-                      <td className="p-2">{user.kyc_status}</td>
-                      <td className="p-2">{user.preferred_currency}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <CreditCard className="h-10 w-10 text-primary" />
+            <div>
+              <p className="text-sm text-muted-foreground">Total Cuentas</p>
+              <h3 className="text-2xl font-bold">{stats?.totalAccounts}</h3>
             </div>
-          </Card>
-        </TabsContent>
+          </div>
+        </Card>
 
-        <TabsContent value="accounts" className="space-y-4">
-          <Card className="p-4">
-            <h3 className="font-semibold text-lg mb-4">Listado de Cuentas</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-2">Número</th>
-                    <th className="text-left p-2">Tipo</th>
-                    <th className="text-left p-2">Balance</th>
-                    <th className="text-left p-2">Moneda</th>
-                    <th className="text-left p-2">Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {accountsData?.map((account) => (
-                    <tr key={account.id} className="border-b">
-                      <td className="p-2">{account.account_number}</td>
-                      <td className="p-2">{account.account_type}</td>
-                      <td className="p-2">${account.balance?.toLocaleString()}</td>
-                      <td className="p-2">{account.currency}</td>
-                      <td className="p-2">{account.is_active ? "Activo" : "Inactivo"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <Building2 className="h-10 w-10 text-primary" />
+            <div>
+              <p className="text-sm text-muted-foreground">Transacciones</p>
+              <h3 className="text-2xl font-bold">{stats?.totalTransactions}</h3>
             </div>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <AlertTriangle className="h-10 w-10 text-yellow-500" />
+            <div>
+              <p className="text-sm text-muted-foreground">Pendientes KYC</p>
+              <h3 className="text-2xl font-bold">{stats?.pendingKYC}</h3>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold mb-4">Volumen de Transacciones</h3>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={transactionStats}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="transactions" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold mb-4">Monto Total</h3>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={transactionStats}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Line 
+                  type="monotone" 
+                  dataKey="amount" 
+                  stroke="#82ca9d" 
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

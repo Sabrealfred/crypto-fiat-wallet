@@ -7,9 +7,10 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { UserPlus, Search, Edit, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AdminUser } from "@/types/admin";
 
 export default function UsersPage() {
-  const { data: users, isLoading } = useQuery({
+  const { data: users, isLoading } = useQuery<AdminUser[]>({
     queryKey: ["admin-users"],
     queryFn: async () => {
       const { data, error } = await supabase
