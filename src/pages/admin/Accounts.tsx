@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Search, PlusCircle, Edit2, Ban, CheckCircle2, History } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 type AccountType = 'savings' | 'checking' | 'investment' | 'credit';
 type BusinessType = 'personal' | 'business' | 'commercial' | 'private_banking';
@@ -23,11 +25,17 @@ interface Account {
   profiles: {
     first_name: string | null;
     last_name: string | null;
-  } | null;
+  };
+  user_id: string;
 }
 
 export default function AccountsPage() {
-  const { data: accounts, isLoading } = useQuery({
+  const [search, setSearch] = useState("");
+  const [accountTypeFilter, setAccountTypeFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+
+  const { data: accounts, isLoading, refetch } = useQuery({
     queryKey: ["admin-accounts"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -42,10 +50,20 @@ export default function AccountsPage() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
-      // Asegurarse de que los datos coincidan con la interfaz Account
-      return (data || []) as Account[];
+      return (data || []) as unknown as Account[];
     },
+  });
+
+  const filteredAccounts = accounts?.filter(account => {
+    const matchesSearch = search === "" || 
+      account.account_number.toLowerCase().includes(search.toLowerCase()) ||
+      `${account.profiles?.first_name} ${account.profiles?.last_name}`.toLowerCase().includes(search.toLowerCase());
+    
+    const matchesType = accountTypeFilter === "" || account.account_type === accountTypeFilter;
+    const matchesStatus = statusFilter === "" || 
+      (statusFilter === "active" ? account.is_active : !account.is_active);
+
+    return matchesSearch && matchesType && matchesStatus;
   });
 
   const handleAccountStatusChange = async (accountId: string, newStatus: boolean) => {
@@ -57,9 +75,36 @@ export default function AccountsPage() {
 
       if (error) throw error;
       
+      await refetch();
       toast.success(`Cuenta ${newStatus ? 'activada' : 'desactivada'} exitosamente`);
     } catch (error) {
       toast.error("Error al actualizar el estado de la cuenta");
+    }
+  };
+
+  const handleCreateAccount = async (formData: FormData) => {
+    try {
+      const accountData = {
+        account_number: formData.get("account_number"),
+        account_type: formData.get("account_type"),
+        business_type: formData.get("business_type"),
+        user_id: formData.get("user_id"),
+        currency: formData.get("currency") || "USD",
+        balance: 0,
+        is_active: true
+      };
+
+      const { error } = await supabase
+        .from("accounts")
+        .insert(accountData);
+
+      if (error) throw error;
+
+      setIsCreateDialogOpen(false);
+      await refetch();
+      toast.success("Cuenta creada exitosamente");
+    } catch (error) {
+      toast.error("Error al crear la cuenta");
     }
   };
 
@@ -67,10 +112,83 @@ export default function AccountsPage() {
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Gestión de Cuentas</h1>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Nueva Cuenta
-        </Button>
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Nueva Cuenta
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Crear Nueva Cuenta</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleCreateAccount(new FormData(e.currentTarget));
+            }} className="space-y-4">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <label htmlFor="account_number">Número de Cuenta</label>
+                  <Input id="account_number" name="account_number" required />
+                </div>
+                
+                <div className="space-y-2">
+                  <label htmlFor="account_type">Tipo de Cuenta</label>
+                  <Select name="account_type" required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="savings">Ahorros</SelectItem>
+                      <SelectItem value="checking">Corriente</SelectItem>
+                      <SelectItem value="investment">Inversión</SelectItem>
+                      <SelectItem value="credit">Crédito</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="business_type">Tipo de Negocio</label>
+                  <Select name="business_type" required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="personal">Personal</SelectItem>
+                      <SelectItem value="business">Negocio</SelectItem>
+                      <SelectItem value="commercial">Comercial</SelectItem>
+                      <SelectItem value="private_banking">Banca Privada</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="currency">Moneda</label>
+                  <Select name="currency" defaultValue="USD">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar moneda" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USD">USD</SelectItem>
+                      <SelectItem value="EUR">EUR</SelectItem>
+                      <SelectItem value="GBP">GBP</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-4 mt-4">
+                <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  Crear Cuenta
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Card className="p-4">
@@ -79,25 +197,29 @@ export default function AccountsPage() {
             <Input 
               placeholder="Buscar cuentas..." 
               className="w-full pl-10"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <Search className="h-4 w-4 absolute left-3 top-3 text-gray-500" />
           </div>
-          <Select>
+          <Select value={accountTypeFilter} onValueChange={setAccountTypeFilter}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Tipo de cuenta" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="">Todos</SelectItem>
               <SelectItem value="savings">Ahorros</SelectItem>
               <SelectItem value="checking">Corriente</SelectItem>
               <SelectItem value="investment">Inversión</SelectItem>
               <SelectItem value="credit">Crédito</SelectItem>
             </SelectContent>
           </Select>
-          <Select>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Estado" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="">Todos</SelectItem>
               <SelectItem value="active">Activa</SelectItem>
               <SelectItem value="inactive">Inactiva</SelectItem>
             </SelectContent>
@@ -117,7 +239,7 @@ export default function AccountsPage() {
               </tr>
             </thead>
             <tbody>
-              {accounts?.map((account) => (
+              {filteredAccounts?.map((account) => (
                 <tr key={account.id} className="border-b">
                   <td className="p-2">{account.account_number}</td>
                   <td className="p-2">
