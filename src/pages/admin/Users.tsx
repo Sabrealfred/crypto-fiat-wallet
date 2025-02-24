@@ -51,12 +51,12 @@ export default function UsersPage() {
 
       <Card className="p-4">
         <div className="flex gap-4 mb-6">
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <Input 
               placeholder="Buscar usuarios..." 
-              className="w-full"
-              icon={<Search className="h-4 w-4" />}
+              className="w-full pl-10"
             />
+            <Search className="h-4 w-4 absolute left-3 top-3 text-gray-500" />
           </div>
           <Select>
             <SelectTrigger className="w-48">
@@ -75,7 +75,7 @@ export default function UsersPage() {
             <thead>
               <tr className="border-b">
                 <th className="text-left p-2">Nombre</th>
-                <th className="text-left p-2">Email</th>
+                <th className="text-left p-2">Teléfono</th>
                 <th className="text-left p-2">Rol</th>
                 <th className="text-left p-2">Estado KYC</th>
                 <th className="text-left p-2">Acciones</th>
@@ -85,7 +85,7 @@ export default function UsersPage() {
               {users?.map((user) => (
                 <tr key={user.id} className="border-b">
                   <td className="p-2">{user.first_name} {user.last_name}</td>
-                  <td className="p-2">{user.email}</td>
+                  <td className="p-2">{user.phone_number}</td>
                   <td className="p-2">{user.user_roles?.[0]?.role || 'N/A'}</td>
                   <td className="p-2">{user.kyc_status}</td>
                   <td className="p-2">

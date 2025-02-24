@@ -31,12 +31,12 @@ export default function TransactionsPage() {
 
       <Card className="p-4">
         <div className="flex gap-4 mb-6">
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <Input 
               placeholder="Buscar transacciones..." 
-              className="w-full"
-              icon={<Search className="h-4 w-4" />}
+              className="w-full pl-10"
             />
+            <Search className="h-4 w-4 absolute left-3 top-3 text-gray-500" />
           </div>
           <Select>
             <SelectTrigger className="w-48">
