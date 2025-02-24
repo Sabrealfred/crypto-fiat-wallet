@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,10 +58,10 @@ export default function UserProfilesPage() {
           first_name,
           last_name,
           kyc_status,
-          user_profile_types (
+          user_profile_types!inner (
             profile_type_id,
             is_active,
-            profile_types (
+            profile_types!inner (
               id,
               code,
               name
@@ -71,7 +70,7 @@ export default function UserProfilesPage() {
         `);
 
       if (error) throw error;
-      return (data || []) as UserProfile[];
+      return (data || []) as unknown as UserProfile[];
     }
   });
 

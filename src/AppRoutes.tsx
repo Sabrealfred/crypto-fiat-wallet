@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -27,7 +28,7 @@ import BusinessDashboard from "@/pages/business/Dashboard";
 import CommercialDashboard from "@/pages/commercial/Dashboard";
 import PrivateBankingDashboard from "@/pages/private/Dashboard";
 import DeveloperPortal from "@/pages/developers/Dashboard";
-import TreasuryPage from "@/pages/commercial/Treasury";
+import TreasuryDashboard from "@/pages/commercial/treasury/Dashboard";
 import TradeFinancePage from "@/pages/commercial/TradeFinance";
 import RiskManagementPage from "@/pages/commercial/RiskManagement";
 import PayrollPage from "@/pages/commercial/Payroll";
