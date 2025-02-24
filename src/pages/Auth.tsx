@@ -4,90 +4,54 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { AuthForm } from "@/components/auth/AuthForm";
-import { DemoLogin } from "@/components/auth/DemoLogin";
-import { AuthHeader } from "@/components/auth/AuthHeader";
+import { Loader2 } from "lucide-react";
 
 export default function Auth() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate('/');
+        checkUserRole(session.user.id);
       }
     });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        navigate('/');
-      }
-    });
-
-    return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleAuth = async (email: string, password: string, firstName?: string, lastName?: string) => {
-    setIsLoading(true);
+  const checkUserRole = async (userId: string) => {
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .single();
 
-    try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              first_name: firstName,
-              last_name: lastName,
-            },
-          },
-        });
-        if (error) throw error;
-        toast.success("Registro exitoso! Por favor inicia sesión.");
-        setIsSignUp(false);
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        toast.success("Inicio de sesión exitoso!");
-      }
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
+    if (roles?.role === 'admin') {
+      navigate('/admin/dashboard');
+    } else {
+      navigate('/');
     }
   };
 
-  const createAndLoginDemoUser = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
+
     try {
-      // First try to create the demo user
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: "demo@example.com",
-        password: "demo12345",
-        options: {
-          data: {
-            first_name: "Leonardo",
-            last_name: "Cruz",
-          },
-        },
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      // Attempt to sign in regardless of whether sign up succeeded
-      // (in case user already exists)
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: "demo@example.com",
-        password: "demo12345",
-      });
+      if (error) throw error;
 
-      if (signInError) throw signInError;
-      toast.success("Inicio de sesión exitoso!");
+      if (data.user) {
+        await checkUserRole(data.user.id);
+        toast.success("Inicio de sesión exitoso");
+      }
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -96,25 +60,61 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <Card className="w-full max-w-md p-6 space-y-6">
-        <AuthHeader isSignUp={isSignUp} />
-        <DemoLogin onDemoLogin={createAndLoginDemoUser} isLoading={isLoading} />
-        <AuthForm 
-          isSignUp={isSignUp} 
-          isLoading={isLoading} 
-          onSubmit={handleAuth} 
-        />
         <div className="text-center">
+          <h1 className="text-2xl font-bold">Iniciar Sesión</h1>
+          <p className="text-sm text-muted-foreground mt-2">
+            Ingresa tus credenciales para continuar
+          </p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium">
+              Correo electrónico
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="correo@ejemplo.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-sm font-medium">
+              Contraseña
+            </label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
           <Button
-            variant="link"
-            className="text-sm"
-            onClick={() => setIsSignUp(!isSignUp)}
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
           >
-            {isSignUp
-              ? "¿Ya tienes una cuenta? Inicia sesión"
-              : "¿No tienes una cuenta? Regístrate"}
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Iniciar Sesión"
+            )}
           </Button>
+        </form>
+
+        <div className="text-center text-sm text-muted-foreground">
+          <p>Cuentas de demostración:</p>
+          <p>Admin: admin1@demo.com / admin123</p>
+          <p>Usuario: user1@demo.com / user123</p>
+          <p>Negocio: business@demo.com / business123</p>
         </div>
       </Card>
     </div>
