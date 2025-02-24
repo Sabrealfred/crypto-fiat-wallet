@@ -71,7 +71,7 @@ export default function UserProfilesPage() {
         `);
 
       if (error) throw error;
-      return data as UserProfile[];
+      return (data || []) as UserProfile[];
     }
   });
 

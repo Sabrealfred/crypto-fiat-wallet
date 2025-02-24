@@ -443,6 +443,7 @@ export type Database = {
           created_at: string | null
           first_name: string | null
           id: string
+          kyc_status: string | null
           last_name: string | null
           phone_number: string | null
           profile_type: string | null
@@ -452,6 +453,7 @@ export type Database = {
           created_at?: string | null
           first_name?: string | null
           id: string
+          kyc_status?: string | null
           last_name?: string | null
           phone_number?: string | null
           profile_type?: string | null
@@ -461,6 +463,7 @@ export type Database = {
           created_at?: string | null
           first_name?: string | null
           id?: string
+          kyc_status?: string | null
           last_name?: string | null
           phone_number?: string | null
           profile_type?: string | null

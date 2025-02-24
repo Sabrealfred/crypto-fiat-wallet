@@ -46,6 +46,9 @@ export default function TransferPage() {
     }
 
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
       const { error } = await supabase
         .from('transfers')
         .insert({
@@ -56,7 +59,8 @@ export default function TransferPage() {
           source_currency: 'USD',
           destination_currency: 'USD',
           exchange_rate: 1,
-          transfer_method: 'internal'
+          transfer_method: 'internal',
+          user_id: user.id // Agregado el user_id requerido
         });
 
       if (error) throw error;
