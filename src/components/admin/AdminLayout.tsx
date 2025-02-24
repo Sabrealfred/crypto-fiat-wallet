@@ -7,7 +7,9 @@ import {
   Wallet, 
   History,
   Settings,
-  LogOut
+  LogOut,
+  HeartHandshake,
+  HelpCircle
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -33,31 +35,43 @@ export default function AdminLayout() {
         <nav className="space-y-2">
           <Link to="/admin/dashboard">
             <Button variant="ghost" className="w-full justify-start">
-              <LayoutDashboard className="mr-2" />
+              <LayoutDashboard className="mr-2 h-4 w-4" />
               Dashboard
             </Button>
           </Link>
           <Link to="/admin/users">
             <Button variant="ghost" className="w-full justify-start">
-              <Users className="mr-2" />
+              <Users className="mr-2 h-4 w-4" />
               Usuarios
             </Button>
           </Link>
           <Link to="/admin/accounts">
             <Button variant="ghost" className="w-full justify-start">
-              <Wallet className="mr-2" />
+              <Wallet className="mr-2 h-4 w-4" />
               Cuentas
             </Button>
           </Link>
           <Link to="/admin/transactions">
             <Button variant="ghost" className="w-full justify-start">
-              <History className="mr-2" />
+              <History className="mr-2 h-4 w-4" />
               Transacciones
+            </Button>
+          </Link>
+          <Link to="/admin/products">
+            <Button variant="ghost" className="w-full justify-start">
+              <HeartHandshake className="mr-2 h-4 w-4" />
+              Productos
+            </Button>
+          </Link>
+          <Link to="/admin/support">
+            <Button variant="ghost" className="w-full justify-start">
+              <HelpCircle className="mr-2 h-4 w-4" />
+              Soporte
             </Button>
           </Link>
           <Link to="/admin/settings">
             <Button variant="ghost" className="w-full justify-start">
-              <Settings className="mr-2" />
+              <Settings className="mr-2 h-4 w-4" />
               Configuración
             </Button>
           </Link>
@@ -69,7 +83,7 @@ export default function AdminLayout() {
             className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
             onClick={handleLogout}
           >
-            <LogOut className="mr-2" />
+            <LogOut className="mr-2 h-4 w-4" />
             Cerrar Sesión
           </Button>
         </div>

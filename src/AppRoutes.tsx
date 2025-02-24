@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -6,7 +7,11 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import UsersPage from "@/pages/admin/Users";
+import AccountsPage from "@/pages/admin/Accounts";
 import TransactionsPage from "@/pages/admin/Transactions";
+import ProductsPage from "@/pages/admin/Products";
+import SupportPage from "@/pages/admin/Support";
+import AdminSettingsPage from "@/pages/admin/Settings";
 import WalletPage from "@/pages/Wallet";
 import CardsPage from "@/pages/Cards";
 import HistoryPage from "@/pages/History";
@@ -37,9 +42,14 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="accounts" element={<AccountsPage />} />
           <Route path="transactions" element={<TransactionsPage />} />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="support" element={<SupportPage />} />
+          <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 
         {/* Regular User Routes */}
@@ -60,7 +70,7 @@ export function AppRoutes() {
         <Route path="/investments" element={<InvestmentsPage />} />
         <Route path="/deposits" element={<DepositsPage />} />
 
-        {/* Rutas comerciales */}
+        {/* Commercial Routes */}
         <Route path="/payroll" element={<PayrollPage />} />
         <Route path="/invoices" element={<InvoicesPage />} />
         <Route path="/expenses" element={<ExpensesPage />} />
