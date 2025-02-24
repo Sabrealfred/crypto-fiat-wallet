@@ -1,98 +1,30 @@
-import { useState } from "react";
-import { AppLayout } from "@/components/layout/app-layout";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { TransferForm } from "@/components/transfers/TransferForm";
-import { CurrencyExchange } from "@/components/transfers/CurrencyExchange";
-import { TransferMethods } from "@/components/transfers/TransferMethods";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Building, CreditCard, Globe, ArrowLeftRight, Wallet, Users } from "lucide-react";
-import type { TransferType, Currency } from "@/types/transfers";
 
-const transferCategories = [
-  {
-    id: "domestic",
-    name: "Domestic",
-    icon: Building,
-    description: "Send money within your country",
-    color: "text-blue-500",
-  },
-  {
-    id: "international",
-    name: "International",
-    icon: Globe,
-    description: "Send money worldwide",
-    color: "text-green-500",
-  },
-  {
-    id: "cards",
-    name: "Cards",
-    icon: CreditCard,
-    description: "Transfer between cards",
-    color: "text-purple-500",
-  },
-  {
-    id: "internal",
-    name: "Internal",
-    icon: ArrowLeftRight,
-    description: "Between your accounts",
-    color: "text-orange-500",
-  },
-  {
-    id: "wallet",
-    name: "E-Wallet",
-    icon: Wallet,
-    description: "To digital wallets",
-    color: "text-pink-500",
-  },
-  {
-    id: "p2p",
-    name: "To Friends",
-    icon: Users,
-    description: "Send to contacts",
-    color: "text-indigo-500",
-  },
-];
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+
+interface Account {
+  id: string;
+  account_number: string;
+  balance: number;
+  currency: string;
+}
 
 export default function TransferPage() {
-  const [amount, setAmount] = useState("");
-  const [sourceCurrency, setSourceCurrency] = useState("USD");
-  const [destinationCurrency, setDestinationCurrency] = useState("USD");
-  const [selectedCategory, setSelectedCategory] = useState("domestic");
+  const [amount, setAmount] = useState('');
+  const [sourceAccount, setSourceAccount] = useState('');
+  const [destinationAccount, setDestinationAccount] = useState('');
 
-  const { data: transferTypes } = useQuery({
-    queryKey: ["transferTypes"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("transfer_types")
-        .select("*")
-        .eq("is_active", true);
-
-      if (error) throw error;
-      return data as TransferType[];
-    }
-  });
-
-  const { data: currencies } = useQuery({
-    queryKey: ["currencies"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("currencies")
-        .select("*")
-        .eq("is_active", true);
-
-      if (error) throw error;
-      return data as Currency[];
-    }
-  });
-
-  const { data: accounts, isLoading: isLoadingAccounts } = useQuery({
+  const { data: accounts = [], isLoading } = useQuery({
     queryKey: ['user-accounts'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
+      if (!user) throw new Error('No authenticated user');
 
       const { data, error } = await supabase
         .from('accounts')
@@ -101,98 +33,104 @@ export default function TransferPage() {
         .eq('is_active', true);
 
       if (error) throw error;
-      return data;
+      return data as Account[];
     }
   });
 
-  const handleSubmit = async (data: any) => {
+  const handleTransfer = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!amount || !sourceAccount || !destinationAccount) {
+      toast.error('Por favor complete todos los campos');
+      return;
+    }
+
     try {
-      setAmount(data.amount);
-      toast.success("Transfer initiated successfully");
+      const { error } = await supabase
+        .from('transfers')
+        .insert({
+          amount: parseFloat(amount),
+          source_wallet_id: sourceAccount,
+          destination_details: { account_id: destinationAccount },
+          destination_type: 'internal',
+          source_currency: 'USD',
+          destination_currency: 'USD',
+          exchange_rate: 1,
+          transfer_method: 'internal'
+        });
+
+      if (error) throw error;
+
+      toast.success('Transferencia iniciada exitosamente');
+      setAmount('');
+      setSourceAccount('');
+      setDestinationAccount('');
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error('Error al realizar la transferencia: ' + error.message);
     }
   };
 
-  const filteredTransferTypes = transferTypes?.filter(type => 
-    type.code.startsWith(selectedCategory)
-  );
+  if (isLoading) {
+    return <div>Cargando...</div>;
+  }
 
   return (
-    <AppLayout>
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Transfer Money</h1>
-          <p className="text-muted-foreground">Choose a transfer method and send money securely</p>
-        </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Realizar Transferencia</h1>
 
-        <div className="grid lg:grid-cols-[2fr,1fr] gap-6">
-          <div className="space-y-6">
-            <Card>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {transferCategories.map((category) => {
-                    const Icon = category.icon;
-                    return (
-                      <button
-                        key={category.id}
-                        onClick={() => setSelectedCategory(category.id)}
-                        className={`p-4 rounded-lg text-left transition-all ${
-                          selectedCategory === category.id
-                            ? "bg-primary/10 border-primary"
-                            : "hover:bg-muted/50 border-transparent"
-                        } border-2`}
-                      >
-                        <Icon className={`h-6 w-6 mb-2 ${category.color}`} />
-                        <h3 className="font-medium mb-1">{category.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {category.description}
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Tabs defaultValue={selectedCategory} value={selectedCategory} className="w-full">
-              <TabsList className="w-full justify-start mb-4">
-                {transferCategories.map((category) => (
-                  <TabsTrigger
-                    key={category.id}
-                    value={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className="flex items-center gap-2"
-                  >
-                    {category.name}
-                  </TabsTrigger>
+      <Card className="p-6">
+        <form onSubmit={handleTransfer} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Cuenta Origen</label>
+            <Select value={sourceAccount} onValueChange={setSourceAccount}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar cuenta origen" />
+              </SelectTrigger>
+              <SelectContent>
+                {accounts.map((account) => (
+                  <SelectItem key={account.id} value={account.id}>
+                    {account.account_number} - {account.currency} {account.balance}
+                  </SelectItem>
                 ))}
-              </TabsList>
-
-              {transferCategories.map((category) => (
-                <TabsContent key={category.id} value={category.id}>
-                  <TransferForm
-                    transferTypes={filteredTransferTypes}
-                    currencies={currencies}
-                    onSubmit={handleSubmit}
-                  />
-                </TabsContent>
-              ))}
-            </Tabs>
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="space-y-6">
-            <CurrencyExchange
-              currencies={currencies}
-              sourceCurrency={sourceCurrency}
-              destinationCurrency={destinationCurrency}
-              amount={amount}
-              onDestinationCurrencyChange={setDestinationCurrency}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Cuenta Destino</label>
+            <Select value={destinationAccount} onValueChange={setDestinationAccount}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar cuenta destino" />
+              </SelectTrigger>
+              <SelectContent>
+                {accounts
+                  .filter(account => account.id !== sourceAccount)
+                  .map((account) => (
+                    <SelectItem key={account.id} value={account.id}>
+                      {account.account_number} - {account.currency} {account.balance}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Monto</label>
+            <Input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="Ingrese el monto"
+              min="0"
+              step="0.01"
             />
-            <TransferMethods />
           </div>
-        </div>
-      </div>
-    </AppLayout>
+
+          <Button type="submit" className="w-full">
+            Realizar Transferencia
+          </Button>
+        </form>
+      </Card>
+    </div>
   );
 }

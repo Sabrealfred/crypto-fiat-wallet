@@ -1,86 +1,119 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { UserPlus, Search, Edit, Trash2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { Search, UserPlus } from "lucide-react";
 
-type AppRole = 'admin' | 'operator' | 'auditor';
+interface ProfileType {
+  id: string;
+  code: string;
+  name: string;
+}
 
-interface User {
+interface UserProfileType {
+  id: string;
+  user_id: string;
+  profile_type_id: string;
+  is_active: boolean;
+}
+
+interface UserProfile {
   id: string;
   first_name: string | null;
   last_name: string | null;
-  phone_number: string | null;
   kyc_status: string | null;
-  user_roles: {
-    role: AppRole;
+  user_profile_types: {
+    profile_type_id: string;
+    is_active: boolean;
+    profile_types: ProfileType;
   }[];
 }
 
-export default function UsersPage() {
-  const { data: users, isLoading } = useQuery<User[]>({
-    queryKey: ["admin-users"],
+export default function UserProfilesPage() {
+  const queryClient = useQueryClient();
+
+  const { data: profileTypes } = useQuery({
+    queryKey: ['profile-types'],
     queryFn: async () => {
-      const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
+      const { data, error } = await supabase
+        .from('profile_types')
+        .select('*');
+      
+      if (error) throw error;
+      return data as ProfileType[];
+    }
+  });
+
+  const { data: users, isLoading } = useQuery({
+    queryKey: ['users-with-profiles'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
         .select(`
           id,
           first_name,
           last_name,
-          phone_number,
-          kyc_status
+          kyc_status,
+          user_profile_types (
+            profile_type_id,
+            is_active,
+            profile_types (
+              id,
+              code,
+              name
+            )
+          )
         `);
 
-      if (profilesError) throw profilesError;
-
-      // Fetch roles separately since the relationship might not be ready yet
-      const { data: userRoles, error: rolesError } = await supabase
-        .from("user_roles")
-        .select("user_id, role");
-
-      if (rolesError) throw rolesError;
-
-      // Ensure the roles are of type AppRole
-      const typedUserRoles = userRoles?.map(r => ({
-        user_id: r.user_id,
-        role: r.role as AppRole
-      })) || [];
-
-      // Combine the data manually with type checking
-      return profiles?.map(profile => ({
-        ...profile,
-        user_roles: typedUserRoles
-          .filter(r => r.user_id === profile.id)
-          .map(r => ({ role: r.role }))
-      })) as User[];
-    },
+      if (error) throw error;
+      return data as UserProfile[];
+    }
   });
 
-  const handleDeleteUser = async (userId: string) => {
-    try {
-      const { error } = await supabase
-        .from("profiles")
-        .delete()
-        .eq("id", userId);
-      
-      if (error) throw error;
-      toast.success("Usuario eliminado exitosamente");
-    } catch (error) {
-      toast.error("Error al eliminar usuario");
+  const toggleProfileMutation = useMutation({
+    mutationFn: async ({ userId, profileTypeId, isActive }: { userId: string, profileTypeId: string, isActive: boolean }) => {
+      if (isActive) {
+        const { error } = await supabase
+          .from('user_profile_types')
+          .insert({ user_id: userId, profile_type_id: profileTypeId });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('user_profile_types')
+          .delete()
+          .match({ user_id: userId, profile_type_id: profileTypeId });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users-with-profiles'] });
+      toast.success("Perfil actualizado exitosamente");
+    },
+    onError: (error: any) => {
+      toast.error("Error al actualizar el perfil: " + error.message);
     }
+  });
+
+  const handleProfileToggle = (userId: string, profileTypeId: string, currentState: boolean) => {
+    toggleProfileMutation.mutate({
+      userId,
+      profileTypeId,
+      isActive: !currentState
+    });
   };
 
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Gestión de Usuarios</h1>
+        <h1 className="text-3xl font-bold">Gestión de Perfiles de Usuario</h1>
         <Button>
           <UserPlus className="mr-2 h-4 w-4" />
-          Nuevo Usuario
+          Agregar Usuario
         </Button>
       </div>
 
@@ -95,12 +128,14 @@ export default function UsersPage() {
           </div>
           <Select>
             <SelectTrigger className="w-48">
-              <SelectValue placeholder="Filtrar por rol" />
+              <SelectValue placeholder="Filtrar por perfil" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="admin">Administrador</SelectItem>
-              <SelectItem value="operator">Operador</SelectItem>
-              <SelectItem value="auditor">Auditor</SelectItem>
+              {profileTypes?.map((type) => (
+                <SelectItem key={type.id} value={type.code}>
+                  {type.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -109,34 +144,42 @@ export default function UsersPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-left p-2">Nombre</th>
-                <th className="text-left p-2">Teléfono</th>
-                <th className="text-left p-2">Rol</th>
+                <th className="text-left p-2">Usuario</th>
                 <th className="text-left p-2">Estado KYC</th>
-                <th className="text-left p-2">Acciones</th>
+                {profileTypes?.map((type) => (
+                  <th key={type.id} className="text-center p-2">{type.name}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {users?.map((user) => (
                 <tr key={user.id} className="border-b">
                   <td className="p-2">{user.first_name} {user.last_name}</td>
-                  <td className="p-2">{user.phone_number}</td>
-                  <td className="p-2">{user.user_roles?.[0]?.role || 'N/A'}</td>
-                  <td className="p-2">{user.kyc_status}</td>
                   <td className="p-2">
-                    <div className="flex gap-2">
-                      <Button variant="ghost" size="icon">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => handleDeleteUser(user.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </div>
+                    <span className={`px-2 py-1 rounded-full text-sm ${
+                      user.kyc_status === 'approved' ? 'bg-green-100 text-green-800' :
+                      user.kyc_status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {user.kyc_status || 'Pendiente'}
+                    </span>
                   </td>
+                  {profileTypes?.map((type) => (
+                    <td key={type.id} className="text-center p-2">
+                      <Switch
+                        checked={user.user_profile_types?.some(
+                          upt => upt.profile_type_id === type.id && upt.is_active
+                        )}
+                        onCheckedChange={() => handleProfileToggle(
+                          user.id,
+                          type.id,
+                          user.user_profile_types?.some(
+                            upt => upt.profile_type_id === type.id && upt.is_active
+                          ) || false
+                        )}
+                      />
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
