@@ -4,19 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
-
-interface Transaction {
-  id: string;
-  created_at: string;
-  amount: number;
-  transaction_type: string;
-  status: string;
-  recipient_address: string | null;
-  currency: string;
-  user_id: string;
-  wallet_id: string;
-  updated_at: string;
-}
+import type { Transaction } from "@/types/database";
 
 interface TransactionHistoryModalProps {
   accountId: string;
@@ -31,7 +19,7 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
       const { data, error } = await supabase
         .from("transactions")
         .select("*")
-        .or(`wallet_id.eq.${accountId}`)
+        .eq("user_id", accountId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -43,18 +31,18 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
   const getTransactionStatus = (status: string) => {
     switch (status) {
       case "completed":
-        return <Badge variant="default" className="bg-green-500">Completada</Badge>;
+        return <Badge variant="default" className="bg-green-500">Completed</Badge>;
       case "pending":
-        return <Badge variant="secondary">Pendiente</Badge>;
+        return <Badge variant="secondary">Pending</Badge>;
       case "failed":
-        return <Badge variant="destructive">Fallida</Badge>;
+        return <Badge variant="destructive">Failed</Badge>;
       default:
-        return <Badge variant="outline">Desconocido</Badge>;
+        return <Badge variant="outline">Unknown</Badge>;
     }
   };
 
   const formatAmount = (amount: number, type: string, currency: string) => {
-    const formatter = new Intl.NumberFormat('es-ES', {
+    const formatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency,
     });
@@ -65,7 +53,7 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Historial de Transacciones</DialogTitle>
+          <DialogTitle>Transaction History</DialogTitle>
         </DialogHeader>
 
         {isLoading ? (
@@ -77,11 +65,10 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-2">Fecha</th>
-                  <th className="text-left p-2">Tipo</th>
-                  <th className="text-right p-2">Monto</th>
-                  <th className="text-left p-2">Estado</th>
-                  <th className="text-left p-2">Dirección Destino</th>
+                  <th className="text-left p-2">Date</th>
+                  <th className="text-left p-2">Type</th>
+                  <th className="text-right p-2">Amount</th>
+                  <th className="text-left p-2">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -98,9 +85,6 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
                     </td>
                     <td className="p-2">
                       {getTransactionStatus(transaction.status)}
-                    </td>
-                    <td className="p-2">
-                      {transaction.recipient_address || 'N/A'}
                     </td>
                   </tr>
                 ))}

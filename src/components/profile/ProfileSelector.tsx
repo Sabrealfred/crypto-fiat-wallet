@@ -13,13 +13,17 @@ import { UserCircle2, Building2, Users, Diamond, Code2, ChevronDown, Plus } from
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { UserProfile, ProfileType } from "@/types/profiles";
 import { toast } from "sonner";
-import { VariantProps } from "class-variance-authority";
+import type { Profile } from "@/types/database";
 import { buttonVariants } from "@/components/ui/button";
+import type { VariantProps } from "class-variance-authority";
 
 interface ProfileSelectorProps extends VariantProps<typeof buttonVariants> {
   className?: string;
+}
+
+interface UserProfile extends Profile {
+  profile_type: 'personal' | 'business' | 'commercial' | 'private_banking' | 'developer';
 }
 
 const profileIcons = {
@@ -55,23 +59,19 @@ export function ProfileSelector({ variant = "ghost", className }: ProfileSelecto
     queryKey: ['user-profiles'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('No authenticated user');
-      }
+      if (!user) throw new Error("No authenticated user");
 
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true });
+      const { data: profiles, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id);
 
       if (error) {
         toast.error("Error loading profiles");
         throw error;
       }
 
-      return data as UserProfile[];
+      return profiles as UserProfile[];
     },
   });
 
@@ -83,7 +83,7 @@ export function ProfileSelector({ variant = "ghost", className }: ProfileSelecto
     }
   }, [profiles, currentProfile, location.pathname]);
 
-  const getCurrentProfileTypeFromPath = (path: string): ProfileType => {
+  const getCurrentProfileTypeFromPath = (path: string): UserProfile['profile_type'] => {
     if (path.startsWith('/business')) return 'business';
     if (path.startsWith('/commercial')) return 'commercial';
     if (path.startsWith('/private')) return 'private_banking';
@@ -130,11 +130,6 @@ export function ProfileSelector({ variant = "ghost", className }: ProfileSelecto
             >
               <ProfileIcon className="h-4 w-4" />
               <span>{profileLabels[profile.profile_type]}</span>
-              {profile.business_name && (
-                <span className="text-xs text-muted-foreground ml-auto">
-                  {profile.business_name}
-                </span>
-              )}
             </DropdownMenuItem>
           );
         })}
