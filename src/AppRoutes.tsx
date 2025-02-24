@@ -5,6 +5,8 @@ import NotFound from "@/pages/NotFound";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/Dashboard";
+import UsersPage from "@/pages/admin/Users";
+import TransactionsPage from "@/pages/admin/Transactions";
 import WalletPage from "@/pages/Wallet";
 import CardsPage from "@/pages/Cards";
 import HistoryPage from "@/pages/History";
@@ -36,7 +38,8 @@ export function AppRoutes() {
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<AdminDashboard />} />
-          {/* Otras rutas admin se añadirán aquí */}
+          <Route path="users" element={<UsersPage />} />
+          <Route path="transactions" element={<TransactionsPage />} />
         </Route>
 
         {/* Regular User Routes */}
