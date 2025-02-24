@@ -100,6 +100,19 @@ export function QuickActions() {
             </div>
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </Link>
+
+          <Link to="/payment-processor" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <CreditCard className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-medium">Payment Processor</h3>
+                <p className="text-sm text-muted-foreground">Manage business payments</p>
+              </div>
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          </Link>
         </div>
       </div>
     </div>
