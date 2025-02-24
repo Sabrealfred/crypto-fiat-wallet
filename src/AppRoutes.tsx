@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -35,6 +34,7 @@ import PayrollPage from "@/pages/commercial/Payroll";
 import InvoicesPage from "@/pages/commercial/Invoices";
 import ExpensesPage from "@/pages/commercial/Expenses";
 import PaymentProcessorPage from "@/pages/commercial/PaymentProcessor";
+import TransactionsPage from "@/pages/commercial/treasury/transactions/TransactionsPage";
 
 export function AppRoutes() {
   return (
@@ -73,7 +73,7 @@ export function AppRoutes() {
           <Route path="treasury">
             <Route path="" element={<TreasuryDashboard />} />
             <Route path="cash-flow" element={<div>Cash Flow - Coming Soon</div>} />
-            <Route path="transactions" element={<div>Transactions - Coming Soon</div>} />
+            <Route path="transactions" element={<TransactionsPage />} />
             <Route path="investments" element={<div>Investments - Coming Soon</div>} />
             <Route path="fx" element={<div>FX Operations - Coming Soon</div>} />
           </Route>
