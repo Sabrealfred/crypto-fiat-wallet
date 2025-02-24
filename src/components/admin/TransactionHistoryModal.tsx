@@ -9,12 +9,13 @@ interface Transaction {
   id: string;
   created_at: string;
   amount: number;
-  type: string;
+  transaction_type: string;
   status: string;
-  description: string;
+  recipient_address: string | null;
   currency: string;
-  from_account: string;
-  to_account: string;
+  user_id: string;
+  wallet_id: string;
+  updated_at: string;
 }
 
 interface TransactionHistoryModalProps {
@@ -30,7 +31,7 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
       const { data, error } = await supabase
         .from("transactions")
         .select("*")
-        .or(`from_account.eq.${accountId},to_account.eq.${accountId}`)
+        .or(`wallet_id.eq.${accountId}`)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -57,7 +58,7 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
       style: 'currency',
       currency: currency,
     });
-    return `${type === 'credit' ? '+' : '-'} ${formatter.format(Math.abs(amount))}`;
+    return `${type === 'deposit' ? '+' : '-'} ${formatter.format(Math.abs(amount))}`;
   };
 
   return (
@@ -77,10 +78,10 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-2">Fecha</th>
-                  <th className="text-left p-2">Descripción</th>
+                  <th className="text-left p-2">Tipo</th>
                   <th className="text-right p-2">Monto</th>
                   <th className="text-left p-2">Estado</th>
-                  <th className="text-left p-2">Cuenta Destino</th>
+                  <th className="text-left p-2">Dirección Destino</th>
                 </tr>
               </thead>
               <tbody>
@@ -89,19 +90,17 @@ export function TransactionHistoryModal({ accountId, isOpen, onClose }: Transact
                     <td className="p-2">
                       {new Date(transaction.created_at).toLocaleString()}
                     </td>
-                    <td className="p-2">{transaction.description}</td>
+                    <td className="p-2 capitalize">{transaction.transaction_type}</td>
                     <td className="p-2 text-right">
-                      <span className={transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'}>
-                        {formatAmount(transaction.amount, transaction.type, transaction.currency)}
+                      <span className={transaction.transaction_type === 'deposit' ? 'text-green-600' : 'text-red-600'}>
+                        {formatAmount(transaction.amount, transaction.transaction_type, transaction.currency)}
                       </span>
                     </td>
                     <td className="p-2">
                       {getTransactionStatus(transaction.status)}
                     </td>
                     <td className="p-2">
-                      {transaction.to_account === accountId ? 
-                        transaction.from_account : 
-                        transaction.to_account}
+                      {transaction.recipient_address || 'N/A'}
                     </td>
                   </tr>
                 ))}
