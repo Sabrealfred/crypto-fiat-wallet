@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserCircle2, Building2, Users, Diamond, Code2, ChevronDown, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { UserProfile, ProfileType } from "@/types/profiles";
@@ -32,8 +32,17 @@ const profileLabels = {
   developer: "Developer Portal",
 };
 
+const dashboardRoutes = {
+  personal: "/personal",
+  business: "/business/dashboard",
+  commercial: "/commercial/dashboard",
+  private_banking: "/private/dashboard",
+  developer: "/developer/dashboard",
+};
+
 export function ProfileSelector() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
 
   const { data: profiles } = useQuery({
@@ -55,30 +64,25 @@ export function ProfileSelector() {
 
   useEffect(() => {
     if (profiles?.length && !currentProfile) {
-      setCurrentProfile(profiles[0]);
+      // Determinar el perfil actual basado en la ruta
+      const profileType = getCurrentProfileTypeFromPath(location.pathname);
+      const matchingProfile = profiles.find(p => p.profile_type === profileType) || profiles[0];
+      setCurrentProfile(matchingProfile);
     }
-  }, [profiles, currentProfile]);
+  }, [profiles, currentProfile, location.pathname]);
+
+  const getCurrentProfileTypeFromPath = (path: string): ProfileType => {
+    if (path.startsWith('/business')) return 'business';
+    if (path.startsWith('/commercial')) return 'commercial';
+    if (path.startsWith('/private')) return 'private_banking';
+    if (path.startsWith('/developer')) return 'developer';
+    return 'personal';
+  };
 
   const handleProfileChange = (profile: UserProfile) => {
     setCurrentProfile(profile);
-    // Redirect to the appropriate dashboard based on profile type
-    switch (profile.profile_type) {
-      case 'personal':
-        navigate('/personal');
-        break;
-      case 'business':
-        navigate('/business/dashboard');
-        break;
-      case 'commercial':
-        navigate('/commercial/dashboard');
-        break;
-      case 'private_banking':
-        navigate('/private/dashboard');
-        break;
-      case 'developer':
-        navigate('/developer/dashboard');
-        break;
-    }
+    // Redirigir al dashboard correspondiente usando las rutas predefinidas
+    navigate(dashboardRoutes[profile.profile_type]);
   };
 
   const handleCreateProfile = () => {
