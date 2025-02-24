@@ -8,34 +8,48 @@ import { UserPlus, Search, Edit, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type AppRole = 'admin' | 'operator' | 'auditor';
+
 interface User {
   id: string;
   first_name: string | null;
   last_name: string | null;
   phone_number: string | null;
   kyc_status: string | null;
-  user_roles: { role: string }[] | null;
+  user_roles: {
+    role: AppRole;
+  }[];
 }
 
 export default function UsersPage() {
   const { data: users, isLoading } = useQuery<User[]>({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select(`
           id,
           first_name,
           last_name,
           phone_number,
-          kyc_status,
-          user_roles (
-            role
-          )
+          kyc_status
         `);
 
-      if (error) throw error;
-      return data as User[];
+      if (profilesError) throw profilesError;
+
+      // Fetch roles separately since the relationship might not be ready yet
+      const { data: userRoles, error: rolesError } = await supabase
+        .from("user_roles")
+        .select("user_id, role");
+
+      if (rolesError) throw rolesError;
+
+      // Combine the data manually
+      return profiles.map(profile => ({
+        ...profile,
+        user_roles: userRoles?.filter(r => r.user_id === profile.id)
+          .map(r => ({ role: r.role })) || []
+      }));
     },
   });
 
