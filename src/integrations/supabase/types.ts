@@ -12,9 +12,7 @@ export type Database = {
       accounts: {
         Row: {
           account_number: string
-          account_type: Database["public"]["Enums"]["account_type"]
           balance: number | null
-          business_type: Database["public"]["Enums"]["business_type"] | null
           created_at: string
           currency: string | null
           id: string
@@ -24,9 +22,7 @@ export type Database = {
         }
         Insert: {
           account_number: string
-          account_type: Database["public"]["Enums"]["account_type"]
           balance?: number | null
-          business_type?: Database["public"]["Enums"]["business_type"] | null
           created_at?: string
           currency?: string | null
           id?: string
@@ -36,9 +32,7 @@ export type Database = {
         }
         Update: {
           account_number?: string
-          account_type?: Database["public"]["Enums"]["account_type"]
           balance?: number | null
-          business_type?: Database["public"]["Enums"]["business_type"] | null
           created_at?: string
           currency?: string | null
           id?: string
@@ -76,15 +70,7 @@ export type Database = {
           user_agent?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "audit_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       bill_payments: {
         Row: {
@@ -132,22 +118,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "bill_payments_currency_fkey"
-            columns: ["currency"]
-            isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "bill_payments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       cards: {
         Row: {
@@ -186,15 +157,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "cards_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       check_deposits: {
         Row: {
@@ -250,48 +213,6 @@ export type Database = {
           status?: string | null
           updated_at?: string | null
           user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "check_deposits_currency_fkey"
-            columns: ["currency"]
-            isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "check_deposits_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      currencies: {
-        Row: {
-          code: string
-          exchange_rate: number | null
-          is_active: boolean | null
-          last_updated: string | null
-          name: string
-          symbol: string
-        }
-        Insert: {
-          code: string
-          exchange_rate?: number | null
-          is_active?: boolean | null
-          last_updated?: string | null
-          name: string
-          symbol: string
-        }
-        Update: {
-          code?: string
-          exchange_rate?: number | null
-          is_active?: boolean | null
-          last_updated?: string | null
-          name?: string
-          symbol?: string
         }
         Relationships: []
       }
@@ -401,115 +322,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "kyc_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      notifications: {
-        Row: {
-          amount: number | null
-          created_at: string | null
-          description: string
-          id: string
-          read: boolean | null
-          title: string
-          type: string
-          user_id: string | null
-        }
-        Insert: {
-          amount?: number | null
-          created_at?: string | null
-          description: string
-          id?: string
-          read?: boolean | null
-          title: string
-          type: string
-          user_id?: string | null
-        }
-        Update: {
-          amount?: number | null
-          created_at?: string | null
-          description?: string
-          id?: string
-          read?: boolean | null
-          title?: string
-          type?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          address: string | null
-          birth_date: string | null
-          created_at: string
-          first_name: string | null
-          id: string
-          kyc_status: string | null
-          last_name: string | null
-          phone_number: string | null
-          preferred_currency: string | null
-          preferred_language: string | null
-          role_id: string | null
-          status: string | null
-          two_fa_enabled: boolean | null
-          updated_at: string
-        }
-        Insert: {
-          address?: string | null
-          birth_date?: string | null
-          created_at?: string
-          first_name?: string | null
-          id: string
-          kyc_status?: string | null
-          last_name?: string | null
-          phone_number?: string | null
-          preferred_currency?: string | null
-          preferred_language?: string | null
-          role_id?: string | null
-          status?: string | null
-          two_fa_enabled?: boolean | null
-          updated_at?: string
-        }
-        Update: {
-          address?: string | null
-          birth_date?: string | null
-          created_at?: string
-          first_name?: string | null
-          id?: string
-          kyc_status?: string | null
-          last_name?: string | null
-          phone_number?: string | null
-          preferred_currency?: string | null
-          preferred_language?: string | null
-          role_id?: string | null
-          status?: string | null
-          two_fa_enabled?: boolean | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "roles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       roles: {
         Row: {
@@ -590,36 +403,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "scheduled_savings_currency_fkey"
-            columns: ["currency"]
-            isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "scheduled_savings_destination_wallet_id_fkey"
-            columns: ["destination_wallet_id"]
-            isOneToOne: false
-            referencedRelation: "wallets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "scheduled_savings_source_wallet_id_fkey"
-            columns: ["source_wallet_id"]
-            isOneToOne: false
-            referencedRelation: "wallets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "scheduled_savings_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       support_tickets: {
         Row: {
@@ -628,7 +412,6 @@ export type Database = {
           description: string
           id: string
           resolution: string | null
-          status: Database["public"]["Enums"]["ticket_status"] | null
           title: string
           updated_at: string | null
           user_id: string | null
@@ -639,7 +422,6 @@ export type Database = {
           description: string
           id?: string
           resolution?: string | null
-          status?: Database["public"]["Enums"]["ticket_status"] | null
           title: string
           updated_at?: string | null
           user_id?: string | null
@@ -650,27 +432,11 @@ export type Database = {
           description?: string
           id?: string
           resolution?: string | null
-          status?: Database["public"]["Enums"]["ticket_status"] | null
           title?: string
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       system_settings: {
         Row: {
@@ -739,76 +505,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "time_deposits_currency_fkey"
-            columns: ["currency"]
-            isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "time_deposits_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      transactions: {
-        Row: {
-          amount: number
-          created_at: string
-          currency: string
-          id: string
-          recipient_address: string | null
-          status: string | null
-          transaction_type: string
-          updated_at: string
-          user_id: string
-          wallet_id: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          currency: string
-          id?: string
-          recipient_address?: string | null
-          status?: string | null
-          transaction_type: string
-          updated_at?: string
-          user_id: string
-          wallet_id: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          currency?: string
-          id?: string
-          recipient_address?: string | null
-          status?: string | null
-          transaction_type?: string
-          updated_at?: string
-          user_id?: string
-          wallet_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "transactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "transactions_wallet_id_fkey"
-            columns: ["wallet_id"]
-            isOneToOne: false
-            referencedRelation: "wallets"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       transfer_types: {
         Row: {
@@ -903,155 +600,34 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "transfers_destination_currency_fkey"
-            columns: ["destination_currency"]
-            isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "transfers_source_currency_fkey"
-            columns: ["source_currency"]
-            isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "transfers_source_wallet_id_fkey"
-            columns: ["source_wallet_id"]
-            isOneToOne: false
-            referencedRelation: "wallets"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "transfers_transfer_type_id_fkey"
             columns: ["transfer_type_id"]
             isOneToOne: false
             referencedRelation: "transfer_types"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "transfers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
         ]
-      }
-      user_profiles: {
-        Row: {
-          business_name: string | null
-          company_size: string | null
-          created_at: string | null
-          id: string
-          industry: string | null
-          is_active: boolean | null
-          profile_type: Database["public"]["Enums"]["profile_type"]
-          tax_id: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          business_name?: string | null
-          company_size?: string | null
-          created_at?: string | null
-          id?: string
-          industry?: string | null
-          is_active?: boolean | null
-          profile_type: Database["public"]["Enums"]["profile_type"]
-          tax_id?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          business_name?: string | null
-          company_size?: string | null
-          created_at?: string | null
-          id?: string
-          industry?: string | null
-          is_active?: boolean | null
-          profile_type?: Database["public"]["Enums"]["profile_type"]
-          tax_id?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
       }
       user_roles: {
         Row: {
           created_at: string
           id: string
-          role: Database["public"]["Enums"]["user_role"]
           updated_at: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
-          role: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
-          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id?: string | null
         }
         Relationships: []
-      }
-      wallets: {
-        Row: {
-          address: string | null
-          balance: number | null
-          created_at: string
-          currency: string
-          currency_code: string | null
-          id: string
-          updated_at: string
-          user_id: string
-          wallet_type: string
-        }
-        Insert: {
-          address?: string | null
-          balance?: number | null
-          created_at?: string
-          currency: string
-          currency_code?: string | null
-          id?: string
-          updated_at?: string
-          user_id: string
-          wallet_type: string
-        }
-        Update: {
-          address?: string | null
-          balance?: number | null
-          created_at?: string
-          currency?: string
-          currency_code?: string | null
-          id?: string
-          updated_at?: string
-          user_id?: string
-          wallet_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "wallets_currency_code_fkey"
-            columns: ["currency_code"]
-            isOneToOne: false
-            referencedRelation: "currencies"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "wallets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {
