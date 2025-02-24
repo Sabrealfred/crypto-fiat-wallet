@@ -807,6 +807,213 @@ export type Database = {
           },
         ]
       }
+      treasury_balances: {
+        Row: {
+          amount: number
+          balance_date: string | null
+          created_at: string | null
+          currency: string
+          division: string | null
+          entity_id: string | null
+          id: string
+          region: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          balance_date?: string | null
+          created_at?: string | null
+          currency: string
+          division?: string | null
+          entity_id?: string | null
+          id?: string
+          region?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          balance_date?: string | null
+          created_at?: string | null
+          currency?: string
+          division?: string | null
+          entity_id?: string | null
+          id?: string
+          region?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treasury_balances_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      treasury_forecasts: {
+        Row: {
+          amount: number
+          confidence_level: number | null
+          created_at: string | null
+          currency: string
+          entity_id: string | null
+          forecast_date: string | null
+          forecast_type: string
+          id: string
+          metadata: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          confidence_level?: number | null
+          created_at?: string | null
+          currency: string
+          entity_id?: string | null
+          forecast_date?: string | null
+          forecast_type: string
+          id?: string
+          metadata?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          confidence_level?: number | null
+          created_at?: string | null
+          currency?: string
+          entity_id?: string | null
+          forecast_date?: string | null
+          forecast_type?: string
+          id?: string
+          metadata?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treasury_forecasts_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      treasury_reconciliation_rules: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          pattern: string
+          priority: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          pattern: string
+          priority?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          pattern?: string
+          priority?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      treasury_tags: {
+        Row: {
+          color: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          rule_pattern: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          color: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          rule_pattern?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          rule_pattern?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      treasury_transactions: {
+        Row: {
+          amount: number
+          bai_code: string | null
+          bank_name: string
+          created_at: string | null
+          currency: string
+          description: string | null
+          entity_id: string | null
+          id: string
+          metadata: Json | null
+          status: string | null
+          tags: Json | null
+          transaction_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          bai_code?: string | null
+          bank_name: string
+          created_at?: string | null
+          currency: string
+          description?: string | null
+          entity_id?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string | null
+          tags?: Json | null
+          transaction_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          bai_code?: string | null
+          bank_name?: string
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          entity_id?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string | null
+          tags?: Json | null
+          transaction_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "treasury_transactions_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_organizations: {
         Row: {
           created_at: string

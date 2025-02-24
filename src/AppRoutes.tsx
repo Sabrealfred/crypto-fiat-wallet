@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -70,7 +69,13 @@ export function AppRoutes() {
           <Route path="payroll" element={<PayrollPage />} />
           <Route path="invoices" element={<InvoicesPage />} />
           <Route path="expenses" element={<ExpensesPage />} />
-          <Route path="treasury" element={<TreasuryPage />} />
+          <Route path="treasury">
+            <Route path="" element={<TreasuryDashboard />} />
+            <Route path="cash-flow" element={<div>Cash Flow - Coming Soon</div>} />
+            <Route path="transactions" element={<div>Transactions - Coming Soon</div>} />
+            <Route path="investments" element={<div>Investments - Coming Soon</div>} />
+            <Route path="fx" element={<div>FX Operations - Coming Soon</div>} />
+          </Route>
           <Route path="trade-finance" element={<TradeFinancePage />} />
           <Route path="risk-management" element={<RiskManagementPage />} />
           <Route path="payment-processor" element={<PaymentProcessorPage />} />
