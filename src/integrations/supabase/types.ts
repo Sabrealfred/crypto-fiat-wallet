@@ -411,12 +411,40 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_types: {
+        Row: {
+          code: string
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
           first_name: string | null
           id: string
           last_name: string | null
+          profile_type: string | null
           updated_at: string | null
         }
         Insert: {
@@ -424,6 +452,7 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          profile_type?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -431,9 +460,18 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          profile_type?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_profile_type_fkey"
+            columns: ["profile_type"]
+            isOneToOne: false
+            referencedRelation: "profile_types"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       roles: {
         Row: {
@@ -783,6 +821,41 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_profile_types: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          profile_type_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          profile_type_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          profile_type_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profile_types_profile_type_id_fkey"
+            columns: ["profile_type_id"]
+            isOneToOne: false
+            referencedRelation: "profile_types"
             referencedColumns: ["id"]
           },
         ]

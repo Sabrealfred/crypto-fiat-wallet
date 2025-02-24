@@ -7,6 +7,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import UsersPage from "@/pages/admin/Users";
+import UserProfilesPage from "@/pages/admin/UserProfiles";
 import AccountsPage from "@/pages/admin/Accounts";
 import TransactionsPage from "@/pages/admin/Transactions";
 import ProductsPage from "@/pages/admin/Products";
@@ -46,6 +47,7 @@ export function AppRoutes() {
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="user-profiles" element={<UserProfilesPage />} />
           <Route path="accounts" element={<AccountsPage />} />
           <Route path="transactions" element={<TransactionsPage />} />
           <Route path="products" element={<ProductsPage />} />

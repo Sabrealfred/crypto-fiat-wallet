@@ -9,7 +9,8 @@ import {
   Settings,
   LogOut,
   HeartHandshake,
-  HelpCircle
+  HelpCircle,
+  UserCog
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -43,6 +44,12 @@ export default function AdminLayout() {
             <Button variant="ghost" className="w-full justify-start">
               <Users className="mr-2 h-4 w-4" />
               Usuarios
+            </Button>
+          </Link>
+          <Link to="/admin/user-profiles">
+            <Button variant="ghost" className="w-full justify-start">
+              <UserCog className="mr-2 h-4 w-4" />
+              Perfiles
             </Button>
           </Link>
           <Link to="/admin/accounts">
