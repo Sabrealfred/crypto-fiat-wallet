@@ -7,7 +7,7 @@ import { BarChart3, TrendingUp, PieChart, ArrowDownUp } from "lucide-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 
-export default function TreasuryDashboard() {
+const TreasuryDashboard = () => {
   const { data: balances = [] } = useQuery({
     queryKey: ['treasury-balances'],
     queryFn: async () => {
@@ -123,3 +123,5 @@ export default function TreasuryDashboard() {
     </AppLayout>
   );
 }
+
+export default TreasuryDashboard;
