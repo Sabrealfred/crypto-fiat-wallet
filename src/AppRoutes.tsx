@@ -55,10 +55,36 @@ export function AppRoutes() {
 
         {/* Regular User Routes */}
         <Route path="/" element={<PersonalDashboard />} />
-        <Route path="/business" element={<BusinessDashboard />} />
-        <Route path="/commercial" element={<CommercialDashboard />} />
-        <Route path="/private" element={<PrivateBankingDashboard />} />
-        <Route path="/developers" element={<DeveloperPortal />} />
+        <Route path="/personal" element={<PersonalDashboard />} />
+        
+        {/* Business Routes */}
+        <Route path="/business">
+          <Route path="dashboard" element={<BusinessDashboard />} />
+        </Route>
+
+        {/* Commercial Routes */}
+        <Route path="/commercial">
+          <Route path="dashboard" element={<CommercialDashboard />} />
+          <Route path="payroll" element={<PayrollPage />} />
+          <Route path="invoices" element={<InvoicesPage />} />
+          <Route path="expenses" element={<ExpensesPage />} />
+          <Route path="treasury" element={<TreasuryPage />} />
+          <Route path="trade-finance" element={<TradeFinancePage />} />
+          <Route path="risk-management" element={<RiskManagementPage />} />
+          <Route path="payment-processor" element={<PaymentProcessorPage />} />
+        </Route>
+
+        {/* Private Banking Routes */}
+        <Route path="/private">
+          <Route path="dashboard" element={<PrivateBankingDashboard />} />
+        </Route>
+
+        {/* Developer Routes */}
+        <Route path="/developer">
+          <Route path="dashboard" element={<DeveloperPortal />} />
+        </Route>
+
+        {/* Shared Routes */}
         <Route path="/wallet" element={<WalletPage />} />
         <Route path="/cards" element={<CardsPage />} />
         <Route path="/history" element={<HistoryPage />} />
@@ -70,15 +96,6 @@ export function AppRoutes() {
         <Route path="/savings" element={<SavingsPage />} />
         <Route path="/investments" element={<InvestmentsPage />} />
         <Route path="/deposits" element={<DepositsPage />} />
-
-        {/* Commercial Routes */}
-        <Route path="/payroll" element={<PayrollPage />} />
-        <Route path="/invoices" element={<InvoicesPage />} />
-        <Route path="/expenses" element={<ExpensesPage />} />
-        <Route path="/treasury" element={<TreasuryPage />} />
-        <Route path="/trade-finance" element={<TradeFinancePage />} />
-        <Route path="/risk-management" element={<RiskManagementPage />} />
-        <Route path="/payment-processor" element={<PaymentProcessorPage />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -64,19 +64,19 @@ export function ProfileSelector() {
     // Redirect to the appropriate dashboard based on profile type
     switch (profile.profile_type) {
       case 'personal':
-        navigate('/');
+        navigate('/personal');
         break;
       case 'business':
-        navigate('/business');
+        navigate('/business/dashboard');
         break;
       case 'commercial':
-        navigate('/commercial');
+        navigate('/commercial/dashboard');
         break;
       case 'private_banking':
-        navigate('/private');
+        navigate('/private/dashboard');
         break;
       case 'developer':
-        navigate('/developer');
+        navigate('/developer/dashboard');
         break;
     }
   };
