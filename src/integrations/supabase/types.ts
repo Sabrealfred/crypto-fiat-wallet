@@ -9,6 +9,45 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      accounts: {
+        Row: {
+          account_number: string
+          account_type: Database["public"]["Enums"]["account_type"]
+          balance: number | null
+          business_type: Database["public"]["Enums"]["business_type"] | null
+          created_at: string
+          currency: string | null
+          id: string
+          is_active: boolean | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          account_number: string
+          account_type: Database["public"]["Enums"]["account_type"]
+          balance?: number | null
+          business_type?: Database["public"]["Enums"]["business_type"] | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          account_number?: string
+          account_type?: Database["public"]["Enums"]["account_type"]
+          balance?: number | null
+          business_type?: Database["public"]["Enums"]["business_type"] | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bill_payments: {
         Row: {
           account_number: string | null
@@ -737,6 +776,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       wallets: {
         Row: {
           address: string | null
@@ -796,12 +859,16 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      account_type: "savings" | "checking" | "investment" | "credit"
+      business_type: "personal" | "business" | "commercial" | "private_banking"
       profile_type:
         | "personal"
         | "business"
         | "commercial"
         | "private_banking"
         | "developer"
+      transaction_type: "deposit" | "withdrawal" | "transfer" | "payment"
+      user_role: "admin" | "user" | "auditor" | "operator"
     }
     CompositeTypes: {
       [_ in never]: never

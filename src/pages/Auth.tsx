@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { UserRoleData } from "@/types/auth";
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -15,24 +16,36 @@ export default function Auth() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        checkUserRole(session.user.id);
-      }
-    });
-  }, [navigate]);
+    checkSession();
+  }, []);
+
+  const checkSession = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      await checkUserRole(session.user.id);
+    }
+  };
 
   const checkUserRole = async (userId: string) => {
-    const { data: roles } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle();
 
-    if (roles?.role === 'admin') {
-      navigate('/admin/dashboard');
-    } else {
-      navigate('/');
+      if (error) {
+        console.error('Error fetching user role:', error);
+        return;
+      }
+
+      if (data?.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Error checking user role:', error);
     }
   };
 
