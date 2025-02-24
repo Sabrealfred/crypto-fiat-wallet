@@ -36,7 +36,7 @@ export function QuickActions() {
     {
       icon: Receipt,
       label: "Generar factura",
-      to: "/invoices",
+      to: "/commercial/invoices",
       variant: "outline" as const
     }
   ];
@@ -62,7 +62,7 @@ export function QuickActions() {
         </div>
 
         <div className="space-y-3">
-          <Link to="/payroll" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+          <Link to="/commercial/payroll" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Users className="h-5 w-5 text-primary" />
@@ -75,7 +75,7 @@ export function QuickActions() {
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </Link>
 
-          <Link to="/invoices" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+          <Link to="/commercial/invoices" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                 <FileText className="h-5 w-5 text-primary" />
@@ -88,7 +88,7 @@ export function QuickActions() {
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </Link>
 
-          <Link to="/expenses" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+          <Link to="/commercial/expenses" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Briefcase className="h-5 w-5 text-primary" />
@@ -101,7 +101,7 @@ export function QuickActions() {
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </Link>
 
-          <Link to="/payment-processor" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+          <Link to="/commercial/payment-processor" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
                 <CreditCard className="h-5 w-5 text-primary" />
