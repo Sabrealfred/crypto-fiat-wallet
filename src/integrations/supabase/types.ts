@@ -324,6 +324,33 @@ export type Database = {
         }
         Relationships: []
       }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       roles: {
         Row: {
           created_at: string | null
@@ -604,6 +631,41 @@ export type Database = {
             columns: ["transfer_type_id"]
             isOneToOne: false
             referencedRelation: "transfer_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_organizations: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          organization_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          organization_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          organization_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_organizations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

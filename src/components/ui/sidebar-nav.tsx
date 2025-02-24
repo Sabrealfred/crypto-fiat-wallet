@@ -18,23 +18,13 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { DarkModeToggle } from "@/components/layout/dark-mode-toggle";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import type { ProfileType } from "@/types/profiles";
+import { OrganizationSelector } from "@/components/organization/OrganizationSelector";
 
 interface SidebarNavProps {
   className?: string;
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
 }
-
-const dashboardRoutes = {
-  personal: "/personal",
-  business: "/business/dashboard",
-  commercial: "/commercial/dashboard",
-  private_banking: "/private/dashboard",
-  developer: "/developer/dashboard",
-};
 
 export function SidebarNav({
   className = "",
@@ -43,39 +33,6 @@ export function SidebarNav({
 }: SidebarNavProps) {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const { data: currentProfile } = useQuery({
-    queryKey: ['current-profile'],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
-
-      const { data: profiles } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true });
-
-      if (!profiles?.length) return null;
-
-      // Determinar el perfil actual basado en la ruta
-      const profileType = getCurrentProfileTypeFromPath(location.pathname);
-      return profiles.find(p => p.profile_type === profileType) || profiles[0];
-    },
-  });
-
-  const getCurrentProfileTypeFromPath = (path: string): ProfileType => {
-    if (path.startsWith('/business')) return 'business';
-    if (path.startsWith('/commercial')) return 'commercial';
-    if (path.startsWith('/private')) return 'private_banking';
-    if (path.startsWith('/developer')) return 'developer';
-    return 'personal';
-  };
-
-  const getDashboardRoute = () => {
-    if (!currentProfile) return '/';
-    return dashboardRoutes[currentProfile.profile_type];
-  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -86,18 +43,23 @@ export function SidebarNav({
         ${isCollapsed ? 'w-20' : 'w-64'}
         bg-white/70 backdrop-blur-sm p-4 border-r
       `}>
-        <div className="flex items-center gap-2 mb-8">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-            <Wallet2 className="h-5 w-5 text-white" />
+        <div className="space-y-4 mb-8">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+              <Wallet2 className="h-5 w-5 text-white" />
+            </div>
+            <span className={`font-semibold text-lg transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>
+              Waymu Wallet
+            </span>
           </div>
-          <span className={`font-semibold text-lg transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>
-            Waymu Wallet
-          </span>
+          {!isCollapsed && (
+            <OrganizationSelector />
+          )}
         </div>
         
         <nav className="space-y-1">
-          <Link to={getDashboardRoute()}>
-            <Button variant={isActive(getDashboardRoute()) ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
+          <Link to={location.pathname.split('/')[1]}>
+            <Button variant={isActive(location.pathname) ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
               <Home className="h-4 w-4" />
               <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
                 Dashboard
