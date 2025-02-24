@@ -48,6 +48,44 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bill_payments: {
         Row: {
           account_number: string | null
@@ -293,6 +331,48 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_products: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          interest_rate: number | null
+          max_amount: number | null
+          min_amount: number | null
+          name: string
+          status: string | null
+          terms: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          interest_rate?: number | null
+          max_amount?: number | null
+          min_amount?: number | null
+          name: string
+          status?: string | null
+          terms?: string | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          interest_rate?: number | null
+          max_amount?: number | null
+          min_amount?: number | null
+          name?: string
+          status?: string | null
+          terms?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       kyc_documents: {
         Row: {
           created_at: string
@@ -374,6 +454,8 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
+          birth_date: string | null
           created_at: string
           first_name: string | null
           id: string
@@ -382,10 +464,14 @@ export type Database = {
           phone_number: string | null
           preferred_currency: string | null
           preferred_language: string | null
+          role_id: string | null
+          status: string | null
           two_fa_enabled: boolean | null
           updated_at: string
         }
         Insert: {
+          address?: string | null
+          birth_date?: string | null
           created_at?: string
           first_name?: string | null
           id: string
@@ -394,10 +480,14 @@ export type Database = {
           phone_number?: string | null
           preferred_currency?: string | null
           preferred_language?: string | null
+          role_id?: string | null
+          status?: string | null
           two_fa_enabled?: boolean | null
           updated_at?: string
         }
         Update: {
+          address?: string | null
+          birth_date?: string | null
           created_at?: string
           first_name?: string | null
           id?: string
@@ -406,8 +496,45 @@ export type Database = {
           phone_number?: string | null
           preferred_currency?: string | null
           preferred_language?: string | null
+          role_id?: string | null
+          status?: string | null
           two_fa_enabled?: boolean | null
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          permissions: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          permissions?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          permissions?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -493,6 +620,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      support_tickets: {
+        Row: {
+          assigned_to: string | null
+          created_at: string | null
+          description: string
+          id: string
+          resolution: string | null
+          status: Database["public"]["Enums"]["ticket_status"] | null
+          title: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          resolution?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          title: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          resolution?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"] | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "support_tickets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_settings: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          key: string
+          updated_at: string | null
+          value: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          key: string
+          updated_at?: string | null
+          value: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          key?: string
+          updated_at?: string | null
+          value?: string
+        }
+        Relationships: []
       }
       time_deposits: {
         Row: {
@@ -861,12 +1063,15 @@ export type Database = {
     Enums: {
       account_type: "savings" | "checking" | "investment" | "credit"
       business_type: "personal" | "business" | "commercial" | "private_banking"
+      kyc_status: "pending" | "approved" | "rejected"
       profile_type:
         | "personal"
         | "business"
         | "commercial"
         | "private_banking"
         | "developer"
+      ticket_status: "open" | "in_progress" | "closed" | "escalated"
+      transaction_status: "pending" | "approved" | "rejected" | "completed"
       transaction_type: "deposit" | "withdrawal" | "transfer" | "payment"
       user_role: "admin" | "user" | "auditor" | "operator"
     }
