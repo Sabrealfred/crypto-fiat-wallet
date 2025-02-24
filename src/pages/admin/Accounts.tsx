@@ -8,6 +8,7 @@ import { Search, PlusCircle, Edit2, Ban, CheckCircle2, History } from "lucide-re
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { TransactionHistoryModal } from "@/components/admin/TransactionHistoryModal";
 
 type AccountType = 'savings' | 'checking' | 'investment' | 'credit';
 type BusinessType = 'personal' | 'business' | 'commercial' | 'private_banking';
@@ -38,10 +39,12 @@ interface AccountFormData {
 
 export default function AccountsPage() {
   const [search, setSearch] = useState("");
-  const [accountTypeFilter, setAccountTypeFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [accountTypeFilter, setAccountTypeFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [selectedAccountForHistory, setSelectedAccountForHistory] = useState<string>("");
 
   const { data: accounts, isLoading, refetch } = useQuery({
     queryKey: ["admin-accounts"],
@@ -102,6 +105,11 @@ export default function AccountsPage() {
     }
   };
 
+  const handleViewHistory = (accountId: string) => {
+    setSelectedAccountForHistory(accountId);
+    setIsHistoryModalOpen(true);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -116,7 +124,6 @@ export default function AccountsPage() {
 
     try {
       if (selectedAccount) {
-        // Actualizar cuenta existente
         const { error } = await supabase
           .from("accounts")
           .update(accountData)
@@ -125,7 +132,6 @@ export default function AccountsPage() {
         if (error) throw error;
         toast.success("Cuenta actualizada exitosamente");
       } else {
-        // Crear nueva cuenta
         const { error } = await supabase
           .from("accounts")
           .insert({
@@ -371,6 +377,7 @@ export default function AccountsPage() {
                         variant="ghost" 
                         size="icon"
                         title="Ver historial"
+                        onClick={() => handleViewHistory(account.id)}
                       >
                         <History className="h-4 w-4" />
                       </Button>
@@ -382,6 +389,15 @@ export default function AccountsPage() {
           </table>
         </div>
       </Card>
+
+      <TransactionHistoryModal 
+        accountId={selectedAccountForHistory}
+        isOpen={isHistoryModalOpen}
+        onClose={() => {
+          setIsHistoryModalOpen(false);
+          setSelectedAccountForHistory("");
+        }}
+      />
     </div>
   );
 }
