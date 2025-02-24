@@ -52,9 +52,8 @@ export default function PersonalDashboard() {
     },
     staleTime: 30000,
     gcTime: 3600000,
-    retry: false,
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Error loading balance data");
+    meta: {
+      errorMessage: "Error loading balance data"
     }
   });
 
@@ -101,9 +100,8 @@ export default function PersonalDashboard() {
     },
     staleTime: 60000,
     gcTime: 3600000,
-    retry: false,
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Error loading notifications");
+    meta: {
+      errorMessage: "Error loading notifications"
     }
   });
 
@@ -126,10 +124,10 @@ export default function PersonalDashboard() {
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <BalanceCard 
-                total={balanceData?.total || 0}
-                change={balanceData?.change || 0}
-                fiat={balanceData?.fiat || 0}
-                crypto={balanceData?.crypto || 0}
+                total={balanceData?.total ?? 0}
+                change={balanceData?.change ?? 0}
+                fiat={balanceData?.fiat ?? 0}
+                crypto={balanceData?.crypto ?? 0}
               />
             </div>
             <div>
