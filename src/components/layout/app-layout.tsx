@@ -57,16 +57,23 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-0 z-40 md:relative md:translate-x-0 transition-transform duration-200 ease-in-out`}>
           <div className="absolute inset-0 bg-black/50 md:hidden" onClick={() => setIsSidebarOpen(false)} />
-          <SidebarNav 
-            className="relative z-50" 
-            isDarkMode={isDarkMode}
-            onToggleDarkMode={toggleDarkMode}
-          />
+          <div className="relative z-50 h-full flex flex-col">
+            <SidebarNav 
+              className="flex-1" 
+              isDarkMode={isDarkMode}
+              onToggleDarkMode={toggleDarkMode}
+            />
+            <div className="p-4 border-t md:hidden">
+              <ProfileSelector variant="secondary" />
+            </div>
+          </div>
         </div>
 
         <div className="flex-1">
-          <div className="p-4 flex items-center justify-between border-b">
-            <ProfileSelector />
+          <div className="p-4 flex items-center justify-end border-b gap-4">
+            <div className="hidden md:block">
+              <ProfileSelector />
+            </div>
             <UserMenu onLogout={handleLogout} />
           </div>
           <div className="p-4">

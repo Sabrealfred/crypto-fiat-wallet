@@ -15,6 +15,12 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { UserProfile, ProfileType } from "@/types/profiles";
 import { toast } from "sonner";
+import { VariantProps } from "class-variance-authority";
+import { buttonVariants } from "@/components/ui/button";
+
+interface ProfileSelectorProps extends VariantProps<typeof buttonVariants> {
+  className?: string;
+}
 
 const profileIcons = {
   personal: UserCircle2,
@@ -40,7 +46,7 @@ const dashboardRoutes = {
   developer: "/developer/dashboard",
 };
 
-export function ProfileSelector() {
+export function ProfileSelector({ variant = "ghost", className }: ProfileSelectorProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
@@ -48,9 +54,16 @@ export function ProfileSelector() {
   const { data: profiles } = useQuery({
     queryKey: ['user-profiles'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('No authenticated user');
+      }
+
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: true });
 
       if (error) {
@@ -64,7 +77,6 @@ export function ProfileSelector() {
 
   useEffect(() => {
     if (profiles?.length && !currentProfile) {
-      // Determinar el perfil actual basado en la ruta
       const profileType = getCurrentProfileTypeFromPath(location.pathname);
       const matchingProfile = profiles.find(p => p.profile_type === profileType) || profiles[0];
       setCurrentProfile(matchingProfile);
@@ -81,7 +93,6 @@ export function ProfileSelector() {
 
   const handleProfileChange = (profile: UserProfile) => {
     setCurrentProfile(profile);
-    // Redirigir al dashboard correspondiente usando las rutas predefinidas
     navigate(dashboardRoutes[profile.profile_type]);
   };
 
@@ -98,7 +109,7 @@ export function ProfileSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center gap-2">
+        <Button variant={variant} className="flex items-center gap-2 w-full">
           <Icon className="h-5 w-5" />
           <span className="hidden md:inline">
             {currentProfile ? profileLabels[currentProfile.profile_type] : "Select Profile"}
