@@ -17,6 +17,8 @@ import {
   Trophy,
   Sparkles,
   ArrowRight,
+  CreditCard,
+  BarChart3
 } from "lucide-react";
 
 const investmentProducts = [
@@ -74,10 +76,33 @@ const investmentProducts = [
     expectedReturn: "10-20%",
     riskLevel: "High",
   },
+  {
+    id: "payment-processor",
+    name: "Payment Processor",
+    icon: CreditCard,
+    description: "Process payments and transactions for your investment operations",
+    minAmount: 1000,
+    expectedReturn: "N/A",
+    riskLevel: "Low",
+    isBrokerService: true,
+  },
+  {
+    id: "trading-platform",
+    name: "Trading Platform",
+    icon: BarChart3,
+    description: "Advanced trading platform with real-time market data and analysis tools",
+    minAmount: 2000,
+    expectedReturn: "Variable",
+    riskLevel: "Medium-High",
+    isBrokerService: true,
+  },
 ];
 
 export default function InvestmentsPage() {
   const [selectedTab, setSelectedTab] = useState("explore");
+
+  const standardProducts = investmentProducts.filter(p => !p.isBrokerService);
+  const brokerProducts = investmentProducts.filter(p => p.isBrokerService);
 
   return (
     <AppLayout>
@@ -90,13 +115,14 @@ export default function InvestmentsPage() {
         <Tabs defaultValue="explore" className="space-y-6" value={selectedTab} onValueChange={setSelectedTab}>
           <TabsList>
             <TabsTrigger value="explore">Explore Products</TabsTrigger>
+            <TabsTrigger value="broker">Broker Services</TabsTrigger>
             <TabsTrigger value="portfolio">My Portfolio</TabsTrigger>
             <TabsTrigger value="performance">Performance</TabsTrigger>
           </TabsList>
 
           <TabsContent value="explore" className="space-y-6">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {investmentProducts.map((product) => {
+              {standardProducts.map((product) => {
                 const Icon = product.icon;
                 return (
                   <Card key={product.id} className="overflow-hidden">
@@ -125,6 +151,51 @@ export default function InvestmentsPage() {
                       </div>
                       <Button className="w-full flex items-center justify-center gap-2">
                         Start Investing <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="broker" className="space-y-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">Broker Services</h2>
+              <p className="text-muted-foreground">Professional tools and services for advanced trading</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              {brokerProducts.map((product) => {
+                const Icon = product.icon;
+                return (
+                  <Card key={product.id} className="overflow-hidden">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-start justify-between">
+                        <Icon className="h-8 w-8 text-primary" />
+                        <div className="px-2 py-1 bg-primary/10 text-primary rounded text-sm">
+                          {product.riskLevel}
+                        </div>
+                      </div>
+                      <CardTitle className="text-xl mt-4">{product.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-muted-foreground">
+                        {product.description}
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Min. Requirement</span>
+                          <span className="font-medium">${product.minAmount}</span>
+                        </div>
+                        {product.expectedReturn !== "N/A" && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Return Rate</span>
+                            <span className="font-medium">{product.expectedReturn}</span>
+                          </div>
+                        )}
+                      </div>
+                      <Button className="w-full flex items-center justify-center gap-2">
+                        Get Started <ArrowRight className="h-4 w-4" />
                       </Button>
                     </CardContent>
                   </Card>
