@@ -33,6 +33,7 @@ import RiskManagementPage from "@/pages/commercial/RiskManagement";
 import PayrollPage from "@/pages/commercial/Payroll";
 import InvoicesPage from "@/pages/commercial/Invoices";
 import ExpensesPage from "@/pages/commercial/Expenses";
+import PaymentProcessorPage from "@/pages/commercial/PaymentProcessor";
 
 export function AppRoutes() {
   return (
@@ -77,6 +78,7 @@ export function AppRoutes() {
         <Route path="/treasury" element={<TreasuryPage />} />
         <Route path="/trade-finance" element={<TradeFinancePage />} />
         <Route path="/risk-management" element={<RiskManagementPage />} />
+        <Route path="/payment-processor" element={<PaymentProcessorPage />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

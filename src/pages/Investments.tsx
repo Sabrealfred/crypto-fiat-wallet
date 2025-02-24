@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +16,6 @@ import {
   Trophy,
   Sparkles,
   ArrowRight,
-  CreditCard,
   BarChart3
 } from "lucide-react";
 
@@ -75,16 +73,6 @@ const investmentProducts = [
     minAmount: 100,
     expectedReturn: "10-20%",
     riskLevel: "High",
-  },
-  {
-    id: "payment-processor",
-    name: "Payment Processor",
-    icon: CreditCard,
-    description: "Process payments and transactions for your investment operations",
-    minAmount: 1000,
-    expectedReturn: "N/A",
-    riskLevel: "Low",
-    isBrokerService: true,
   },
   {
     id: "trading-platform",
