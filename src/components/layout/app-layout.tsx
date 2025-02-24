@@ -64,7 +64,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               onToggleDarkMode={toggleDarkMode}
             />
             <div className="p-4 border-t md:hidden">
-              <ProfileSelector variant="secondary" />
+              <ProfileSelector />
             </div>
           </div>
         </div>
