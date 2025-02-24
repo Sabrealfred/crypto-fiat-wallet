@@ -44,12 +44,19 @@ export default function UsersPage() {
 
       if (rolesError) throw rolesError;
 
-      // Combine the data manually
-      return profiles.map(profile => ({
+      // Ensure the roles are of type AppRole
+      const typedUserRoles = userRoles?.map(r => ({
+        user_id: r.user_id,
+        role: r.role as AppRole
+      })) || [];
+
+      // Combine the data manually with type checking
+      return profiles?.map(profile => ({
         ...profile,
-        user_roles: userRoles?.filter(r => r.user_id === profile.id)
-          .map(r => ({ role: r.role })) || []
-      }));
+        user_roles: typedUserRoles
+          .filter(r => r.user_id === profile.id)
+          .map(r => ({ role: r.role }))
+      })) as User[];
     },
   });
 

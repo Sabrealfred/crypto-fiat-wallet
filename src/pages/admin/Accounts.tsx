@@ -8,11 +8,14 @@ import { Search, PlusCircle, Edit2, Ban, CheckCircle2, History } from "lucide-re
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type AccountType = 'savings' | 'checking' | 'investment' | 'credit';
+type BusinessType = 'personal' | 'business' | 'commercial' | 'private_banking';
+
 interface Account {
   id: string;
   account_number: string;
-  account_type: string;
-  business_type: string;
+  account_type: AccountType;
+  business_type: BusinessType;
   balance: number;
   currency: string;
   is_active: boolean;
@@ -39,7 +42,9 @@ export default function AccountsPage() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as Account[];
+      
+      // Asegurarse de que los datos coincidan con la interfaz Account
+      return (data || []) as Account[];
     },
   });
 
@@ -85,6 +90,7 @@ export default function AccountsPage() {
               <SelectItem value="savings">Ahorros</SelectItem>
               <SelectItem value="checking">Corriente</SelectItem>
               <SelectItem value="investment">Inversión</SelectItem>
+              <SelectItem value="credit">Crédito</SelectItem>
             </SelectContent>
           </Select>
           <Select>
