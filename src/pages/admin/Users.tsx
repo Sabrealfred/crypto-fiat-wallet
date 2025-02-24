@@ -9,20 +9,34 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AdminUser } from "@/types/admin";
 
+type ProfileWithRoles = {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone_number: string | null;
+  kyc_status: string | null;
+  user_roles: { role: string }[] | null;
+}
+
 export default function UsersPage() {
-  const { data: users, isLoading } = useQuery<AdminUser[]>({
+  const { data: users, isLoading } = useQuery<ProfileWithRoles[]>({
     queryKey: ["admin-users"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
         .select(`
-          *,
+          id,
+          first_name,
+          last_name,
+          phone_number,
+          kyc_status,
           user_roles (
             role
           )
         `);
+
       if (error) throw error;
-      return data;
+      return data as ProfileWithRoles[];
     },
   });
 
