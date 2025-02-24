@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { useQuery } from "@tanstack/react-query";
@@ -63,7 +62,6 @@ export default function TransferPage() {
   const [destinationCurrency, setDestinationCurrency] = useState("USD");
   const [selectedCategory, setSelectedCategory] = useState("domestic");
 
-  // Fetch transfer types
   const { data: transferTypes } = useQuery({
     queryKey: ["transferTypes"],
     queryFn: async () => {
@@ -77,7 +75,6 @@ export default function TransferPage() {
     }
   });
 
-  // Fetch currencies
   const { data: currencies } = useQuery({
     queryKey: ["currencies"],
     queryFn: async () => {
@@ -90,7 +87,24 @@ export default function TransferPage() {
       return data as Currency[];
     }
   });
-  
+
+  const { data: accounts, isLoading: isLoadingAccounts } = useQuery({
+    queryKey: ['user-accounts'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+
+      const { data, error } = await supabase
+        .from('accounts')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+
+      if (error) throw error;
+      return data;
+    }
+  });
+
   const handleSubmit = async (data: any) => {
     try {
       setAmount(data.amount);

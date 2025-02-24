@@ -444,6 +444,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          phone_number: string | null
           profile_type: string | null
           updated_at: string | null
         }
@@ -452,6 +453,7 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          phone_number?: string | null
           profile_type?: string | null
           updated_at?: string | null
         }
@@ -460,6 +462,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          phone_number?: string | null
           profile_type?: string | null
           updated_at?: string | null
         }
@@ -662,6 +665,7 @@ export type Database = {
           created_at: string | null
           currency: string
           id: string
+          profile_id: string | null
           status: string
           transaction_type: string
           updated_at: string | null
@@ -672,6 +676,7 @@ export type Database = {
           created_at?: string | null
           currency?: string
           id?: string
+          profile_id?: string | null
           status?: string
           transaction_type: string
           updated_at?: string | null
@@ -682,12 +687,21 @@ export type Database = {
           created_at?: string | null
           currency?: string
           id?: string
+          profile_id?: string | null
           status?: string
           transaction_type?: string
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "transactions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transfer_types: {
         Row: {
@@ -864,18 +878,21 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          role: string
           updated_at: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
+          role?: string
           updated_at?: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          role?: string
           updated_at?: string
           user_id?: string | null
         }

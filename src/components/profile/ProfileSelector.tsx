@@ -1,144 +1,127 @@
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Check, ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { UserCircle2, Building2, Users, Diamond, Code2, ChevronDown, Plus } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import type { Profile } from "@/types/database";
-import { buttonVariants } from "@/components/ui/button";
-import type { VariantProps } from "class-variance-authority";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { supabase } from '@/integrations/supabase/client';
 
-interface ProfileSelectorProps extends VariantProps<typeof buttonVariants> {
-  className?: string;
+interface ProfileType {
+  id: string;
+  code: string;
+  name: string;
 }
 
-interface UserProfile extends Profile {
-  profile_type: 'personal' | 'business' | 'commercial' | 'private_banking' | 'developer';
-}
-
-const profileIcons = {
-  personal: UserCircle2,
-  business: Building2,
-  commercial: Users,
-  private_banking: Diamond,
-  developer: Code2,
-};
-
-const profileLabels = {
-  personal: "Personal Banking",
-  business: "Business Banking",
-  commercial: "Commercial Banking",
-  private_banking: "Private Banking",
-  developer: "Developer Portal",
-};
-
-const dashboardRoutes = {
-  personal: "/personal",
-  business: "/business/dashboard",
-  commercial: "/commercial/dashboard",
-  private_banking: "/private/dashboard",
-  developer: "/developer/dashboard",
-};
-
-export function ProfileSelector({ variant = "ghost", className }: ProfileSelectorProps) {
+export function ProfileSelector() {
+  const [open, setOpen] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<ProfileType | null>(null);
+  const [profiles, setProfiles] = useState<ProfileType[]>([]);
   const navigate = useNavigate();
-  const location = useLocation();
-  const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
-
-  const { data: profiles } = useQuery({
-    queryKey: ['user-profiles'],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("No authenticated user");
-
-      const { data: profiles, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (error) {
-        toast.error("Error loading profiles");
-        throw error;
-      }
-
-      return profiles as UserProfile[];
-    },
-  });
 
   useEffect(() => {
-    if (profiles?.length && !currentProfile) {
-      const profileType = getCurrentProfileTypeFromPath(location.pathname);
-      const matchingProfile = profiles.find(p => p.profile_type === profileType) || profiles[0];
-      setCurrentProfile(matchingProfile);
+    fetchUserProfiles();
+  }, []);
+
+  const fetchUserProfiles = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('user_profile_types')
+      .select(`
+        profile_type_id,
+        profile_types (
+          id,
+          code,
+          name
+        )
+      `)
+      .eq('user_id', user.id)
+      .eq('is_active', true);
+
+    if (error) {
+      console.error('Error fetching profiles:', error);
+      return;
     }
-  }, [profiles, currentProfile, location.pathname]);
 
-  const getCurrentProfileTypeFromPath = (path: string): UserProfile['profile_type'] => {
-    if (path.startsWith('/business')) return 'business';
-    if (path.startsWith('/commercial')) return 'commercial';
-    if (path.startsWith('/private')) return 'private_banking';
-    if (path.startsWith('/developer')) return 'developer';
-    return 'personal';
+    const availableProfiles = data
+      .map(item => item.profile_types)
+      .filter(profile => profile) as ProfileType[];
+
+    setProfiles(availableProfiles);
   };
 
-  const handleProfileChange = (profile: UserProfile) => {
-    setCurrentProfile(profile);
-    navigate(dashboardRoutes[profile.profile_type]);
+  const handleProfileSelect = (profile: ProfileType) => {
+    setSelectedProfile(profile);
+    setOpen(false);
+
+    switch (profile.code) {
+      case 'personal':
+        navigate('/');
+        break;
+      case 'business':
+        navigate('/business/dashboard');
+        break;
+      case 'commercial':
+        navigate('/commercial/dashboard');
+        break;
+      case 'private_banking':
+        navigate('/private/dashboard');
+        break;
+      case 'developer':
+        navigate('/developer/dashboard');
+        break;
+    }
   };
-
-  const handleCreateProfile = () => {
-    navigate('/settings/profiles/new');
-  };
-
-  if (!profiles?.length) {
-    return null;
-  }
-
-  const Icon = currentProfile ? profileIcons[currentProfile.profile_type] : UserCircle2;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={variant} className="flex items-center gap-2 w-full">
-          <Icon className="h-5 w-5" />
-          <span className="hidden md:inline">
-            {currentProfile ? profileLabels[currentProfile.profile_type] : "Select Profile"}
-          </span>
-          <ChevronDown className="h-4 w-4" />
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {selectedProfile ? selectedProfile.name : "Seleccionar perfil"}
+          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>Switch Profile</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {profiles?.map((profile) => {
-          const ProfileIcon = profileIcons[profile.profile_type];
-          return (
-            <DropdownMenuItem
-              key={profile.id}
-              onClick={() => handleProfileChange(profile)}
-              className="flex items-center gap-2"
-            >
-              <ProfileIcon className="h-4 w-4" />
-              <span>{profileLabels[profile.profile_type]}</span>
-            </DropdownMenuItem>
-          );
-        })}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleCreateProfile} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" />
-          <span>Add New Profile</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandInput placeholder="Buscar perfil..." className="h-9" />
+          <CommandEmpty>No se encontraron perfiles.</CommandEmpty>
+          <CommandGroup>
+            {profiles.map((profile) => (
+              <CommandItem
+                key={profile.id}
+                value={profile.code}
+                onSelect={() => handleProfileSelect(profile)}
+              >
+                {profile.name}
+                <Check
+                  className={cn(
+                    "ml-auto h-4 w-4",
+                    selectedProfile?.id === profile.id ? "opacity-100" : "opacity-0"
+                  )}
+                />
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
