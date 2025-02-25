@@ -1,5 +1,5 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
+import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,7 +13,7 @@ import { AdditionalRiskCard } from "./components/risk-management/AdditionalRiskC
 import { riskCategories, additionalRisks } from "./components/risk-management/data";
 import { RiskMetric } from "./components/risk-management/types";
 
-export default function RiskManagement() {
+export default function RiskManagementPage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const navigate = useNavigate();
@@ -42,31 +42,11 @@ export default function RiskManagement() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h1 className="text-2xl font-semibold mb-2">Risk Management</h1>
-            <p className="text-muted-foreground">
-              Comprehensive risk analysis and management tools
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate("/commercial/dashboard")}
-            >
-              Back to Dashboard
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className="animate-in fade-in duration-300"
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-              Refresh Metrics
-            </Button>
-          </div>
-        </div>
+        <CommercialHeader 
+          title="Risk Management"
+          description="Monitor and manage business risks"
+          showBack={true}
+        />
 
         <QuickAccessGrid />
 
