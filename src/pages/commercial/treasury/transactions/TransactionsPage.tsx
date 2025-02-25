@@ -16,11 +16,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Search, FileDown, Plus, Filter } from "lucide-react";
+import { TransactionFormModal } from "./TransactionFormModal";
 
 const TransactionsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<TreasuryTransaction | undefined>();
 
-  const { data: transactions = [], isLoading } = useQuery({
+  const { data: transactions = [], isLoading, refetch } = useQuery({
     queryKey: ['treasury-transactions'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -39,6 +42,21 @@ const TransactionsPage = () => {
     transaction.amount.toString().includes(searchTerm)
   );
 
+  const handleEdit = (transaction: TreasuryTransaction) => {
+    setSelectedTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleCreateNew = () => {
+    setSelectedTransaction(undefined);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedTransaction(undefined);
+  };
+
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
@@ -54,7 +72,7 @@ const TransactionsPage = () => {
               <FileDown className="mr-2 h-4 w-4" />
               Export
             </Button>
-            <Button>
+            <Button onClick={handleCreateNew}>
               <Plus className="mr-2 h-4 w-4" />
               New Transaction
             </Button>
@@ -113,7 +131,11 @@ const TransactionsPage = () => {
                   </TableRow>
                 ) : (
                   filteredTransactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
+                    <TableRow 
+                      key={transaction.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleEdit(transaction)}
+                    >
                       <TableCell>
                         {new Date(transaction.transaction_date).toLocaleDateString()}
                       </TableCell>
@@ -145,6 +167,13 @@ const TransactionsPage = () => {
             </Table>
           </CardContent>
         </Card>
+
+        <TransactionFormModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          transaction={selectedTransaction}
+          onSuccess={refetch}
+        />
       </div>
     </AppLayout>
   );
