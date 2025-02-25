@@ -196,6 +196,25 @@ export function TransactionTagStats() {
 
   const combinedData = [...monthlyData, ...predictions];
 
+  const detectAnomalies = (data: number[]): number[] => {
+    const mean = data.reduce((sum, val) => sum + val, 0) / data.length;
+    const stdDev = Math.sqrt(
+      data.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / data.length
+    );
+    const threshold = stdDev * 2; // 2 desviaciones estándar
+    
+    return data.map(val => Math.abs(val - mean) > threshold ? val : 0);
+  };
+
+  const anomalies = top5Tags.reduce((acc, tag) => {
+    const monthlyValues = Object.values(monthlyStats).map(m => m[tag] || 0);
+    const anomalousValues = detectAnomalies(monthlyValues);
+    if (anomalousValues.some(v => v !== 0)) {
+      acc[tag] = anomalousValues;
+    }
+    return acc;
+  }, {} as Record<string, number[]>);
+
   return (
     <Card className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -240,6 +259,8 @@ export function TransactionTagStats() {
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload as TagStats;
+                      const hasAnomaly = anomalies[data.tag]?.some(v => v > 0);
+                      
                       return (
                         <div className="bg-white p-3 border rounded-lg shadow">
                           <p className="font-medium">{data.tag}</p>
@@ -249,6 +270,11 @@ export function TransactionTagStats() {
                           {data.monthlyGrowth && (
                             <p className={data.monthlyGrowth > 0 ? 'text-green-600' : 'text-red-600'}>
                               Growth: {data.monthlyGrowth}%
+                            </p>
+                          )}
+                          {hasAnomaly && (
+                            <p className="text-yellow-600 font-medium">
+                              ⚠️ Anomalías detectadas
                             </p>
                           )}
                         </div>
@@ -276,11 +302,22 @@ export function TransactionTagStats() {
                     return (
                       <div className="bg-white p-3 border rounded-lg shadow">
                         <p className="font-medium">{label}</p>
-                        {payload.map((entry, index) => (
-                          <p key={index} style={{ color: entry.color }}>
-                            {entry.name}: ${entry.value?.toLocaleString()}
-                          </p>
-                        ))}
+                        {payload.map((entry) => {
+                          const tag = entry.dataKey as string;
+                          const value = entry.value as number;
+                          const isAnomaly = anomalies[tag]?.includes(value);
+                          
+                          return (
+                            <p 
+                              key={tag} 
+                              style={{ color: entry.color }}
+                              className={isAnomaly ? 'font-bold' : ''}
+                            >
+                              {tag}: ${value?.toLocaleString()}
+                              {isAnomaly && ' ⚠️'}
+                            </p>
+                          );
+                        })}
                       </div>
                     );
                   }
@@ -295,7 +332,20 @@ export function TransactionTagStats() {
                     dataKey={tag}
                     stroke={`hsl(${index * 60}, 70%, 50%)`}
                     strokeWidth={2}
-                    dot={{ r: 4 }}
+                    dot={({ payload }) => {
+                      const value = payload[tag];
+                      const isAnomaly = anomalies[tag]?.includes(value);
+                      return (
+                        <circle
+                          cx={0}
+                          cy={0}
+                          r={isAnomaly ? 6 : 4}
+                          fill={isAnomaly ? "#fbbf24" : `hsl(${index * 60}, 70%, 50%)`}
+                          stroke={isAnomaly ? "#f59e0b" : "none"}
+                          strokeWidth={2}
+                        />
+                      );
+                    }}
                     activeDot={{ r: 6 }}
                   />
                 ))}
@@ -303,7 +353,7 @@ export function TransactionTagStats() {
             </ResponsiveContainer>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Líneas punteadas muestran predicciones para los próximos 3 meses
+            ⚠️ Puntos amarillos indican anomalías | Líneas punteadas muestran predicciones
           </p>
         </Card>
       </div>
@@ -323,7 +373,12 @@ export function TransactionTagStats() {
           <tbody>
             {statsArray.map(stat => (
               <tr key={stat.tag} className="border-b hover:bg-muted/50 transition-colors">
-                <td className="py-2">{stat.tag}</td>
+                <td className="py-2">
+                  {stat.tag}
+                  {anomalies[stat.tag] && (
+                    <span className="ml-2 text-yellow-600" title="Anomalías detectadas">⚠️</span>
+                  )}
+                </td>
                 <td className="text-right">{stat.count}</td>
                 <td className="text-right">${stat.totalAmount.toLocaleString()}</td>
                 <td className="text-right">${stat.averageAmount.toLocaleString()}</td>
