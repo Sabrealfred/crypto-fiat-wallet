@@ -8,44 +8,44 @@ export function QuickAccessGrid() {
   return (
     <Card className="mb-8 bg-muted/50">
       <CardHeader>
-        <CardTitle className="text-lg">Quick Access - Commercial Banking</CardTitle>
+        <CardTitle className="text-lg">Quick Access - Risk Management</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <Link to="/commercial/treasury">
+          <Link to="/commercial/risk-management">
             <Button variant="outline" className="w-full justify-start">
               <LineChart className="w-4 h-4 mr-2" />
-              Treasury Dashboard
+              Risk Overview
             </Button>
           </Link>
-          <Link to="/commercial/treasury/cash-flow">
+          <Link to="/commercial/risk-management/market">
             <Button variant="outline" className="w-full justify-start">
               <DollarSign className="w-4 h-4 mr-2" />
-              Cash Flow Analysis
+              Market Risk
             </Button>
           </Link>
-          <Link to="/commercial/treasury/transactions">
+          <Link to="/commercial/risk-management/operational">
             <Button variant="outline" className="w-full justify-start">
               <TrendingUp className="w-4 h-4 mr-2" />
-              Transaction Management
+              Operational Risk
             </Button>
           </Link>
-          <Link to="/commercial/payroll">
+          <Link to="/commercial/risk-management/compliance">
             <Button variant="outline" className="w-full justify-start">
               <Users className="w-4 h-4 mr-2" />
-              Payroll
+              Compliance
             </Button>
           </Link>
-          <Link to="/commercial/invoices">
+          <Link to="/commercial/risk-management/reports">
             <Button variant="outline" className="w-full justify-start">
               <FileWarning className="w-4 h-4 mr-2" />
-              Invoices
+              Risk Reports
             </Button>
           </Link>
-          <Link to="/commercial/expenses">
+          <Link to="/commercial/risk-management/settings">
             <Button variant="outline" className="w-full justify-start">
               <Building2 className="w-4 h-4 mr-2" />
-              Expenses
+              Settings
             </Button>
           </Link>
         </div>
@@ -53,4 +53,3 @@ export function QuickAccessGrid() {
     </Card>
   );
 }
-

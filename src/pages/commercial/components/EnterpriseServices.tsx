@@ -7,7 +7,7 @@ export function EnterpriseServices() {
     <div className="glass-card p-6">
       <h2 className="text-lg font-semibold mb-4">Enterprise Services</h2>
       <div className="space-y-3">
-        <Link to="/treasury" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+        <Link to="/commercial/treasury" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <DollarSign className="h-5 w-5 text-primary" />
@@ -20,7 +20,7 @@ export function EnterpriseServices() {
           <ChevronRight className="h-5 w-5 text-muted-foreground" />
         </Link>
 
-        <Link to="/trade-finance" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+        <Link to="/commercial/trade-finance" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Globe2 className="h-5 w-5 text-primary" />
@@ -33,7 +33,7 @@ export function EnterpriseServices() {
           <ChevronRight className="h-5 w-5 text-muted-foreground" />
         </Link>
 
-        <Link to="/risk-management" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
+        <Link to="/commercial/risk-management" className="flex items-center justify-between p-3 hover:bg-accent rounded-lg transition-colors">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Briefcase className="h-5 w-5 text-primary" />

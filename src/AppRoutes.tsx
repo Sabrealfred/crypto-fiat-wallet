@@ -68,7 +68,7 @@ export function AppRoutes() {
         {/* Commercial Routes */}
         <Route path="/commercial">
           <Route path="dashboard" element={<CommercialDashboard />} />
-          <Route path="risk-management" element={<RiskManagement />} />
+          <Route path="risk-management/*" element={<RiskManagement />} />
           <Route path="payroll" element={<PayrollPage />} />
           <Route path="invoices" element={<InvoicesPage />} />
           <Route path="expenses" element={<ExpensesPage />} />
