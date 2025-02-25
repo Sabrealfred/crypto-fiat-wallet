@@ -18,6 +18,5 @@ enabled = true
 port = 54323
 api_url = "http://localhost"
 
-[[functions]]
-name = "portfolio-rebalance"
+[functions.portfolio-rebalance]
 verify_jwt = true
