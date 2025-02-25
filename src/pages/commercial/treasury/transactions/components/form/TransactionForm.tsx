@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { FormTags } from "./FormTags";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { applyTagRules } from "../../services/tagRules";
+import { applyTagRules } from "../../../services/tagRules";
 
 interface FormErrors {
   bank_name?: string;
