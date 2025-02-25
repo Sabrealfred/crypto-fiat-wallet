@@ -70,8 +70,11 @@ export function AppRoutes() {
           <Route path="dashboard" element={<BusinessDashboard />} />
         </Route>
 
-        {/* Commercial Routes */}
+        {/* Commercial Banking Routes */}
         <Route path="/commercial">
+          <Route path="" element={<CommercialDashboard />} />
+          <Route path="dashboard" element={<CommercialDashboard />} />
+          
           {/* Treasury Routes */}
           <Route path="treasury">
             <Route path="" element={<TreasuryDashboard />} />

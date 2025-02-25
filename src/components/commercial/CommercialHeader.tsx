@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface CommercialHeaderProps {
@@ -20,15 +20,24 @@ export function CommercialHeader({ title, description, showBack = true }: Commer
           <p className="text-muted-foreground">{description}</p>
         )}
       </div>
-      {showBack && (
+      <div className="flex gap-2">
+        {showBack && (
+          <Button 
+            variant="outline" 
+            onClick={() => navigate(-1)}
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+        )}
         <Button 
           variant="outline" 
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/commercial/dashboard")}
         >
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          Back
+          <Home className="mr-2 h-4 w-4" />
+          Dashboard
         </Button>
-      )}
+      </div>
     </div>
   );
 }
