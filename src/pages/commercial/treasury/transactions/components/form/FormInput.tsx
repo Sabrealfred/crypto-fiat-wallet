@@ -10,6 +10,7 @@ interface FormInputProps {
   type?: string;
   required?: boolean;
   step?: string;
+  error?: string;
 }
 
 export function FormInput({
@@ -20,6 +21,7 @@ export function FormInput({
   type = "text",
   required = false,
   step,
+  error,
 }: FormInputProps) {
   return (
     <div className="space-y-2">
@@ -31,7 +33,11 @@ export function FormInput({
         onChange={(e) => onChange(type === "number" ? parseFloat(e.target.value) : e.target.value)}
         required={required}
         step={step}
+        className={error ? "border-red-500" : ""}
       />
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
     </div>
   );
 }
