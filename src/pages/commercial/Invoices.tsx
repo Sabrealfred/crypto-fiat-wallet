@@ -1,5 +1,6 @@
 
 import { AppLayout } from "@/components/layout/app-layout";
+import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, FileText, TrendingUp, BarChart, Calendar, DollarSign } from "lucide-react";
@@ -60,12 +61,11 @@ export default function InvoicesPage() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Invoice Management</h1>
-          <p className="text-muted-foreground">
-            Create, track, and manage your business invoices efficiently
-          </p>
-        </div>
+        <CommercialHeader 
+          title="Invoice Management"
+          description="Create, track, and manage your business invoices efficiently"
+          showBack={true}
+        />
 
         {/* Métricas de Facturas */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
