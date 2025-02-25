@@ -1,56 +1,65 @@
 
-import { TagStats } from '../types';
+import { Card } from "@/components/ui/card";
+import { TagStats } from "../types";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
+import { TrendingDown, TrendingUp, Minus } from "lucide-react";
 
-interface TagStatsTableProps {
+export interface TagStatsTableProps {
   statsArray: TagStats[];
   top5Tags: string[];
   anomalies: Record<string, number[]>;
+  showPercentages?: boolean;
 }
 
-export function TagStatsTable({ statsArray, top5Tags, anomalies }: TagStatsTableProps) {
+export function TagStatsTable({ 
+  statsArray, 
+  top5Tags, 
+  anomalies,
+  showPercentages = false 
+}: TagStatsTableProps) {
   return (
-    <div className="mt-6 overflow-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left py-2">Tag</th>
-            <th className="text-right py-2">Transactions</th>
-            <th className="text-right py-2">Total Amount</th>
-            <th className="text-right py-2">Average Amount</th>
-            <th className="text-right py-2">Monthly Growth</th>
-            <th className="text-right py-2">Predicted Trend</th>
-          </tr>
-        </thead>
-        <tbody>
-          {statsArray.map(stat => (
-            <tr key={stat.tag} className="border-b hover:bg-muted/50 transition-colors">
-              <td className="py-2">
-                {stat.tag}
-                {anomalies[stat.tag] && (
-                  <span className="ml-2 text-yellow-600" title="Anomalías detectadas">⚠️</span>
-                )}
-              </td>
-              <td className="text-right">{stat.count}</td>
-              <td className="text-right">${stat.totalAmount.toLocaleString()}</td>
-              <td className="text-right">${stat.averageAmount.toLocaleString()}</td>
-              <td className={`text-right ${
-                stat.monthlyGrowth && stat.monthlyGrowth > 0 ? 'text-green-600' : 
-                stat.monthlyGrowth && stat.monthlyGrowth < 0 ? 'text-red-600' : ''
-              }`}>
-                {stat.monthlyGrowth ? `${stat.monthlyGrowth}%` : '-'}
-              </td>
-              <td className="text-right">
-                {top5Tags.includes(stat.tag) ? 
-                  (stat.monthlyGrowth && stat.monthlyGrowth > 5 ? '📈 Creciente' :
-                   stat.monthlyGrowth && stat.monthlyGrowth < -5 ? '📉 Decreciente' : 
-                   '➡️ Estable') :
-                  '-'
-                }
-              </td>
-            </tr>
+    <Card className="mt-6">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Tag</TableHead>
+            <TableHead>Transacciones</TableHead>
+            <TableHead>Monto Total</TableHead>
+            <TableHead>Promedio</TableHead>
+            {showPercentages && <TableHead>Variación %</TableHead>}
+            <TableHead>Tendencia</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {statsArray.map((stat) => (
+            <TableRow key={stat.tag}>
+              <TableCell>{stat.tag}</TableCell>
+              <TableCell>{stat.count}</TableCell>
+              <TableCell>${stat.totalAmount.toLocaleString()}</TableCell>
+              <TableCell>${stat.averageAmount.toLocaleString()}</TableCell>
+              {showPercentages && (
+                <TableCell>
+                  <span className={stat.percentageChange > 0 ? 'text-green-500' : 'text-red-500'}>
+                    {stat.percentageChange > 0 ? '+' : ''}{stat.percentageChange?.toFixed(1)}%
+                  </span>
+                </TableCell>
+              )}
+              <TableCell>
+                {stat.trend === 'up' && <TrendingUp className="text-green-500" />}
+                {stat.trend === 'down' && <TrendingDown className="text-red-500" />}
+                {stat.trend === 'stable' && <Minus className="text-gray-500" />}
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </Card>
   );
 }
