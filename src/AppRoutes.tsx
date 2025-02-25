@@ -41,6 +41,7 @@ import PaymentProcessorPage from "@/pages/commercial/PaymentProcessor";
 import FundManagement from "@/pages/commercial/fund-management/Dashboard";
 import Portfolios from "@/pages/commercial/fund-management/Portfolios";
 import AIPortfolios from "@/pages/commercial/fund-management/AIPortfolios";
+import OperationsDashboard from "@/pages/commercial/operations/Dashboard";
 
 export function AppRoutes() {
   return (
@@ -85,6 +86,7 @@ export function AppRoutes() {
           </Route>
 
           {/* Operations Routes */}
+          <Route path="operations" element={<OperationsDashboard />} />
           <Route path="payroll" element={<PayrollPage />} />
           <Route path="invoices" element={<InvoicesPage />} />
           <Route path="expenses" element={<ExpensesPage />} />
