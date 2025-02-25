@@ -1,3 +1,4 @@
+
 import { Input } from "@/components/ui/input";
 import { DateRange } from "react-day-picker";
 import { CalendarDateRangePicker } from "@/components/ui/calendar-date-range-picker";
@@ -34,9 +35,8 @@ export function TransactionFilters({
             placeholder="Search transactions..."
             value={searchTerm}
             onChange={(e) => onFilterChange({
-              dateRange: dateRange,
-              status: selectedFilters.status,
-              tags: selectedFilters.tags,
+              ...selectedFilters,
+              dateRange: selectedFilters.dateRange,
             })}
           />
         </div>
@@ -49,49 +49,50 @@ export function TransactionFilters({
             }}
             onDateChange={(range: DateRange | undefined) =>
               onFilterChange({
-                dateRange: {
-                  from: range?.from?.toISOString().split('T')[0] || '',
-                  to: range?.to?.toISOString().split('T')[0] || '',
-                },
-                status: selectedFilters.status,
-                tags: selectedFilters.tags,
+                ...selectedFilters,
+                dateRange: range ? {
+                  from: range.from?.toISOString().split('T')[0] || '',
+                  to: range.to?.toISOString().split('T')[0] || '',
+                } : null,
               })
             }
           />
         </div>
 
         <div className="space-y-2">
-          <Select value={selectedFilters.status.join(',')} onValueChange={(value) => {
-            const status = value.split(',').map(status => status.trim());
-            onFilterChange({
-              dateRange: selectedFilters.dateRange,
-              status: status,
-              tags: selectedFilters.tags,
-            });
-          }}>
+          <Select 
+            value={selectedFilters.status[0] || "all"} 
+            onValueChange={(value) => {
+              onFilterChange({
+                ...selectedFilters,
+                status: value === "all" ? [] : [value],
+              });
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Status</SelectItem>
+              <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="completed">Completed</SelectItem>
               <SelectItem value="failed">Failed</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      </div>
 
-      <TransactionTagFilter
-        selectedTags={selectedFilters.tags}
-        onTagSelect={(tag) => {
-          onFilterChange({
-            dateRange: selectedFilters.dateRange,
-            status: selectedFilters.status,
-            tags: [tag],
-          });
-        }}
-      />
+        <div className="space-y-2">
+          <TransactionTagFilter
+            selectedTags={selectedFilters.tags}
+            onTagSelect={(tag) => {
+              onFilterChange({
+                ...selectedFilters,
+                tags: [tag],
+              });
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

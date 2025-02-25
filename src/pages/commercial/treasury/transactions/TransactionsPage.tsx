@@ -34,7 +34,6 @@ export default function TransactionsPage() {
   });
 
   const handleTransactionClick = (transaction: TreasuryTransaction) => {
-    // Implementar lógica de clic en transacción
     console.log('Transaction clicked:', transaction);
   };
 
