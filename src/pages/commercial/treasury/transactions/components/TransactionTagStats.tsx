@@ -1,14 +1,21 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
+import { startOfMonth, format, subMonths } from "date-fns";
 
 interface TagStats {
   tag: string;
   totalAmount: number;
   count: number;
   averageAmount: number;
+}
+
+interface MonthlyTagStats {
+  month: string;
+  [key: string]: number | string;
 }
 
 export function TransactionTagStats() {
@@ -40,9 +47,20 @@ export function TransactionTagStats() {
 
   // Calcular estadísticas por etiqueta
   const tagStats: Record<string, TagStats> = {};
+  const monthlyStats: Record<string, Record<string, number>> = {};
+  
+  // Inicializar los últimos 6 meses
+  for (let i = 0; i < 6; i++) {
+    const date = subMonths(new Date(), i);
+    const monthKey = format(date, 'yyyy-MM');
+    monthlyStats[monthKey] = {};
+  }
   
   transactions.forEach(transaction => {
+    const monthKey = format(new Date(transaction.transaction_date), 'yyyy-MM');
+    
     transaction.tags?.forEach(tagName => {
+      // Estadísticas generales
       if (!tagStats[tagName]) {
         tagStats[tagName] = {
           tag: tagName,
@@ -54,6 +72,11 @@ export function TransactionTagStats() {
       
       tagStats[tagName].totalAmount += transaction.amount;
       tagStats[tagName].count += 1;
+
+      // Estadísticas mensuales
+      if (monthlyStats[monthKey]) {
+        monthlyStats[monthKey][tagName] = (monthlyStats[monthKey][tagName] || 0) + transaction.amount;
+      }
     });
   });
 
@@ -67,9 +90,20 @@ export function TransactionTagStats() {
   // Ordenar por monto total
   statsArray.sort((a, b) => b.totalAmount - a.totalAmount);
 
+  // Preparar datos para el gráfico de tendencias
+  const monthlyData: MonthlyTagStats[] = Object.entries(monthlyStats)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([month, values]) => ({
+      month: format(new Date(month), 'MMM yyyy'),
+      ...values
+    }));
+
+  // Obtener los top 5 tags por monto total para el gráfico de tendencias
+  const top5Tags = statsArray.slice(0, 5).map(stat => stat.tag);
+
   return (
     <Card className="p-6">
-      <h2 className="text-lg font-semibold mb-4">Transaction Analysis by Tags</h2>
+      <h2 className="text-2xl font-semibold mb-6">Transaction Analysis by Tags</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card className="p-4 bg-muted/50">
@@ -92,18 +126,46 @@ export function TransactionTagStats() {
         </Card>
       </div>
 
-      <div className="h-[300px] mb-6">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={statsArray}>
-            <XAxis dataKey="tag" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="totalAmount" fill="#6366f1" name="Total Amount" />
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-4">
+          <h3 className="text-lg font-semibold mb-4">Total Amount by Tag</h3>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={statsArray}>
+                <XAxis dataKey="tag" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="totalAmount" fill="#6366f1" name="Total Amount" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <h3 className="text-lg font-semibold mb-4">Monthly Trends (Top 5 Tags)</h3>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={monthlyData}>
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {top5Tags.map((tag, index) => (
+                  <Line
+                    key={tag}
+                    type="monotone"
+                    dataKey={tag}
+                    stroke={`hsl(${index * 60}, 70%, 50%)`}
+                    strokeWidth={2}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
       </div>
 
-      <div className="overflow-auto">
+      <div className="mt-6 overflow-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b">
