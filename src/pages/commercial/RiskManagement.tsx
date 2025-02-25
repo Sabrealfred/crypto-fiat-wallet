@@ -2,6 +2,7 @@
 import { AppLayout } from "@/components/layout/app-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ChevronRight, 
   Shield, 
@@ -13,48 +14,71 @@ import {
   Users,
   Building2,
   Scale,
-  FileWarning
+  FileWarning,
+  RefreshCw
 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
-const riskCategories = [
+// Definimos un tipo para las métricas
+type RiskMetric = {
+  name: string;
+  value: string;
+  change: string;
+  status: 'good' | 'warning' | 'critical' | 'neutral';
+};
+
+type RiskCategory = {
+  title: string;
+  description: string;
+  icon: any;
+  metrics: RiskMetric[];
+  lastUpdate?: string;
+};
+
+const riskCategories: RiskCategory[] = [
   {
     title: "Market Risk Analysis",
     description: "Monitor and analyze market risk exposure",
     icon: LineChart,
+    lastUpdate: "2024-03-15T14:30:00",
     metrics: [
-      { name: "VaR (Value at Risk)", value: "2.3M", change: "+0.5%" },
-      { name: "Position Limit Usage", value: "67%", change: "-3%" },
-      { name: "Market Volatility Index", value: "18.4", change: "+2.1" }
+      { name: "VaR (Value at Risk)", value: "2.3M", change: "+0.5%", status: 'warning' },
+      { name: "Position Limit Usage", value: "67%", change: "-3%", status: 'good' },
+      { name: "Market Volatility Index", value: "18.4", change: "+2.1", status: 'warning' }
     ]
   },
   {
     title: "Credit Risk Assessment",
     description: "Evaluate and manage counterparty risks",
     icon: Shield,
+    lastUpdate: "2024-03-15T14:30:00",
     metrics: [
-      { name: "Total Exposure", value: "12.8M", change: "+1.2%" },
-      { name: "Default Probability", value: "0.8%", change: "-0.1%" },
-      { name: "Credit Rating Distribution", value: "A+", change: "stable" }
+      { name: "Total Exposure", value: "12.8M", change: "+1.2%", status: 'warning' },
+      { name: "Default Probability", value: "0.8%", change: "-0.1%", status: 'good' },
+      { name: "Credit Rating Distribution", value: "A+", change: "stable", status: 'good' }
     ]
   },
   {
     title: "Operational Risk",
     description: "Identify and mitigate operational risks",
     icon: AlertTriangle,
+    lastUpdate: "2024-03-15T14:30:00",
     metrics: [
-      { name: "Incident Rate", value: "0.05%", change: "-0.02%" },
-      { name: "System Uptime", value: "99.9%", change: "+0.1%" },
-      { name: "Control Effectiveness", value: "94%", change: "+2%" }
+      { name: "Incident Rate", value: "0.05%", change: "-0.02%", status: 'good' },
+      { name: "System Uptime", value: "99.9%", change: "+0.1%", status: 'good' },
+      { name: "Control Effectiveness", value: "94%", change: "+2%", status: 'good' }
     ]
   },
   {
     title: "Compliance Management",
     description: "Ensure regulatory compliance and reporting",
     icon: Lock,
+    lastUpdate: "2024-03-15T14:30:00",
     metrics: [
-      { name: "Compliance Score", value: "96%", change: "+1%" },
-      { name: "Open Findings", value: "3", change: "-2" },
-      { name: "Regulatory Reports", value: "100%", change: "stable" }
+      { name: "Compliance Score", value: "96%", change: "+1%", status: 'good' },
+      { name: "Open Findings", value: "3", change: "-2", status: 'warning' },
+      { name: "Regulatory Reports", value: "100%", change: "stable", status: 'good' }
     ]
   }
 ];
@@ -93,79 +117,155 @@ const additionalRisks = [
 ];
 
 export default function RiskManagementPage() {
+  const [activeTab, setActiveTab] = useState("overview");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    // Simulamos una actualización de datos
+    setTimeout(() => {
+      setIsRefreshing(false);
+      toast.success("Risk metrics updated successfully");
+    }, 1500);
+  };
+
+  const getStatusColor = (status: RiskMetric['status']) => {
+    switch (status) {
+      case 'good':
+        return 'text-green-500';
+      case 'warning':
+        return 'text-yellow-500';
+      case 'critical':
+        return 'text-red-500';
+      default:
+        return 'text-muted-foreground';
+    }
+  };
+
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Risk Management Dashboard</h1>
-          <p className="text-muted-foreground">
-            Comprehensive risk analysis and management tools
-          </p>
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h1 className="text-2xl font-semibold mb-2">Risk Management Dashboard</h1>
+            <p className="text-muted-foreground">
+              Comprehensive risk analysis and management tools
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="animate-in fade-in duration-300"
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh Metrics
+          </Button>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          {riskCategories.map((category, index) => (
-            <Card key={index} className="relative overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold">
-                  {category.title}
-                </CardTitle>
-                <category.icon className="h-5 w-5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {category.description}
-                </p>
-                <div className="space-y-4">
-                  {category.metrics.map((metric, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">{metric.name}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{metric.value}</span>
-                        <span className={`text-xs ${
-                          metric.change.includes('+') 
-                            ? 'text-green-500' 
-                            : metric.change.includes('-') 
-                            ? 'text-red-500' 
-                            : 'text-muted-foreground'
-                        }`}>
-                          {metric.change}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Button variant="outline" className="w-full mt-4">
-                  Ver Detalles
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          <TabsList className="w-full justify-start">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="details">Detailed Analysis</TabsTrigger>
+            <TabsTrigger value="reports">Risk Reports</TabsTrigger>
+          </TabsList>
 
-        <h2 className="text-xl font-semibold mb-4">Additional Risk Categories</h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          {additionalRisks.map((risk, index) => (
-            <Card key={index} className="hover:bg-accent/50 transition-colors cursor-pointer">
-              <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-                <div className="flex items-center space-x-4">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <risk.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-sm font-semibold">
-                      {risk.title}
+          <TabsContent value="overview" className="space-y-8">
+            <div className="grid md:grid-cols-2 gap-6">
+              {riskCategories.map((category, index) => (
+                <Card key={index} className="relative overflow-hidden group hover:shadow-lg transition-all">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                      <category.icon className="h-5 w-5 text-primary" />
+                      {category.title}
                     </CardTitle>
-                    <p className="text-xs text-muted-foreground">
-                      {risk.description}
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {category.description}
                     </p>
-                  </div>
-                </div>
-              </CardHeader>
+                    <div className="space-y-4">
+                      {category.metrics.map((metric, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                          <span className="text-sm text-muted-foreground">{metric.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className={`font-medium ${getStatusColor(metric.status)}`}>
+                              {metric.value}
+                            </span>
+                            <span className={`text-xs ${
+                              metric.change.includes('+') 
+                                ? 'text-green-500' 
+                                : metric.change.includes('-') 
+                                ? 'text-red-500' 
+                                : 'text-muted-foreground'
+                            }`}>
+                              {metric.change}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 pt-4 border-t flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">
+                        Last updated: {new Date(category.lastUpdate || '').toLocaleTimeString()}
+                      </span>
+                      <Button variant="outline" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        View Details
+                        <ChevronRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Additional Risk Categories</h2>
+              <div className="grid md:grid-cols-3 gap-4">
+                {additionalRisks.map((risk, index) => (
+                  <Card 
+                    key={index} 
+                    className="hover:bg-accent/50 transition-all cursor-pointer hover:shadow-md"
+                  >
+                    <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                      <div className="flex items-center space-x-4">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <risk.icon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-sm font-semibold">
+                            {risk.title}
+                          </CardTitle>
+                          <p className="text-xs text-muted-foreground">
+                            {risk.description}
+                          </p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="details">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Detailed Risk Analysis</h3>
+              <p className="text-muted-foreground">
+                Select a risk category above to view detailed analysis and metrics.
+              </p>
             </Card>
-          ))}
-        </div>
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Risk Reports</h3>
+              <p className="text-muted-foreground">
+                Generate and view detailed risk reports and assessments.
+              </p>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </AppLayout>
   );
