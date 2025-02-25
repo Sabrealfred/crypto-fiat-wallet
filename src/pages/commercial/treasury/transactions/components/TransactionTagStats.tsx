@@ -1,26 +1,17 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, Legend, Brush, CartesianGrid } from 'recharts';
-import { startOfMonth, format, subMonths, isSameMonth, addMonths } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { format, subMonths } from "date-fns";
 import { toast } from "sonner";
-
-interface TagStats {
-  tag: string;
-  totalAmount: number;
-  count: number;
-  averageAmount: number;
-  monthlyGrowth?: number;
-  trend?: 'up' | 'down' | 'stable';
-}
-
-interface MonthlyTagStats {
-  month: string;
-  [key: string]: number | string;
-}
+import { TagStatsHeader } from "./tag-stats/TagStatsHeader";
+import { TagMetricsCards } from "./tag-stats/TagMetricsCards";
+import { TagAmountChart } from "./tag-stats/TagAmountChart";
+import { TagTrendsChart } from "./tag-stats/TagTrendsChart";
+import { TagStatsTable } from "./tag-stats/TagStatsTable";
+import { calculateTagStats, calculatePredictions, detectAnomalies } from "./tag-stats/TagAnalytics";
+import { MonthlyTagStats, TagStats } from "./types";
 
 export function TransactionTagStats() {
   const { data: transactions = [] } = useQuery({
@@ -49,55 +40,16 @@ export function TransactionTagStats() {
     }
   });
 
-  const tagStats: Record<string, TagStats> = {};
+  // Inicializar estadísticas mensuales
   const monthlyStats: Record<string, Record<string, number>> = {};
-  
   for (let i = 0; i < 12; i++) {
     const date = subMonths(new Date(), i);
     const monthKey = format(date, 'yyyy-MM');
     monthlyStats[monthKey] = {};
   }
-  
-  transactions.forEach(transaction => {
-    const transactionDate = new Date(transaction.transaction_date);
-    const monthKey = format(transactionDate, 'yyyy-MM');
-    
-    transaction.tags?.forEach(tagName => {
-      if (!tagStats[tagName]) {
-        tagStats[tagName] = {
-          tag: tagName,
-          totalAmount: 0,
-          count: 0,
-          averageAmount: 0,
-          monthlyGrowth: 0
-        };
-      }
-      
-      tagStats[tagName].totalAmount += transaction.amount;
-      tagStats[tagName].count += 1;
 
-      if (monthlyStats[monthKey]) {
-        monthlyStats[monthKey][tagName] = (monthlyStats[monthKey][tagName] || 0) + transaction.amount;
-      }
-    });
-  });
-
-  Object.keys(tagStats).forEach(tagName => {
-    const monthlyAmounts = Object.keys(monthlyStats)
-      .sort()
-      .map(month => monthlyStats[month][tagName] || 0);
-    
-    if (monthlyAmounts.length >= 2) {
-      const lastMonth = monthlyAmounts[monthlyAmounts.length - 1];
-      const previousMonth = monthlyAmounts[monthlyAmounts.length - 2];
-      
-      if (previousMonth > 0) {
-        const growth = ((lastMonth - previousMonth) / previousMonth) * 100;
-        tagStats[tagName].monthlyGrowth = Number(growth.toFixed(1));
-        tagStats[tagName].trend = growth > 5 ? 'up' : growth < -5 ? 'down' : 'stable';
-      }
-    }
-  });
+  // Calcular estadísticas
+  const tagStats = calculateTagStats(transactions, monthlyStats);
 
   const statsArray = Object.values(tagStats)
     .map(stat => ({
@@ -107,14 +59,38 @@ export function TransactionTagStats() {
     }))
     .sort((a, b) => b.totalAmount - a.totalAmount);
 
-  const monthlyData: MonthlyTagStats[] = Object.entries(monthlyStats)
+  const top5Tags = statsArray.slice(0, 5).map(stat => stat.tag);
+
+  // Calcular datos mensuales y predicciones
+  const monthlyData = Object.entries(monthlyStats)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, values]) => ({
       month: format(new Date(month), 'MMM yyyy'),
       ...values
     }));
 
-  const top5Tags = statsArray.slice(0, 5).map(stat => stat.tag);
+  const predictions = top5Tags.reduce((acc, tag) => {
+    const tagPredictions = calculatePredictions(tag, monthlyStats);
+    if (tagPredictions) {
+      tagPredictions.forEach((pred, i) => {
+        if (!acc[i]) acc[i] = { month: pred.month };
+        acc[i] = { ...acc[i], ...pred };
+      });
+    }
+    return acc;
+  }, [] as MonthlyTagStats[]);
+
+  const combinedData = [...monthlyData, ...predictions];
+
+  // Detectar anomalías
+  const anomalies = top5Tags.reduce((acc, tag) => {
+    const monthlyValues = Object.values(monthlyStats).map(m => m[tag] || 0);
+    const anomalousValues = detectAnomalies(monthlyValues);
+    if (anomalousValues.some(v => v !== 0)) {
+      acc[tag] = anomalousValues;
+    }
+    return acc;
+  }, {} as Record<string, number[]>);
 
   const handleExportCSV = () => {
     const csvData = statsArray.map(stat => ({
@@ -147,260 +123,34 @@ export function TransactionTagStats() {
     toast.success("Statistics exported successfully");
   };
 
-  const calculatePredictions = (tag: string) => {
-    const monthlyData = Object.entries(monthlyStats)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([month, values]) => ({
-        month: new Date(month),
-        amount: values[tag] || 0
-      }));
-
-    if (monthlyData.length < 2) return null;
-
-    const n = monthlyData.length;
-    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
-    
-    monthlyData.forEach((data, i) => {
-      sumX += i;
-      sumY += data.amount;
-      sumXY += i * data.amount;
-      sumXX += i * i;
-    });
-
-    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-    const intercept = (sumY - slope * sumX) / n;
-
-    const predictions = [];
-    for (let i = 1; i <= 3; i++) {
-      const predictedAmount = slope * (n + i - 1) + intercept;
-      const predictedDate = addMonths(monthlyData[monthlyData.length - 1].month, i);
-      predictions.push({
-        month: format(predictedDate, 'MMM yyyy'),
-        [tag]: Math.max(0, predictedAmount)
-      });
-    }
-
-    return predictions;
-  };
-
-  const predictions = top5Tags.reduce((acc, tag) => {
-    const tagPredictions = calculatePredictions(tag);
-    if (tagPredictions) {
-      tagPredictions.forEach((pred, i) => {
-        if (!acc[i]) acc[i] = { month: pred.month };
-        acc[i] = { ...acc[i], ...pred };
-      });
-    }
-    return acc;
-  }, [] as MonthlyTagStats[]);
-
-  const combinedData = [...monthlyData, ...predictions];
-
-  const detectAnomalies = (data: number[]): number[] => {
-    const mean = data.reduce((sum, val) => sum + val, 0) / data.length;
-    const stdDev = Math.sqrt(
-      data.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / data.length
-    );
-    const threshold = stdDev * 2; // 2 desviaciones estándar
-    
-    return data.map(val => Math.abs(val - mean) > threshold ? val : 0);
-  };
-
-  const anomalies = top5Tags.reduce((acc, tag) => {
-    const monthlyValues = Object.values(monthlyStats).map(m => m[tag] || 0);
-    const anomalousValues = detectAnomalies(monthlyValues);
-    if (anomalousValues.some(v => v !== 0)) {
-      acc[tag] = anomalousValues;
-    }
-    return acc;
-  }, {} as Record<string, number[]>);
-
   return (
     <Card className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Transaction Analysis by Tags</h2>
-        <Button onClick={handleExportCSV} variant="outline" size="sm">
-          <Download className="h-4 w-4 mr-2" />
-          Export Stats
-        </Button>
-      </div>
+      <TagStatsHeader onExport={handleExportCSV} />
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="p-4 bg-muted/50">
-          <h3 className="text-sm font-medium mb-1">Total Tags</h3>
-          <p className="text-2xl font-bold">{tags.length}</p>
-        </Card>
-        
-        <Card className="p-4 bg-muted/50">
-          <h3 className="text-sm font-medium mb-1">Tagged Transactions</h3>
-          <p className="text-2xl font-bold">
-            {transactions.filter(t => t.tags?.length > 0).length}
-          </p>
-        </Card>
-        
-        <Card className="p-4 bg-muted/50">
-          <h3 className="text-sm font-medium mb-1">Untagged Transactions</h3>
-          <p className="text-2xl font-bold">
-            {transactions.filter(t => !t.tags?.length).length}
-          </p>
-        </Card>
-      </div>
+      <TagMetricsCards
+        totalTags={tags.length}
+        taggedTransactions={transactions.filter(t => t.tags?.length > 0).length}
+        untaggedTransactions={transactions.filter(t => !t.tags?.length).length}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-4">Total Amount by Tag</h3>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={statsArray}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="tag" />
-                <YAxis />
-                <Tooltip 
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const data = payload[0].payload as TagStats;
-                      const hasAnomaly = anomalies[data.tag]?.some(v => v > 0);
-                      
-                      return (
-                        <div className="bg-white p-3 border rounded-lg shadow">
-                          <p className="font-medium">{data.tag}</p>
-                          <p>Total: ${data.totalAmount.toLocaleString()}</p>
-                          <p>Count: {data.count}</p>
-                          <p>Average: ${data.averageAmount.toLocaleString()}</p>
-                          {data.monthlyGrowth && (
-                            <p className={data.monthlyGrowth > 0 ? 'text-green-600' : 'text-red-600'}>
-                              Growth: {data.monthlyGrowth}%
-                            </p>
-                          )}
-                          {hasAnomaly && (
-                            <p className="text-yellow-600 font-medium">
-                              ⚠️ Anomalías detectadas
-                            </p>
-                          )}
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Bar dataKey="totalAmount" fill="#6366f1" name="Total Amount" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-4">Monthly Trends & Predictions (Top 5 Tags)</h3>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={combinedData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip content={({ active, payload, label }) => {
-                  if (active && payload && payload.length) {
-                    return (
-                      <div className="bg-white p-3 border rounded-lg shadow">
-                        <p className="font-medium">{label}</p>
-                        {payload.map((entry) => {
-                          const tag = entry.dataKey as string;
-                          const value = entry.value as number;
-                          const isAnomaly = anomalies[tag]?.includes(value);
-                          
-                          return (
-                            <p 
-                              key={tag} 
-                              style={{ color: entry.color }}
-                              className={isAnomaly ? 'font-bold' : ''}
-                            >
-                              {tag}: ${value?.toLocaleString()}
-                              {isAnomaly && ' ⚠️'}
-                            </p>
-                          );
-                        })}
-                      </div>
-                    );
-                  }
-                  return null;
-                }} />
-                <Legend />
-                <Brush dataKey="month" height={30} stroke="#8884d8" />
-                {top5Tags.map((tag, index) => (
-                  <Line
-                    key={tag}
-                    type="monotone"
-                    dataKey={tag}
-                    stroke={`hsl(${index * 60}, 70%, 50%)`}
-                    strokeWidth={2}
-                    dot={({ payload }) => {
-                      const value = payload[tag];
-                      const isAnomaly = anomalies[tag]?.includes(value);
-                      return (
-                        <circle
-                          cx={0}
-                          cy={0}
-                          r={isAnomaly ? 6 : 4}
-                          fill={isAnomaly ? "#fbbf24" : `hsl(${index * 60}, 70%, 50%)`}
-                          stroke={isAnomaly ? "#f59e0b" : "none"}
-                          strokeWidth={2}
-                        />
-                      );
-                    }}
-                    activeDot={{ r: 6 }}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">
-            ⚠️ Puntos amarillos indican anomalías | Líneas punteadas muestran predicciones
-          </p>
-        </Card>
+        <TagAmountChart
+          statsArray={statsArray}
+          anomalies={anomalies}
+        />
+        
+        <TagTrendsChart
+          combinedData={combinedData}
+          top5Tags={top5Tags}
+          anomalies={anomalies}
+        />
       </div>
 
-      <div className="mt-6 overflow-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b">
-              <th className="text-left py-2">Tag</th>
-              <th className="text-right py-2">Transactions</th>
-              <th className="text-right py-2">Total Amount</th>
-              <th className="text-right py-2">Average Amount</th>
-              <th className="text-right py-2">Monthly Growth</th>
-              <th className="text-right py-2">Predicted Trend</th>
-            </tr>
-          </thead>
-          <tbody>
-            {statsArray.map(stat => (
-              <tr key={stat.tag} className="border-b hover:bg-muted/50 transition-colors">
-                <td className="py-2">
-                  {stat.tag}
-                  {anomalies[stat.tag] && (
-                    <span className="ml-2 text-yellow-600" title="Anomalías detectadas">⚠️</span>
-                  )}
-                </td>
-                <td className="text-right">{stat.count}</td>
-                <td className="text-right">${stat.totalAmount.toLocaleString()}</td>
-                <td className="text-right">${stat.averageAmount.toLocaleString()}</td>
-                <td className={`text-right ${
-                  stat.monthlyGrowth && stat.monthlyGrowth > 0 ? 'text-green-600' : 
-                  stat.monthlyGrowth && stat.monthlyGrowth < 0 ? 'text-red-600' : ''
-                }`}>
-                  {stat.monthlyGrowth ? `${stat.monthlyGrowth}%` : '-'}
-                </td>
-                <td className="text-right">
-                  {top5Tags.includes(stat.tag) ? 
-                    (stat.monthlyGrowth && stat.monthlyGrowth > 5 ? '📈 Creciente' :
-                     stat.monthlyGrowth && stat.monthlyGrowth < -5 ? '📉 Decreciente' : 
-                     '➡️ Estable') :
-                    '-'
-                  }
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <TagStatsTable
+        statsArray={statsArray}
+        top5Tags={top5Tags}
+        anomalies={anomalies}
+      />
     </Card>
   );
 }
