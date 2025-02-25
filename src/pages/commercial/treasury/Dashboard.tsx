@@ -1,5 +1,6 @@
 
 import { AppLayout } from "@/components/layout/app-layout";
+import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -80,12 +81,11 @@ export default function TreasuryDashboard() {
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Treasury Management</h1>
-          <p className="text-muted-foreground">
-            Overview of your organization's treasury operations and financial position
-          </p>
-        </div>
+        <CommercialHeader 
+          title="Treasury Management"
+          description="Overview of your organization's treasury operations and financial position"
+          showBack={true}
+        />
 
         <div className="grid gap-6">
           {/* Key Metrics */}
