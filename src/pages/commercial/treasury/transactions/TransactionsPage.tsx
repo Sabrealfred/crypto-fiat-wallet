@@ -15,6 +15,7 @@ const TransactionsPage = () => {
   const [selectedTransaction, setSelectedTransaction] = useState<TreasuryTransaction | undefined>();
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
   const [statusFilter, setStatusFilter] = useState<string>("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const { data: transactions = [], isLoading, refetch } = useQuery({
     queryKey: ['treasury-transactions'],
@@ -29,6 +30,14 @@ const TransactionsPage = () => {
     }
   });
 
+  const handleTagSelect = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
   const filteredTransactions = transactions.filter(transaction => {
     const matchesSearch = 
       transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,19 +51,24 @@ const TransactionsPage = () => {
       (!dateRange.from || transactionDate >= new Date(dateRange.from)) &&
       (!dateRange.to || transactionDate <= new Date(dateRange.to));
 
-    return matchesSearch && matchesStatus && matchesDateRange;
+    const matchesTags = 
+      selectedTags.length === 0 || 
+      selectedTags.every(tag => transaction.tags.includes(tag));
+
+    return matchesSearch && matchesStatus && matchesDateRange && matchesTags;
   });
 
   const handleExport = () => {
     const csvContent = [
-      ["Date", "Bank", "Description", "Status", "Amount", "Currency"].join(","),
+      ["Date", "Bank", "Description", "Status", "Amount", "Currency", "Tags"].join(","),
       ...filteredTransactions.map(t => [
         new Date(t.transaction_date).toLocaleDateString(),
         t.bank_name,
         t.description || "",
         t.status,
         t.amount,
-        t.currency
+        t.currency,
+        t.tags.join(";")
       ].join(","))
     ].join("\n");
 
@@ -80,9 +94,11 @@ const TransactionsPage = () => {
           searchTerm={searchTerm}
           dateRange={dateRange}
           statusFilter={statusFilter}
+          selectedTags={selectedTags}
           onSearchChange={setSearchTerm}
           onDateRangeChange={setDateRange}
           onStatusChange={setStatusFilter}
+          onTagSelect={handleTagSelect}
         />
 
         <TransactionTable
