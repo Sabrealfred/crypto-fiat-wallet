@@ -33,46 +33,54 @@ export default function CommercialDashboard() {
           </p>
         </div>
 
-        <div className="grid gap-8">
+        <div className="grid gap-6">
           <section className="fade-in">
             <h2 className="text-xl font-semibold mb-4">Key Performance Indicators</h2>
             <div className="grid gap-4">
               <CommercialMetrics />
-              <StatisticsCards 
-                currentEarning={currentEarning}
-                previousEarning={previousEarning}
-                currentSpending={currentSpending}
-                previousSpending={previousSpending}
-              />
             </div>
           </section>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            <section className="fade-in animation-delay-200">
-              <h2 className="text-xl font-semibold mb-4">Financial Analytics</h2>
-              <Card className="bg-background/95 shadow-lg">
-                <StatisticsChart monthlyData={monthlyData} />
-              </Card>
-            </section>
+          <section className="grid lg:grid-cols-2 gap-6">
+            <div className="space-y-6">
+              <div className="fade-in animation-delay-100">
+                <h2 className="text-xl font-semibold mb-4">Financial Analytics</h2>
+                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg">
+                  <StatisticsCards 
+                    currentEarning={currentEarning}
+                    previousEarning={previousEarning}
+                    currentSpending={currentSpending}
+                    previousSpending={previousSpending}
+                  />
+                </Card>
+              </div>
 
-            <section className="fade-in animation-delay-200">
-              <h2 className="text-xl font-semibold mb-4">Financial Highlights</h2>
-              <Card className="bg-background/95 shadow-lg h-full p-6">
+              <div className="fade-in animation-delay-200">
+                <h2 className="text-xl font-semibold mb-4">Area Performance</h2>
+                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg p-6">
+                  <AreaMetrics />
+                </Card>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="fade-in animation-delay-150">
+                <h2 className="text-xl font-semibold mb-4">Financial Highlights</h2>
                 <FinancialHighlights />
-              </Card>
-            </section>
-          </div>
+              </div>
 
-          <section className="fade-in animation-delay-300">
-            <h2 className="text-xl font-semibold mb-4">Area Performance</h2>
-            <Card className="bg-background/95 shadow-lg p-6">
-              <AreaMetrics />
-            </Card>
+              <div className="fade-in animation-delay-250">
+                <h2 className="text-xl font-semibold mb-4">Monthly Trends</h2>
+                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg">
+                  <StatisticsChart monthlyData={monthlyData} />
+                </Card>
+              </div>
+            </div>
           </section>
 
-          <section className="fade-in animation-delay-400">
+          <section className="fade-in animation-delay-300">
             <h2 className="text-xl font-semibold mb-4">Enterprise Services</h2>
-            <Card className="bg-background/95 shadow-lg p-6">
+            <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg p-6">
               <EnterpriseServices />
             </Card>
           </section>
