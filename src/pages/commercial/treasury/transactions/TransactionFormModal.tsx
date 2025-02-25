@@ -25,7 +25,8 @@ export function TransactionFormModal({
     currency: transaction?.currency || "USD",
     transaction_date: transaction?.transaction_date?.split('T')[0] || new Date().toISOString().split('T')[0],
     description: transaction?.description || "",
-    status: transaction?.status || "pending"
+    status: transaction?.status || "pending",
+    tags: transaction?.tags || []
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,10 +36,15 @@ export function TransactionFormModal({
     setIsSubmitting(true);
 
     try {
+      const submitData = {
+        ...formData,
+        metadata: {} // You might want to add more metadata here
+      };
+
       if (transaction?.id) {
         const { error } = await supabase
           .from('treasury_transactions')
-          .update(formData)
+          .update(submitData)
           .eq('id', transaction.id);
 
         if (error) throw error;
@@ -47,10 +53,8 @@ export function TransactionFormModal({
         const { error } = await supabase
           .from('treasury_transactions')
           .insert([{
-            ...formData,
+            ...submitData,
             entity_id: '1', // This should come from your auth context
-            tags: [],
-            metadata: {}
           }]);
 
         if (error) throw error;

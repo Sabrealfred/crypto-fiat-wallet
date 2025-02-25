@@ -1,4 +1,3 @@
-
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ interface FormErrors {
   transaction_date?: string;
   description?: string;
   status?: string;
+  tags?: string[];
 }
 
 interface TransactionFormProps {
@@ -23,6 +23,7 @@ interface TransactionFormProps {
     transaction_date: string;
     description: string;
     status: string;
+    tags: string[];
   };
   onFormChange: (data: any) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -84,6 +85,14 @@ export function TransactionForm({
           newErrors.transaction_date = 'Transaction date is required';
         } else {
           delete newErrors.transaction_date;
+        }
+        break;
+      
+      case 'tags':
+        if (!Array.isArray(value)) {
+          newErrors.tags = 'Tags must be an array';
+        } else {
+          delete newErrors.tags;
         }
         break;
     }
@@ -167,6 +176,12 @@ export function TransactionForm({
         options={statusOptions}
         required
         error={errors.status}
+      />
+
+      <FormTags
+        selectedTags={formData.tags}
+        onChange={(tags) => handleFieldChange('tags', tags)}
+        error={errors.tags}
       />
 
       <DialogFooter>
