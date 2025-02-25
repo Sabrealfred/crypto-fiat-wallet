@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
@@ -10,18 +10,31 @@ import { TagMetricsCards } from "./tag-stats/TagMetricsCards";
 import { TagAmountChart } from "./tag-stats/TagAmountChart";
 import { TagTrendsChart } from "./tag-stats/TagTrendsChart";
 import { TagStatsTable } from "./tag-stats/TagStatsTable";
+import { TagStatsFilters } from "./tag-stats/TagStatsFilters";
 import { calculateTagStats, calculatePredictions, detectAnomalies } from "./tag-stats/TagAnalytics";
 import { MonthlyTagStats, TagStats } from "./types";
+import { DateRange } from "react-day-picker";
 
 export function TransactionTagStats() {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [comparisonPeriod, setComparisonPeriod] = useState("previous");
+
   const { data: transactions = [] } = useQuery({
-    queryKey: ['treasury-transactions'],
+    queryKey: ['treasury-transactions', dateRange],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('treasury_transactions')
         .select('*')
         .order('transaction_date', { ascending: false });
-      
+
+      if (dateRange?.from) {
+        query = query.gte('transaction_date', dateRange.from.toISOString());
+      }
+      if (dateRange?.to) {
+        query = query.lte('transaction_date', dateRange.to.toISOString());
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
       return data as TreasuryTransaction[];
     }
@@ -40,15 +53,28 @@ export function TransactionTagStats() {
     }
   });
 
-  // Inicializar estadísticas mensuales
-  const monthlyStats: Record<string, Record<string, number>> = {};
-  for (let i = 0; i < 12; i++) {
-    const date = subMonths(new Date(), i);
-    const monthKey = format(date, 'yyyy-MM');
-    monthlyStats[monthKey] = {};
-  }
+  const { data: monthlyStats = {} } = useQuery({
+    queryKey: ['treasury-monthly-stats', dateRange],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('treasury_transactions')
+        .select('transaction_date')
+        .order('transaction_date', { ascending: false });
 
-  // Calcular estadísticas
+      if (error) throw error;
+      const monthlyStats: Record<string, Record<string, number>> = {};
+      data.forEach(transaction => {
+        const date = new Date(transaction.transaction_date);
+        const monthKey = format(date, 'yyyy-MM');
+        if (!monthlyStats[monthKey]) {
+          monthlyStats[monthKey] = {};
+        }
+        monthlyStats[monthKey][transaction.tags?.[0] || ''] = (monthlyStats[monthKey][transaction.tags?.[0] || ''] || 0) + 1;
+      });
+      return monthlyStats;
+    }
+  });
+
   const tagStats = calculateTagStats(transactions, monthlyStats);
 
   const statsArray = Object.values(tagStats)
@@ -61,7 +87,6 @@ export function TransactionTagStats() {
 
   const top5Tags = statsArray.slice(0, 5).map(stat => stat.tag);
 
-  // Calcular datos mensuales y predicciones
   const monthlyData = Object.entries(monthlyStats)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, values]) => ({
@@ -82,7 +107,6 @@ export function TransactionTagStats() {
 
   const combinedData = [...monthlyData, ...predictions];
 
-  // Detectar anomalías
   const anomalies = top5Tags.reduce((acc, tag) => {
     const monthlyValues = Object.values(monthlyStats).map(m => m[tag] || 0);
     const anomalousValues = detectAnomalies(monthlyValues);
@@ -127,6 +151,13 @@ export function TransactionTagStats() {
     <Card className="p-6">
       <TagStatsHeader onExport={handleExportCSV} />
       
+      <TagStatsFilters
+        dateRange={dateRange}
+        onDateRangeChange={setDateRange}
+        comparisonPeriod={comparisonPeriod}
+        onComparisonPeriodChange={setComparisonPeriod}
+      />
+
       <TagMetricsCards
         totalTags={tags.length}
         taggedTransactions={transactions.filter(t => t.tags?.length > 0).length}
