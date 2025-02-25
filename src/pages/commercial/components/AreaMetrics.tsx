@@ -1,59 +1,38 @@
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 const data = [
-  {
-    name: 'North',
-    revenue: 4000,
-    profit: 2400,
-  },
-  {
-    name: 'South',
-    revenue: 3000,
-    profit: 1398,
-  },
-  {
-    name: 'East',
-    revenue: 2000,
-    profit: 9800,
-  },
-  {
-    name: 'West',
-    revenue: 2780,
-    profit: 3908,
-  },
+  { name: 'Treasury', value: 35 },
+  { name: 'Investments', value: 30 },
+  { name: 'Operations', value: 20 },
+  { name: 'Other', value: 15 }
 ];
+
+const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
 
 export function AreaMetrics() {
   return (
     <div className="h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip 
-            content={({ active, payload, label }) => {
-              if (active && payload && payload.length) {
-                return (
-                  <div className="bg-background/95 p-3 rounded-lg shadow-lg border">
-                    <p className="font-medium">{label} Region</p>
-                    <p className="text-sm text-purple-500">
-                      Revenue: ${payload[0].value.toLocaleString()}
-                    </p>
-                    <p className="text-sm text-blue-500">
-                      Profit: ${payload[1].value.toLocaleString()}
-                    </p>
-                  </div>
-                );
-              }
-              return null;
-            }}
-          />
-          <Bar dataKey="revenue" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="profit" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-        </BarChart>
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={80}
+            fill="#8884d8"
+            paddingAngle={5}
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
       </ResponsiveContainer>
     </div>
   );
