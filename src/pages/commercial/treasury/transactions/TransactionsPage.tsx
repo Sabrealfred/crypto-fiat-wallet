@@ -1,127 +1,49 @@
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { TreasuryTransaction } from "@/types/treasury";
 import { AppLayout } from "@/components/layout/app-layout";
-import { TransactionFormModal } from "./TransactionFormModal";
-import { TransactionFilters } from "./components/TransactionFilters";
 import { TransactionTable } from "./components/TransactionTable";
-import { TransactionActions } from "./components/TransactionActions";
+import { TransactionFilters } from "./components/TransactionFilters";
+import { TransactionTagStats } from "./components/TransactionTagStats";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { TransactionFormModal } from "./TransactionFormModal";
 
-const TransactionsPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+export default function TransactionsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<TreasuryTransaction | undefined>();
-  const [dateRange, setDateRange] = useState({ from: "", to: "" });
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-  const { data: transactions = [], isLoading, refetch } = useQuery({
-    queryKey: ['treasury-transactions'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('treasury_transactions')
-        .select('*')
-        .order('transaction_date', { ascending: false });
-      
-      if (error) throw error;
-      return data as TreasuryTransaction[];
-    }
+  const [selectedFilters, setSelectedFilters] = useState({
+    dateRange: null,
+    status: [],
+    tags: [],
   });
-
-  const handleTagSelect = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
-  };
-
-  const filteredTransactions = transactions.filter(transaction => {
-    const matchesSearch = 
-      transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transaction.bank_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transaction.amount.toString().includes(searchTerm);
-
-    const matchesStatus = !statusFilter || transaction.status === statusFilter;
-
-    const transactionDate = new Date(transaction.transaction_date);
-    const matchesDateRange = 
-      (!dateRange.from || transactionDate >= new Date(dateRange.from)) &&
-      (!dateRange.to || transactionDate <= new Date(dateRange.to));
-
-    const matchesTags = 
-      selectedTags.length === 0 || 
-      selectedTags.every(tag => transaction.tags.includes(tag));
-
-    return matchesSearch && matchesStatus && matchesDateRange && matchesTags;
-  });
-
-  const handleExport = () => {
-    const csvContent = [
-      ["Date", "Bank", "Description", "Status", "Amount", "Currency", "Tags"].join(","),
-      ...filteredTransactions.map(t => [
-        new Date(t.transaction_date).toLocaleDateString(),
-        t.bank_name,
-        t.description || "",
-        t.status,
-        t.amount,
-        t.currency,
-        t.tags.join(";")
-      ].join(","))
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `treasury-transactions-${new Date().toISOString().split('T')[0]}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
-        <TransactionActions
-          onExport={handleExport}
-          onCreateNew={() => setIsModalOpen(true)}
-          transactions={filteredTransactions}
-        />
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-semibold">Treasury Transactions</h1>
+          <Button onClick={() => setIsModalOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Transaction
+          </Button>
+        </div>
 
-        <TransactionFilters
-          searchTerm={searchTerm}
-          dateRange={dateRange}
-          statusFilter={statusFilter}
-          selectedTags={selectedTags}
-          onSearchChange={setSearchTerm}
-          onDateRangeChange={setDateRange}
-          onStatusChange={setStatusFilter}
-          onTagSelect={handleTagSelect}
-        />
+        <div className="space-y-6">
+          <TransactionFilters
+            selectedFilters={selectedFilters}
+            onFilterChange={setSelectedFilters}
+          />
 
-        <TransactionTable
-          transactions={filteredTransactions}
-          isLoading={isLoading}
-          onTransactionClick={(transaction) => {
-            setSelectedTransaction(transaction);
-            setIsModalOpen(true);
-          }}
-        />
+          <TransactionTagStats />
 
-        <TransactionFormModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedTransaction(undefined);
-          }}
-          transaction={selectedTransaction}
-          onSuccess={refetch}
-        />
+          <TransactionTable filters={selectedFilters} />
+
+          <TransactionFormModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSuccess={() => setIsModalOpen(false)}
+          />
+        </div>
       </div>
     </AppLayout>
   );
-};
-
-export default TransactionsPage;
+}
