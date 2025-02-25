@@ -4,8 +4,11 @@ import { FormSelect } from "./FormSelect";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { TreasuryTransaction } from "@/types/treasury";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FormTags } from "./FormTags";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { applyTagRules } from "../../services/tagRules";
 
 interface FormErrors {
   bank_name?: string;
@@ -43,6 +46,31 @@ export function TransactionForm({
   isEdit,
 }: TransactionFormProps) {
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const { data: tags = [] } = useQuery({
+    queryKey: ['treasury-tags'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('treasury_tags')
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Apply automatic tag rules when description changes
+  useEffect(() => {
+    if (formData.description && !isEdit) {
+      const suggestedTags = applyTagRules(
+        { ...formData, id: '', entity_id: '', metadata: {}, created_at: '', updated_at: '' },
+        tags
+      );
+      onFormChange({ tags: suggestedTags });
+    }
+  }, [formData.description, tags, isEdit]);
 
   const statusOptions = [
     { value: "pending", label: "Pending" },
