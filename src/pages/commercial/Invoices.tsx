@@ -76,11 +76,11 @@ export default function InvoicesPage() {
                   {metric.title}
                 </CardTitle>
                 <metric.icon 
-                  className={
+                  className={`h-4 w-4 ${
                     metric.trend === "up" === (metric.title !== "Overdue Invoices")
                       ? "text-green-500" 
                       : "text-red-500"
-                  } 
+                  }`}
                 />
               </CardHeader>
               <CardContent>
