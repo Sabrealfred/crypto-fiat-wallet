@@ -1,12 +1,8 @@
 
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  CreditCard,
-  DollarSign,
   SendHorizontal,
   RefreshCw,
   FileCheck,
@@ -15,16 +11,10 @@ import {
   FileSearch
 } from "lucide-react";
 import { useState } from "react";
-
-interface Payment {
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  type: string;
-  date: string;
-  recipient: string;
-}
+import { QuickActionCard } from "./payment-processor/QuickActionCard";
+import { PaymentsList } from "./payment-processor/PaymentsList";
+import { EmptyTabContent } from "./payment-processor/EmptyTabContent";
+import { Payment } from "./types/payments";
 
 const recentPayments: Payment[] = [
   {
@@ -107,113 +97,31 @@ export default function PaymentProcessorPage() {
             </TabsContent>
 
             <TabsContent value="scheduled">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Scheduled Payments</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Clock className="mx-auto h-12 w-12 mb-4" />
-                    <p>No scheduled payments found</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <EmptyTabContent
+                title="Scheduled Payments"
+                icon={Clock}
+                message="No scheduled payments found"
+              />
             </TabsContent>
 
             <TabsContent value="recurring">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recurring Payments</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8 text-muted-foreground">
-                    <RefreshCw className="mx-auto h-12 w-12 mb-4" />
-                    <p>No recurring payments configured</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <EmptyTabContent
+                title="Recurring Payments"
+                icon={RefreshCw}
+                message="No recurring payments configured"
+              />
             </TabsContent>
 
             <TabsContent value="reports">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Payment Reports</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8 text-muted-foreground">
-                    <FileCheck className="mx-auto h-12 w-12 mb-4" />
-                    <p>No reports available</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <EmptyTabContent
+                title="Payment Reports"
+                icon={FileCheck}
+                message="No reports available"
+              />
             </TabsContent>
           </Tabs>
         </div>
       </div>
     </AppLayout>
-  );
-}
-
-function QuickActionCard({ 
-  title, 
-  icon: Icon, 
-  description 
-}: { 
-  title: string; 
-  icon: any; 
-  description: string;
-}) {
-  return (
-    <Card className="hover:bg-accent transition-colors cursor-pointer">
-      <CardContent className="pt-6">
-        <div className="text-center">
-          <Icon className="h-8 w-8 mx-auto mb-2 text-primary" />
-          <h3 className="font-semibold mb-1">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function PaymentsList({ payments }: { payments: Payment[] }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent Payments</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {payments.map((payment) => (
-            <div
-              key={payment.id}
-              className="flex items-center justify-between p-4 border rounded-lg"
-            >
-              <div className="flex items-center gap-4">
-                {payment.type === 'wire' && <SendHorizontal className="h-5 w-5 text-blue-500" />}
-                {payment.type === 'ach' && <DollarSign className="h-5 w-5 text-green-500" />}
-                {payment.type === 'swift' && <CreditCard className="h-5 w-5 text-purple-500" />}
-                <div>
-                  <p className="font-medium">{payment.recipient}</p>
-                  <p className="text-sm text-muted-foreground">{payment.date}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-medium">
-                  {payment.currency} {payment.amount.toLocaleString()}
-                </p>
-                <p className={`text-sm ${
-                  payment.status === 'completed' ? 'text-green-500' :
-                  payment.status === 'pending' ? 'text-yellow-500' :
-                  'text-blue-500'
-                }`}>
-                  {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
   );
 }
