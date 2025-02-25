@@ -7,14 +7,36 @@ import { TransactionTagStats } from "./components/TransactionTagStats";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { TransactionFormModal } from "./TransactionFormModal";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { TreasuryTransaction } from "@/types/treasury";
 
 export default function TransactionsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({
     dateRange: null,
-    status: [],
-    tags: [],
+    status: [] as string[],
+    tags: [] as string[],
   });
+
+  const { data: transactions = [], isLoading } = useQuery({
+    queryKey: ['treasury-transactions'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('treasury_transactions')
+        .select('*')
+        .order('transaction_date', { ascending: false });
+      
+      if (error) throw error;
+      return data as TreasuryTransaction[];
+    }
+  });
+
+  const handleTransactionClick = (transaction: TreasuryTransaction) => {
+    // Implementar lógica de clic en transacción
+    console.log('Transaction clicked:', transaction);
+  };
 
   return (
     <AppLayout>
@@ -29,13 +51,20 @@ export default function TransactionsPage() {
 
         <div className="space-y-6">
           <TransactionFilters
+            searchTerm={searchTerm}
+            dateRange={selectedFilters.dateRange}
             selectedFilters={selectedFilters}
             onFilterChange={setSelectedFilters}
           />
 
           <TransactionTagStats />
 
-          <TransactionTable filters={selectedFilters} />
+          <TransactionTable
+            transactions={transactions}
+            isLoading={isLoading}
+            onTransactionClick={handleTransactionClick}
+            filters={selectedFilters}
+          />
 
           <TransactionFormModal
             isOpen={isModalOpen}

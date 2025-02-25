@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
@@ -61,7 +60,6 @@ export function TransactionTagStats() {
   // Calcular promedios y convertir a array
   const statsArray = Object.values(tagStats).map(stat => ({
     ...stat,
-    averageAmount: stat.totalAmount / stat.count,
     totalAmount: Number(stat.totalAmount.toFixed(2)),
     averageAmount: Number((stat.totalAmount / stat.count).toFixed(2))
   }));

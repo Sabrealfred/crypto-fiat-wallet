@@ -10,16 +10,24 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 
+interface TransactionFilters {
+  dateRange: { from: string; to: string } | null;
+  status: string[];
+  tags: string[];
+}
+
 interface TransactionTableProps {
   transactions: TreasuryTransaction[];
   isLoading: boolean;
   onTransactionClick: (transaction: TreasuryTransaction) => void;
+  filters: TransactionFilters;
 }
 
 export function TransactionTable({
   transactions,
   isLoading,
   onTransactionClick,
+  filters,
 }: TransactionTableProps) {
   return (
     <Card>
