@@ -1,12 +1,10 @@
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
+import { TransactionForm } from "./components/form/TransactionForm";
 
 interface TransactionFormModalProps {
   isOpen: boolean;
@@ -68,6 +66,13 @@ export function TransactionFormModal({
     }
   };
 
+  const handleFormChange = (newData: Partial<typeof formData>) => {
+    setFormData(prev => ({
+      ...prev,
+      ...newData
+    }));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -77,101 +82,14 @@ export function TransactionFormModal({
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="bank_name">Bank Name</Label>
-            <Input
-              id="bank_name"
-              value={formData.bank_name}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                bank_name: e.target.value
-              }))}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
-            <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              value={formData.amount}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                amount: parseFloat(e.target.value)
-              }))}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="currency">Currency</Label>
-            <Input
-              id="currency"
-              value={formData.currency}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                currency: e.target.value
-              }))}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="transaction_date">Transaction Date</Label>
-            <Input
-              id="transaction_date"
-              type="date"
-              value={formData.transaction_date}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                transaction_date: e.target.value
-              }))}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                description: e.target.value
-              }))}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <select
-              id="status"
-              className="w-full rounded-md border border-input bg-background px-3 py-2"
-              value={formData.status}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                status: e.target.value
-              }))}
-              required
-            >
-              <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
-              <option value="failed">Failed</option>
-            </select>
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : transaction ? 'Update' : 'Create'}
-            </Button>
-          </DialogFooter>
-        </form>
+        <TransactionForm
+          formData={formData}
+          onFormChange={handleFormChange}
+          onSubmit={handleSubmit}
+          onClose={onClose}
+          isSubmitting={isSubmitting}
+          isEdit={!!transaction}
+        />
       </DialogContent>
     </Dialog>
   );
