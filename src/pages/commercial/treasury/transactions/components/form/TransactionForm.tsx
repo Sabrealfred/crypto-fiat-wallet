@@ -1,9 +1,11 @@
+
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { TreasuryTransaction } from "@/types/treasury";
 import { useState } from "react";
+import { FormTags } from "./FormTags";
 
 interface FormErrors {
   bank_name?: string;
@@ -12,7 +14,7 @@ interface FormErrors {
   transaction_date?: string;
   description?: string;
   status?: string;
-  tags?: string[];
+  tags?: string;
 }
 
 interface TransactionFormProps {
