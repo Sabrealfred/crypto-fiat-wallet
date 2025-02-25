@@ -3,9 +3,9 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -24,7 +24,8 @@ import {
   Wallet,
   RefreshCw,
   CreditCard,
-  Globe
+  Globe,
+  Building2
 } from "lucide-react";
 
 const cashFlowData = [
@@ -43,6 +44,29 @@ const liquidityData = [
   { name: 'Week 4', value: 2780 },
   { name: 'Week 5', value: 1890 },
   { name: 'Week 6', value: 2390 }
+];
+
+const quickActions = [
+  {
+    title: "FX Operations",
+    icon: Globe,
+    path: "/commercial/treasury/fx"
+  },
+  {
+    title: "Payment Processing",
+    icon: CreditCard,
+    path: "/commercial/payment-processor"
+  },
+  {
+    title: "Cash Pooling",
+    icon: RefreshCw,
+    path: "/commercial/treasury/cash-flow"
+  },
+  {
+    title: "Investment Management",
+    icon: TrendingUp,
+    path: "/commercial/treasury/investments"
+  }
 ];
 
 const MetricCard = ({ title, value, change, icon: Icon, trend }: {
@@ -78,6 +102,8 @@ const MetricCard = ({ title, value, change, icon: Icon, trend }: {
 );
 
 export default function TreasuryDashboard() {
+  const navigate = useNavigate();
+
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
@@ -197,22 +223,17 @@ export default function TreasuryDashboard() {
 
           {/* Quick Actions */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-              <Globe className="h-5 w-5" />
-              <span>FX Operations</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-              <CreditCard className="h-5 w-5" />
-              <span>Payment Processing</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-              <RefreshCw className="h-5 w-5" />
-              <span>Cash Pooling</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              <span>Investment Management</span>
-            </Button>
+            {quickActions.map((action) => (
+              <Button
+                key={action.title}
+                variant="outline"
+                className="h-auto py-4 flex flex-col items-center gap-2"
+                onClick={() => navigate(action.path)}
+              >
+                <action.icon className="h-5 w-5" />
+                <span>{action.title}</span>
+              </Button>
+            ))}
           </div>
         </div>
       </div>

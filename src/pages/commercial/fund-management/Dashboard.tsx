@@ -2,155 +2,218 @@
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
-  AreaChart,
-  Area
+  PieChart,
+  Pie,
+  Cell
 } from 'recharts';
-import { DollarSign, TrendingUp, Percent, Users, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import {
+  TrendingUp,
+  ChevronRight,
+  DollarSign,
+  ChartPie,
+  ArrowUpRight,
+  ArrowDownRight,
+  Brain
+} from "lucide-react";
 
-const data = [
-  { name: 'Jan', value: 2400, investors: 156 },
-  { name: 'Feb', value: 2800, investors: 165 },
-  { name: 'Mar', value: 3200, investors: 180 },
-  { name: 'Apr', value: 3600, investors: 190 },
-  { name: 'May', value: 3900, investors: 205 },
-  { name: 'Jun', value: 4200, investors: 220 },
+const performanceData = [
+  { month: 'Jan', return: 2.5 },
+  { month: 'Feb', return: 3.2 },
+  { month: 'Mar', return: 2.8 },
+  { month: 'Apr', return: 3.5 },
+  { month: 'May', return: 4.2 },
+  { month: 'Jun', return: 3.8 }
 ];
 
-interface MetricCardProps {
+const allocationData = [
+  { name: 'Equity', value: 45 },
+  { name: 'Fixed Income', value: 30 },
+  { name: 'Cash', value: 15 },
+  { name: 'Alternative', value: 10 }
+];
+
+const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
+
+const quickActions = [
+  {
+    title: "Portfolio Analysis",
+    icon: ChartPie,
+    path: "/commercial/fund-management/portfolios"
+  },
+  {
+    title: "AI Portfolios",
+    icon: Brain,
+    path: "/commercial/fund-management/portfolios/ai"
+  },
+  {
+    title: "Investment Reports",
+    icon: DollarSign,
+    path: "/commercial/fund-management/reports"
+  },
+  {
+    title: "Trade Securities",
+    icon: TrendingUp,
+    path: "/commercial/fund-management/trade"
+  }
+];
+
+const MetricCard = ({ title, value, change, trend }: {
   title: string;
   value: string;
-  change: number;
-  icon: any;
-}
-
-function MetricCard({ title, value, change, icon: Icon }: MetricCardProps) {
-  const isPositive = change > 0;
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        <div className="flex items-center mt-1">
-          {isPositive ? (
-            <ArrowUpRight className="h-4 w-4 text-green-500" />
-          ) : (
-            <ArrowDownRight className="h-4 w-4 text-red-500" />
-          )}
-          <span className={`text-sm ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-            {Math.abs(change)}%
-          </span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+  change: string;
+  trend: 'up' | 'down';
+}) => (
+  <Card>
+    <CardContent className="pt-6">
+      <p className="text-sm text-muted-foreground">{title}</p>
+      <h3 className="text-2xl font-bold mt-2">{value}</h3>
+      <p className={`text-sm mt-2 flex items-center ${
+        trend === 'up' ? 'text-green-500' : 'text-red-500'
+      }`}>
+        {trend === 'up' ? (
+          <ArrowUpRight className="h-4 w-4 mr-1" />
+        ) : (
+          <ArrowDownRight className="h-4 w-4 mr-1" />
+        )}
+        {change}
+      </p>
+    </CardContent>
+  </Card>
+);
 
 export default function FundManagement() {
-  const metrics = [
-    {
-      title: "Total AUM",
-      value: "$845M",
-      change: 12.5,
-      icon: DollarSign
-    },
-    {
-      title: "YTD Return",
-      value: "18.2%",
-      change: 5.3,
-      icon: TrendingUp
-    },
-    {
-      title: "Active Investors",
-      value: "220",
-      change: 8.4,
-      icon: Users
-    },
-    {
-      title: "Avg Portfolio Beta",
-      value: "0.92",
-      change: -2.1,
-      icon: Percent
-    }
-  ];
+  const navigate = useNavigate();
 
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
         <CommercialHeader 
           title="Fund Management" 
-          description="Overview of fund performance and management"
+          description="Manage and monitor your investment portfolio"
+          showBack={true}
         />
 
-        <div className="grid gap-6">
-          {/* Metrics */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {metrics.map((metric) => (
-              <MetricCard key={metric.title} {...metric} />
-            ))}
-          </div>
+        {/* Key Metrics */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <MetricCard
+            title="Total Portfolio Value"
+            value="$4.2M"
+            change="+5.8% vs last month"
+            trend="up"
+          />
+          <MetricCard
+            title="YTD Return"
+            value="12.4%"
+            change="+2.1% vs benchmark"
+            trend="up"
+          />
+          <MetricCard
+            title="Risk Score"
+            value="Medium"
+            change="No change"
+            trend="up"
+          />
+          <MetricCard
+            title="Cash Position"
+            value="$620K"
+            change="-8.3% vs target"
+            trend="down"
+          />
+        </div>
 
-          {/* Charts */}
-          <div className="grid lg:grid-cols-2 gap-6">
-            <Card className="p-6">
-              <CardHeader>
-                <CardTitle>AUM Growth</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={data}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Area 
-                        type="monotone" 
-                        dataKey="value" 
-                        stroke="#8884d8" 
-                        fill="#8884d8" 
-                        fillOpacity={0.3}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
+        {/* Performance Chart */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Portfolio Performance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={performanceData}>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line 
+                      type="monotone" 
+                      dataKey="return" 
+                      stroke="#8b5cf6" 
+                      strokeWidth={2}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
 
-            <Card className="p-6">
-              <CardHeader>
-                <CardTitle>Investor Growth</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={data}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Line 
-                        type="monotone" 
-                        dataKey="investors" 
-                        stroke="#82ca9d" 
-                        strokeWidth={2}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ChartPie className="h-5 w-5" />
+                Asset Allocation
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={allocationData}
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {allocationData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="flex justify-center gap-4 mt-4">
+                  {allocationData.map((item, index) => (
+                    <div key={item.name} className="flex items-center gap-2">
+                      <div 
+                        className="w-3 h-3 rounded-full" 
+                        style={{ backgroundColor: COLORS[index] }}
                       />
-                    </LineChart>
-                  </ResponsiveContainer>
+                      <span className="text-sm">{item.name}</span>
+                    </div>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {quickActions.map((action) => (
+            <Button
+              key={action.title}
+              variant="outline"
+              className="h-auto py-4 flex flex-col items-center gap-2"
+              onClick={() => navigate(action.path)}
+            >
+              <action.icon className="h-5 w-5" />
+              <span>{action.title}</span>
+            </Button>
+          ))}
         </div>
       </div>
     </AppLayout>

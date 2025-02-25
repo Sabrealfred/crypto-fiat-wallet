@@ -8,6 +8,7 @@ import {
   CreditCard,
   FileText,
   Receipt,
+  Building2,
 } from "lucide-react";
 
 const services = [
@@ -24,10 +25,10 @@ const services = [
     path: "/commercial/fund-management"
   },
   {
-    title: "Corporate Accounts",
-    icon: Wallet,
-    description: "Business accounts and transactions",
-    path: "/commercial/accounts"
+    title: "Operations",
+    icon: Building2,
+    description: "Manage business operations",
+    path: "/commercial/operations"
   },
   {
     title: "Corporate Cards",
