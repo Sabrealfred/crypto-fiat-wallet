@@ -1,10 +1,12 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
 import { startOfMonth, format, subMonths } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
+import { toast } from "sonner";
 
 interface TagStats {
   tag: string;
@@ -45,11 +47,9 @@ export function TransactionTagStats() {
     }
   });
 
-  // Calcular estadísticas por etiqueta
   const tagStats: Record<string, TagStats> = {};
   const monthlyStats: Record<string, Record<string, number>> = {};
   
-  // Inicializar los últimos 6 meses
   for (let i = 0; i < 6; i++) {
     const date = subMonths(new Date(), i);
     const monthKey = format(date, 'yyyy-MM');
@@ -60,7 +60,6 @@ export function TransactionTagStats() {
     const monthKey = format(new Date(transaction.transaction_date), 'yyyy-MM');
     
     transaction.tags?.forEach(tagName => {
-      // Estadísticas generales
       if (!tagStats[tagName]) {
         tagStats[tagName] = {
           tag: tagName,
@@ -73,24 +72,20 @@ export function TransactionTagStats() {
       tagStats[tagName].totalAmount += transaction.amount;
       tagStats[tagName].count += 1;
 
-      // Estadísticas mensuales
       if (monthlyStats[monthKey]) {
         monthlyStats[monthKey][tagName] = (monthlyStats[monthKey][tagName] || 0) + transaction.amount;
       }
     });
   });
 
-  // Calcular promedios y convertir a array
   const statsArray = Object.values(tagStats).map(stat => ({
     ...stat,
     totalAmount: Number(stat.totalAmount.toFixed(2)),
     averageAmount: Number((stat.totalAmount / stat.count).toFixed(2))
   }));
 
-  // Ordenar por monto total
   statsArray.sort((a, b) => b.totalAmount - a.totalAmount);
 
-  // Preparar datos para el gráfico de tendencias
   const monthlyData: MonthlyTagStats[] = Object.entries(monthlyStats)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, values]) => ({
@@ -98,12 +93,46 @@ export function TransactionTagStats() {
       ...values
     }));
 
-  // Obtener los top 5 tags por monto total para el gráfico de tendencias
   const top5Tags = statsArray.slice(0, 5).map(stat => stat.tag);
+
+  const handleExportCSV = () => {
+    const csvData = statsArray.map(stat => ({
+      Tag: stat.tag,
+      'Total Amount': stat.totalAmount,
+      'Transaction Count': stat.count,
+      'Average Amount': stat.averageAmount,
+    }));
+
+    const headers = ['Tag', 'Total Amount', 'Transaction Count', 'Average Amount'];
+    const csvContent = [
+      headers.join(','),
+      ...csvData.map(row => 
+        headers.map(header => JSON.stringify(row[header as keyof typeof row])).join(',')
+      )
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `transaction_tags_stats_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success("Statistics exported successfully");
+  };
 
   return (
     <Card className="p-6">
-      <h2 className="text-2xl font-semibold mb-6">Transaction Analysis by Tags</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Transaction Analysis by Tags</h2>
+        <Button onClick={handleExportCSV} variant="outline" size="sm">
+          <Download className="h-4 w-4 mr-2" />
+          Export Stats
+        </Button>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card className="p-4 bg-muted/50">
