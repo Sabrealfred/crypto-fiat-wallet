@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,7 +11,6 @@ import { TagMetricsCards } from "./tag-stats/TagMetricsCards";
 import { TagAmountChart } from "./tag-stats/TagAmountChart";
 import { TagTrendsChart } from "./tag-stats/TagTrendsChart";
 import { TagStatsTable } from "./tag-stats/TagStatsTable";
-import { TagStatsFilters } from "./tag-stats/TagStatsFilters";
 import { calculateTagStats, calculatePredictions, detectAnomalies } from "./tag-stats/TagAnalytics";
 import { MonthlyTagStats, TagStats } from "./types";
 import { DateRange } from "react-day-picker";
@@ -24,7 +24,7 @@ export function TransactionTagStats() {
     queryFn: async () => {
       let query = supabase
         .from('treasury_transactions')
-        .select('*')
+        .select('id, amount, currency, transaction_date, description, status, tags, metadata, bank_name, bai_code, entity_id')
         .order('transaction_date', { ascending: false });
 
       if (dateRange?.from) {
@@ -53,28 +53,15 @@ export function TransactionTagStats() {
     }
   });
 
-  const { data: monthlyStats = {} } = useQuery({
-    queryKey: ['treasury-monthly-stats', dateRange],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('treasury_transactions')
-        .select('transaction_date')
-        .order('transaction_date', { ascending: false });
+  // Inicializar estadísticas mensuales
+  const monthlyStats: Record<string, Record<string, number>> = {};
+  for (let i = 0; i < 12; i++) {
+    const date = subMonths(new Date(), i);
+    const monthKey = format(date, 'yyyy-MM');
+    monthlyStats[monthKey] = {};
+  }
 
-      if (error) throw error;
-      const monthlyStats: Record<string, Record<string, number>> = {};
-      data.forEach(transaction => {
-        const date = new Date(transaction.transaction_date);
-        const monthKey = format(date, 'yyyy-MM');
-        if (!monthlyStats[monthKey]) {
-          monthlyStats[monthKey] = {};
-        }
-        monthlyStats[monthKey][transaction.tags?.[0] || ''] = (monthlyStats[monthKey][transaction.tags?.[0] || ''] || 0) + 1;
-      });
-      return monthlyStats;
-    }
-  });
-
+  // Calcular estadísticas
   const tagStats = calculateTagStats(transactions, monthlyStats);
 
   const statsArray = Object.values(tagStats)
@@ -87,6 +74,7 @@ export function TransactionTagStats() {
 
   const top5Tags = statsArray.slice(0, 5).map(stat => stat.tag);
 
+  // Calcular datos mensuales y predicciones
   const monthlyData = Object.entries(monthlyStats)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, values]) => ({
@@ -107,6 +95,7 @@ export function TransactionTagStats() {
 
   const combinedData = [...monthlyData, ...predictions];
 
+  // Detectar anomalías
   const anomalies = top5Tags.reduce((acc, tag) => {
     const monthlyValues = Object.values(monthlyStats).map(m => m[tag] || 0);
     const anomalousValues = detectAnomalies(monthlyValues);
