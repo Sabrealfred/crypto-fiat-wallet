@@ -1,10 +1,9 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, Legend, Brush, CartesianGrid } from 'recharts';
-import { startOfMonth, format, subMonths, isSameMonth } from "date-fns";
+import { startOfMonth, format, subMonths, isSameMonth, addMonths } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
@@ -53,7 +52,6 @@ export function TransactionTagStats() {
   const tagStats: Record<string, TagStats> = {};
   const monthlyStats: Record<string, Record<string, number>> = {};
   
-  // Inicializar los últimos 12 meses para mejor análisis de tendencias
   for (let i = 0; i < 12; i++) {
     const date = subMonths(new Date(), i);
     const monthKey = format(date, 'yyyy-MM');
@@ -84,7 +82,6 @@ export function TransactionTagStats() {
     });
   });
 
-  // Calcular tendencias y crecimiento mensual
   Object.keys(tagStats).forEach(tagName => {
     const monthlyAmounts = Object.keys(monthlyStats)
       .sort()
@@ -149,6 +146,55 @@ export function TransactionTagStats() {
     
     toast.success("Statistics exported successfully");
   };
+
+  const calculatePredictions = (tag: string) => {
+    const monthlyData = Object.entries(monthlyStats)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, values]) => ({
+        month: new Date(month),
+        amount: values[tag] || 0
+      }));
+
+    if (monthlyData.length < 2) return null;
+
+    const n = monthlyData.length;
+    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+    
+    monthlyData.forEach((data, i) => {
+      sumX += i;
+      sumY += data.amount;
+      sumXY += i * data.amount;
+      sumXX += i * i;
+    });
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    const predictions = [];
+    for (let i = 1; i <= 3; i++) {
+      const predictedAmount = slope * (n + i - 1) + intercept;
+      const predictedDate = addMonths(monthlyData[monthlyData.length - 1].month, i);
+      predictions.push({
+        month: format(predictedDate, 'MMM yyyy'),
+        [tag]: Math.max(0, predictedAmount)
+      });
+    }
+
+    return predictions;
+  };
+
+  const predictions = top5Tags.reduce((acc, tag) => {
+    const tagPredictions = calculatePredictions(tag);
+    if (tagPredictions) {
+      tagPredictions.forEach((pred, i) => {
+        if (!acc[i]) acc[i] = { month: pred.month };
+        acc[i] = { ...acc[i], ...pred };
+      });
+    }
+    return acc;
+  }, [] as MonthlyTagStats[]);
+
+  const combinedData = [...monthlyData, ...predictions];
 
   return (
     <Card className="p-6">
@@ -218,14 +264,28 @@ export function TransactionTagStats() {
         </Card>
 
         <Card className="p-4">
-          <h3 className="text-lg font-semibold mb-4">Monthly Trends (Top 5 Tags)</h3>
+          <h3 className="text-lg font-semibold mb-4">Monthly Trends & Predictions (Top 5 Tags)</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={monthlyData}>
+              <LineChart data={combinedData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-white p-3 border rounded-lg shadow">
+                        <p className="font-medium">{label}</p>
+                        {payload.map((entry, index) => (
+                          <p key={index} style={{ color: entry.color }}>
+                            {entry.name}: ${entry.value?.toLocaleString()}
+                          </p>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                }} />
                 <Legend />
                 <Brush dataKey="month" height={30} stroke="#8884d8" />
                 {top5Tags.map((tag, index) => (
@@ -242,6 +302,9 @@ export function TransactionTagStats() {
               </LineChart>
             </ResponsiveContainer>
           </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            Líneas punteadas muestran predicciones para los próximos 3 meses
+          </p>
         </Card>
       </div>
 
@@ -254,6 +317,7 @@ export function TransactionTagStats() {
               <th className="text-right py-2">Total Amount</th>
               <th className="text-right py-2">Average Amount</th>
               <th className="text-right py-2">Monthly Growth</th>
+              <th className="text-right py-2">Predicted Trend</th>
             </tr>
           </thead>
           <tbody>
@@ -268,6 +332,14 @@ export function TransactionTagStats() {
                   stat.monthlyGrowth && stat.monthlyGrowth < 0 ? 'text-red-600' : ''
                 }`}>
                   {stat.monthlyGrowth ? `${stat.monthlyGrowth}%` : '-'}
+                </td>
+                <td className="text-right">
+                  {top5Tags.includes(stat.tag) ? 
+                    (stat.monthlyGrowth && stat.monthlyGrowth > 5 ? '📈 Creciente' :
+                     stat.monthlyGrowth && stat.monthlyGrowth < -5 ? '📉 Decreciente' : 
+                     '➡️ Estable') :
+                    '-'
+                  }
                 </td>
               </tr>
             ))}
