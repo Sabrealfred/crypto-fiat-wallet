@@ -5,6 +5,7 @@ import { StatisticsChart } from "@/components/dashboard/StatisticsChart";
 import { CommercialMetrics } from "./components/CommercialMetrics";
 import { FinancialHighlights } from "./components/FinancialHighlights";
 import { EnterpriseServices } from "./components/EnterpriseServices";
+import { AreaMetrics } from "./components/AreaMetrics";
 import { Card } from "@/components/ui/card";
 
 export default function CommercialDashboard() {
@@ -39,21 +40,16 @@ export default function CommercialDashboard() {
             <CommercialMetrics />
           </section>
 
-          {/* Highlights Financieros */}
+          {/* Métricas por Área */}
           <section className="fade-in animation-delay-100">
-            <h2 className="text-xl font-semibold mb-4">Financial Highlights</h2>
-            <FinancialHighlights />
+            <h2 className="text-xl font-semibold mb-4">Area Performance</h2>
+            <AreaMetrics />
           </section>
 
-          {/* Estadísticas */}
+          {/* Highlights Financieros */}
           <section className="fade-in animation-delay-200">
-            <h2 className="text-xl font-semibold mb-4">Statistics Overview</h2>
-            <StatisticsCards 
-              currentEarning={currentEarning}
-              previousEarning={previousEarning}
-              currentSpending={currentSpending}
-              previousSpending={previousSpending}
-            />
+            <h2 className="text-xl font-semibold mb-4">Financial Highlights</h2>
+            <FinancialHighlights />
           </section>
 
           {/* Dashboard y Servicios */}
