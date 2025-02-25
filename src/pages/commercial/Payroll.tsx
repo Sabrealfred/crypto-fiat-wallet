@@ -1,5 +1,6 @@
 
 import { AppLayout } from "@/components/layout/app-layout";
+import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Calendar, DollarSign, FileText, User, TrendingUp, TrendingDown, BarChart } from "lucide-react";
@@ -59,12 +60,11 @@ export default function PayrollPage() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Payroll Management</h1>
-          <p className="text-muted-foreground">
-            Streamline your payroll processing and employee compensation
-          </p>
-        </div>
+        <CommercialHeader 
+          title="Payroll Management"
+          description="Streamline your payroll processing and employee compensation"
+          showBack={true}
+        />
 
         {/* Métricas de Nómina */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
