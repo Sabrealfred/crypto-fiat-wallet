@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,8 +18,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
 
-// Definimos un tipo para las métricas
 type RiskMetric = {
   name: string;
   value: string;
@@ -119,10 +118,10 @@ const additionalRisks = [
 export default function RiskManagementPage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const navigate = useNavigate();
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    // Simulamos una actualización de datos
     setTimeout(() => {
       setIsRefreshing(false);
       toast.success("Risk metrics updated successfully");
@@ -147,21 +146,75 @@ export default function RiskManagementPage() {
       <div className="max-w-7xl mx-auto p-6">
         <div className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-2xl font-semibold mb-2">Risk Management Dashboard</h1>
+            <h1 className="text-2xl font-semibold mb-2">Risk Management</h1>
             <p className="text-muted-foreground">
               Comprehensive risk analysis and management tools
             </p>
           </div>
-          <Button 
-            variant="outline" 
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="animate-in fade-in duration-300"
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Refresh Metrics
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate("/commercial/dashboard")}
+            >
+              Back to Dashboard
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="animate-in fade-in duration-300"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Refresh Metrics
+            </Button>
+          </div>
         </div>
+
+        <Card className="mb-8 bg-muted/50">
+          <CardHeader>
+            <CardTitle className="text-lg">Quick Access - Commercial Banking</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <Link to="/commercial/treasury">
+                <Button variant="outline" className="w-full justify-start">
+                  <LineChart className="w-4 h-4 mr-2" />
+                  Treasury Dashboard
+                </Button>
+              </Link>
+              <Link to="/commercial/treasury/cash-flow">
+                <Button variant="outline" className="w-full justify-start">
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  Cash Flow Analysis
+                </Button>
+              </Link>
+              <Link to="/commercial/treasury/transactions">
+                <Button variant="outline" className="w-full justify-start">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  Transaction Management
+                </Button>
+              </Link>
+              <Link to="/commercial/payroll">
+                <Button variant="outline" className="w-full justify-start">
+                  <Users className="w-4 h-4 mr-2" />
+                  Payroll
+                </Button>
+              </Link>
+              <Link to="/commercial/invoices">
+                <Button variant="outline" className="w-full justify-start">
+                  <FileWarning className="w-4 h-4 mr-2" />
+                  Invoices
+                </Button>
+              </Link>
+              <Link to="/commercial/expenses">
+                <Button variant="outline" className="w-full justify-start">
+                  <Building2 className="w-4 h-4 mr-2" />
+                  Expenses
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           <TabsList className="w-full justify-start">
