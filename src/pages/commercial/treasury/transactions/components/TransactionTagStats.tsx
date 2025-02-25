@@ -1,9 +1,10 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { TreasuryTransaction } from "@/types/treasury";
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
-import { startOfMonth, format, subMonths } from "date-fns";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, Legend, Brush, CartesianGrid } from 'recharts';
+import { startOfMonth, format, subMonths, isSameMonth } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
@@ -13,6 +14,8 @@ interface TagStats {
   totalAmount: number;
   count: number;
   averageAmount: number;
+  monthlyGrowth?: number;
+  trend?: 'up' | 'down' | 'stable';
 }
 
 interface MonthlyTagStats {
@@ -50,14 +53,16 @@ export function TransactionTagStats() {
   const tagStats: Record<string, TagStats> = {};
   const monthlyStats: Record<string, Record<string, number>> = {};
   
-  for (let i = 0; i < 6; i++) {
+  // Inicializar los últimos 12 meses para mejor análisis de tendencias
+  for (let i = 0; i < 12; i++) {
     const date = subMonths(new Date(), i);
     const monthKey = format(date, 'yyyy-MM');
     monthlyStats[monthKey] = {};
   }
   
   transactions.forEach(transaction => {
-    const monthKey = format(new Date(transaction.transaction_date), 'yyyy-MM');
+    const transactionDate = new Date(transaction.transaction_date);
+    const monthKey = format(transactionDate, 'yyyy-MM');
     
     transaction.tags?.forEach(tagName => {
       if (!tagStats[tagName]) {
@@ -65,7 +70,8 @@ export function TransactionTagStats() {
           tag: tagName,
           totalAmount: 0,
           count: 0,
-          averageAmount: 0
+          averageAmount: 0,
+          monthlyGrowth: 0
         };
       }
       
@@ -78,13 +84,31 @@ export function TransactionTagStats() {
     });
   });
 
-  const statsArray = Object.values(tagStats).map(stat => ({
-    ...stat,
-    totalAmount: Number(stat.totalAmount.toFixed(2)),
-    averageAmount: Number((stat.totalAmount / stat.count).toFixed(2))
-  }));
+  // Calcular tendencias y crecimiento mensual
+  Object.keys(tagStats).forEach(tagName => {
+    const monthlyAmounts = Object.keys(monthlyStats)
+      .sort()
+      .map(month => monthlyStats[month][tagName] || 0);
+    
+    if (monthlyAmounts.length >= 2) {
+      const lastMonth = monthlyAmounts[monthlyAmounts.length - 1];
+      const previousMonth = monthlyAmounts[monthlyAmounts.length - 2];
+      
+      if (previousMonth > 0) {
+        const growth = ((lastMonth - previousMonth) / previousMonth) * 100;
+        tagStats[tagName].monthlyGrowth = Number(growth.toFixed(1));
+        tagStats[tagName].trend = growth > 5 ? 'up' : growth < -5 ? 'down' : 'stable';
+      }
+    }
+  });
 
-  statsArray.sort((a, b) => b.totalAmount - a.totalAmount);
+  const statsArray = Object.values(tagStats)
+    .map(stat => ({
+      ...stat,
+      totalAmount: Number(stat.totalAmount.toFixed(2)),
+      averageAmount: Number((stat.totalAmount / stat.count).toFixed(2))
+    }))
+    .sort((a, b) => b.totalAmount - a.totalAmount);
 
   const monthlyData: MonthlyTagStats[] = Object.entries(monthlyStats)
     .sort(([a], [b]) => a.localeCompare(b))
@@ -101,9 +125,11 @@ export function TransactionTagStats() {
       'Total Amount': stat.totalAmount,
       'Transaction Count': stat.count,
       'Average Amount': stat.averageAmount,
+      'Monthly Growth %': stat.monthlyGrowth,
+      'Trend': stat.trend
     }));
 
-    const headers = ['Tag', 'Total Amount', 'Transaction Count', 'Average Amount'];
+    const headers = ['Tag', 'Total Amount', 'Transaction Count', 'Average Amount', 'Monthly Growth %', 'Trend'];
     const csvContent = [
       headers.join(','),
       ...csvData.map(row => 
@@ -161,9 +187,30 @@ export function TransactionTagStats() {
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={statsArray}>
+                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="tag" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip 
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload as TagStats;
+                      return (
+                        <div className="bg-white p-3 border rounded-lg shadow">
+                          <p className="font-medium">{data.tag}</p>
+                          <p>Total: ${data.totalAmount.toLocaleString()}</p>
+                          <p>Count: {data.count}</p>
+                          <p>Average: ${data.averageAmount.toLocaleString()}</p>
+                          {data.monthlyGrowth && (
+                            <p className={data.monthlyGrowth > 0 ? 'text-green-600' : 'text-red-600'}>
+                              Growth: {data.monthlyGrowth}%
+                            </p>
+                          )}
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
                 <Bar dataKey="totalAmount" fill="#6366f1" name="Total Amount" />
               </BarChart>
             </ResponsiveContainer>
@@ -175,10 +222,12 @@ export function TransactionTagStats() {
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
+                <Brush dataKey="month" height={30} stroke="#8884d8" />
                 {top5Tags.map((tag, index) => (
                   <Line
                     key={tag}
@@ -186,6 +235,8 @@ export function TransactionTagStats() {
                     dataKey={tag}
                     stroke={`hsl(${index * 60}, 70%, 50%)`}
                     strokeWidth={2}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
                   />
                 ))}
               </LineChart>
@@ -202,15 +253,22 @@ export function TransactionTagStats() {
               <th className="text-right py-2">Transactions</th>
               <th className="text-right py-2">Total Amount</th>
               <th className="text-right py-2">Average Amount</th>
+              <th className="text-right py-2">Monthly Growth</th>
             </tr>
           </thead>
           <tbody>
             {statsArray.map(stat => (
-              <tr key={stat.tag} className="border-b">
+              <tr key={stat.tag} className="border-b hover:bg-muted/50 transition-colors">
                 <td className="py-2">{stat.tag}</td>
                 <td className="text-right">{stat.count}</td>
                 <td className="text-right">${stat.totalAmount.toLocaleString()}</td>
                 <td className="text-right">${stat.averageAmount.toLocaleString()}</td>
+                <td className={`text-right ${
+                  stat.monthlyGrowth && stat.monthlyGrowth > 0 ? 'text-green-600' : 
+                  stat.monthlyGrowth && stat.monthlyGrowth < 0 ? 'text-red-600' : ''
+                }`}>
+                  {stat.monthlyGrowth ? `${stat.monthlyGrowth}%` : '-'}
+                </td>
               </tr>
             ))}
           </tbody>
