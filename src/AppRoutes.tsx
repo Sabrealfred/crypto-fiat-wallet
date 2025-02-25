@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -25,11 +26,11 @@ import InvestmentsPage from "@/pages/Investments";
 import DepositsPage from "@/pages/Deposits";
 import BusinessDashboard from "@/pages/business/Dashboard";
 import CommercialDashboard from "@/pages/commercial/Dashboard";
+import RiskManagement from "@/pages/commercial/RiskManagement";
 import PrivateBankingDashboard from "@/pages/private/Dashboard";
 import DeveloperPortal from "@/pages/developers/Dashboard";
 import TreasuryDashboard from "@/pages/commercial/treasury/Dashboard";
 import TradeFinancePage from "@/pages/commercial/TradeFinance";
-import RiskManagementPage from "@/pages/commercial/RiskManagement";
 import PayrollPage from "@/pages/commercial/Payroll";
 import InvoicesPage from "@/pages/commercial/Invoices";
 import ExpensesPage from "@/pages/commercial/Expenses";
@@ -67,7 +68,7 @@ export function AppRoutes() {
         {/* Commercial Routes */}
         <Route path="/commercial">
           <Route path="dashboard" element={<CommercialDashboard />} />
-          <Route path="risk-management" element={<RiskManagementPage />} />
+          <Route path="risk-management" element={<RiskManagement />} />
           <Route path="payroll" element={<PayrollPage />} />
           <Route path="invoices" element={<InvoicesPage />} />
           <Route path="expenses" element={<ExpensesPage />} />

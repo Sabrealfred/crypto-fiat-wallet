@@ -13,7 +13,7 @@ import { AdditionalRiskCard } from "./components/risk-management/AdditionalRiskC
 import { riskCategories, additionalRisks } from "./components/risk-management/data";
 import { RiskMetric } from "./components/risk-management/types";
 
-export default function RiskManagementPage() {
+export default function RiskManagement() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const navigate = useNavigate();
