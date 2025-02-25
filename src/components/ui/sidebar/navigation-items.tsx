@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,9 @@ import {
   DollarSign,
   BriefcaseBusiness,
   BarChart,
+  Home,
+  Store,
+  ShoppingBag
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,6 +53,7 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
     },
   });
 
+  // Menú para organizaciones comerciales
   if (currentOrg?.type === 'commercial') {
     return (
       <nav className="space-y-1">
@@ -145,6 +150,7 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
     );
   }
 
+  // Menú para banca personal
   return (
     <nav className="space-y-1">
       <Link to="/personal">
@@ -191,6 +197,7 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
           </span>
         </Button>
       </Link>
+
       <Link to="/cards">
         <Button variant={isActive('/cards') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
           <CreditCard className="h-4 w-4" />
@@ -217,6 +224,7 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
           </span>
         </Button>
       </Link>
+
       <Link to="/bills">
         <Button variant={isActive('/bills') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
           <Receipt className="h-4 w-4" />
@@ -225,6 +233,7 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
           </span>
         </Button>
       </Link>
+
       <Link to="/deposits">
         <Button variant={isActive('/deposits') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
           <DollarSign className="h-4 w-4" />
@@ -242,9 +251,10 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
           </span>
         </Button>
       </Link>
+
       <Link to="/marketplace">
         <Button variant={isActive('/marketplace') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
-          <Store className="h-4 w-4" />
+          <ShoppingBag className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
             Marketplace
           </span>
