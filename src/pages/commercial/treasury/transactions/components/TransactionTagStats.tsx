@@ -11,6 +11,7 @@ import { TagMetricsCards } from "./tag-stats/TagMetricsCards";
 import { TagAmountChart } from "./tag-stats/TagAmountChart";
 import { TagTrendsChart } from "./tag-stats/TagTrendsChart";
 import { TagStatsTable } from "./tag-stats/TagStatsTable";
+import { TagStatsFilters } from "./tag-stats/TagStatsFilters";
 import { calculateTagStats, calculatePredictions, detectAnomalies } from "./tag-stats/TagAnalytics";
 import { MonthlyTagStats, TagStats } from "./types";
 import { DateRange } from "react-day-picker";
