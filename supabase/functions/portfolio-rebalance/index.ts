@@ -10,22 +10,38 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const { currentAllocation, marketConditions, riskProfile } = await req.json();
+    
+    console.log('Received request with:', { currentAllocation, marketConditions, riskProfile });
+    console.log('OpenAI API Key status:', openAIApiKey ? 'Present' : 'Missing');
+
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key is not configured');
+    }
 
     const prompt = `As an AI investment advisor, analyze and recommend portfolio rebalancing based on:
     Current Allocation: ${JSON.stringify(currentAllocation)}
     Market Conditions: ${marketConditions}
     Risk Profile: ${riskProfile}
     
-    Provide specific recommendations for portfolio rebalancing including:
-    1. Target allocation changes
-    2. Expected impact on returns and risk
-    3. Reasoning behind each recommendation`;
+    Provide three specific recommendations for portfolio rebalancing in this format:
+    1. Title: [short action title]
+    Description: [2-3 sentence explanation]
+    Impact: [quantified impact]
+    
+    2. Title: [short action title]
+    Description: [2-3 sentence explanation]
+    Impact: [quantified impact]
+    
+    3. Title: [short action title]
+    Description: [2-3 sentence explanation]
+    Impact: [quantified impact]`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -46,7 +62,7 @@ serve(async (req) => {
     });
 
     const data = await response.json();
-    console.log('AI Response:', data);
+    console.log('AI Response received:', data);
 
     return new Response(JSON.stringify({
       recommendations: data.choices[0].message.content,
@@ -56,7 +72,10 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Error in portfolio-rebalance function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      details: error.toString()
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

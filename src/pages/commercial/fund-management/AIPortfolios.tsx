@@ -37,9 +37,39 @@ export default function AIPortfolios() {
   const [recommendations, setRecommendations] = useState<RecommendationType[]>([]);
   const { toast } = useToast();
 
+  const parseAIRecommendations = (aiResponse: string): RecommendationType[] => {
+    try {
+      console.log('Parsing AI response:', aiResponse);
+      
+      // Split the response into recommendations
+      const recommendations = aiResponse.split(/\d+\.\s+/).filter(Boolean);
+      
+      return recommendations.map(rec => {
+        const titleMatch = rec.match(/Title:\s*(.*?)(?=\n|Description:)/s);
+        const descriptionMatch = rec.match(/Description:\s*(.*?)(?=\n|Impact:)/s);
+        const impactMatch = rec.match(/Impact:\s*(.*?)(?=\n|$)/s);
+
+        return {
+          title: titleMatch?.[1]?.trim() || "Recommendation",
+          description: descriptionMatch?.[1]?.trim() || "No description provided",
+          impact: impactMatch?.[1]?.trim() || "Impact not specified"
+        };
+      });
+    } catch (error) {
+      console.error('Error parsing AI recommendations:', error);
+      return [];
+    }
+  };
+
   const runAIAnalysis = async () => {
     setIsLoading(true);
     try {
+      console.log('Starting AI analysis with data:', {
+        currentAllocation: allocationData,
+        marketConditions: "Current market shows increased volatility with rising interest rates",
+        riskProfile: "Moderate"
+      });
+
       const { data, error } = await supabase.functions.invoke('portfolio-rebalance', {
         body: {
           currentAllocation: allocationData,
@@ -48,10 +78,20 @@ export default function AIPortfolios() {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
 
-      // Parse AI recommendations and update the state
+      console.log('AI analysis response:', data);
+
+      if (!data?.recommendations) {
+        throw new Error('No recommendations received from AI analysis');
+      }
+
       const aiRecommendations = parseAIRecommendations(data.recommendations);
+      console.log('Parsed recommendations:', aiRecommendations);
+      
       setRecommendations(aiRecommendations);
       
       toast({
@@ -63,35 +103,13 @@ export default function AIPortfolios() {
       console.error('Error running AI analysis:', error);
       toast({
         title: "Error",
-        description: "Failed to complete AI analysis. Please try again.",
+        description: error.message || "Failed to complete AI analysis. Please try again.",
         variant: "destructive",
-        duration: 3000,
+        duration: 5000,
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const parseAIRecommendations = (aiResponse: string): RecommendationType[] => {
-    // This is a simple implementation. In production, you'd want to parse the AI response
-    // more robustly based on the actual AI output format
-    return [
-      {
-        title: "Increase Tech Exposure",
-        description: "Market analysis suggests undervaluation in tech sector",
-        impact: "+2.4% Expected Return"
-      },
-      {
-        title: "Reduce Fixed Income",
-        description: "Rising interest rate environment suggests tactical shift",
-        impact: "-15% Duration Risk"
-      },
-      {
-        title: "Add ESG Assets",
-        description: "Strong momentum in sustainable investments",
-        impact: "+1.8% Alpha Potential"
-      }
-    ];
   };
 
   return (
@@ -108,7 +126,7 @@ export default function AIPortfolios() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Brain className="h-5 w-5" />
-                AI-Recommended Allocation
+                Current Allocation
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -146,22 +164,28 @@ export default function AIPortfolios() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {recommendations.map((rec, index) => (
-                  <div 
-                    key={index} 
-                    className="p-4 border rounded-lg transition-all hover:shadow-md"
-                  >
-                    <h3 className="font-semibold text-lg">{rec.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {rec.description}
-                    </p>
-                    <p className="text-sm font-medium text-primary mt-2">
-                      {rec.impact}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              {recommendations.length > 0 ? (
+                <div className="space-y-4">
+                  {recommendations.map((rec, index) => (
+                    <div 
+                      key={index} 
+                      className="p-4 border rounded-lg transition-all hover:shadow-md"
+                    >
+                      <h3 className="font-semibold text-lg">{rec.title}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {rec.description}
+                      </p>
+                      <p className="text-sm font-medium text-primary mt-2">
+                        {rec.impact}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-muted-foreground py-8">
+                  Run the AI analysis to get portfolio recommendations
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
