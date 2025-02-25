@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface MonthlyData {
   month: string;
@@ -13,11 +14,11 @@ interface StatisticsChartProps {
 
 export function StatisticsChart({ monthlyData }: StatisticsChartProps) {
   return (
-    <div className="relative glass-card p-6">
-      <div className="flex justify-between items-center mb-4">
+    <div className="relative bg-background/95 p-6 rounded-xl shadow-md">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-semibold">Statistics</h2>
         <div className="flex gap-2">
-          <Button variant="secondary" size="sm" className="bg-accent text-white">
+          <Button variant="secondary" size="sm" className="bg-purple-500 text-white hover:bg-purple-600">
             Weekly
           </Button>
           <Button variant="outline" size="sm">
@@ -28,24 +29,63 @@ export function StatisticsChart({ monthlyData }: StatisticsChartProps) {
           </Button>
         </div>
       </div>
-      <div className="h-[200px] flex items-end justify-between gap-2">
-        {monthlyData.map((data) => (
-          <div key={data.month} className="flex flex-col items-center">
-            <div className="flex-1 w-full relative">
-              <div 
-                className="absolute bottom-0 w-full bg-accent/20 rounded-t-lg transition-all duration-300"
-                style={{ height: `${(data.earning / 25000) * 100}%` }}
-              ></div>
-              <div 
-                className="absolute bottom-0 w-full bg-red-400/20 rounded-t-lg transition-all duration-300"
-                style={{ height: `${(data.spending / 25000) * 100}%`, width: '50%', left: '25%' }}
-              ></div>
-            </div>
-            <span className="text-xs text-muted-foreground mt-2">
-              {data.month.slice(0, 3)}
-            </span>
-          </div>
-        ))}
+      <div className="h-[300px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={monthlyData}>
+            <defs>
+              <linearGradient id="earning" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+              </linearGradient>
+              <linearGradient id="spending" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
+            <XAxis 
+              dataKey="month" 
+              tickFormatter={(value) => value.slice(0, 3)}
+              className="text-xs text-muted-foreground"
+            />
+            <YAxis 
+              tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
+              className="text-xs text-muted-foreground"
+            />
+            <Tooltip 
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  return (
+                    <div className="bg-background/95 p-3 rounded-lg shadow-lg border">
+                      <p className="text-sm font-medium">{payload[0].payload.month}</p>
+                      <p className="text-sm text-purple-500">
+                        Earnings: ${payload[0].value.toLocaleString()}
+                      </p>
+                      <p className="text-sm text-red-500">
+                        Spending: ${payload[1].value.toLocaleString()}
+                      </p>
+                    </div>
+                  );
+                }
+                return null;
+              }}
+            />
+            <Area
+              type="monotone"
+              dataKey="earning"
+              stroke="#8b5cf6"
+              fillOpacity={1}
+              fill="url(#earning)"
+            />
+            <Area
+              type="monotone"
+              dataKey="spending"
+              stroke="#ef4444"
+              fillOpacity={1}
+              fill="url(#spending)"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

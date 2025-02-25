@@ -35,40 +35,46 @@ export default function CommercialDashboard() {
 
         <div className="grid gap-8">
           <section className="fade-in">
-            <h2 className="text-xl font-semibold mb-4">Key Metrics</h2>
-            <CommercialMetrics />
+            <h2 className="text-xl font-semibold mb-4">Key Performance Indicators</h2>
+            <div className="grid gap-4">
+              <CommercialMetrics />
+              <StatisticsCards 
+                currentEarning={currentEarning}
+                previousEarning={previousEarning}
+                currentSpending={currentSpending}
+                previousSpending={previousSpending}
+              />
+            </div>
           </section>
 
-          <section className="fade-in animation-delay-100">
-            <StatisticsCards 
-              currentEarning={currentEarning}
-              previousEarning={previousEarning}
-              currentSpending={currentSpending}
-              previousSpending={previousSpending}
-            />
-          </section>
+          <div className="grid lg:grid-cols-2 gap-8">
+            <section className="fade-in animation-delay-200">
+              <h2 className="text-xl font-semibold mb-4">Financial Analytics</h2>
+              <Card className="bg-background/95 shadow-lg">
+                <StatisticsChart monthlyData={monthlyData} />
+              </Card>
+            </section>
 
-          <section className="fade-in animation-delay-200">
-            <h2 className="text-xl font-semibold mb-4">Financial Analytics</h2>
-            <Card className="p-6">
-              <StatisticsChart monthlyData={monthlyData} />
-            </Card>
-          </section>
+            <section className="fade-in animation-delay-200">
+              <h2 className="text-xl font-semibold mb-4">Financial Highlights</h2>
+              <Card className="bg-background/95 shadow-lg h-full p-6">
+                <FinancialHighlights />
+              </Card>
+            </section>
+          </div>
 
           <section className="fade-in animation-delay-300">
             <h2 className="text-xl font-semibold mb-4">Area Performance</h2>
-            <AreaMetrics />
+            <Card className="bg-background/95 shadow-lg p-6">
+              <AreaMetrics />
+            </Card>
           </section>
 
-          <section className="grid lg:grid-cols-2 gap-8 fade-in animation-delay-400">
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Financial Highlights</h2>
-              <FinancialHighlights />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Enterprise Services</h2>
+          <section className="fade-in animation-delay-400">
+            <h2 className="text-xl font-semibold mb-4">Enterprise Services</h2>
+            <Card className="bg-background/95 shadow-lg p-6">
               <EnterpriseServices />
-            </div>
+            </Card>
           </section>
         </div>
       </div>
