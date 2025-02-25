@@ -1,6 +1,23 @@
 
-project_id = "lhmdjdukkwoxznovlonp"
+project_id = "your-project-id"
 
-[functions.update-exchange-rates]
-verify_jwt = false
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
 
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://localhost"
+
+[[functions]]
+name = "portfolio-rebalance"
+verify_jwt = true
