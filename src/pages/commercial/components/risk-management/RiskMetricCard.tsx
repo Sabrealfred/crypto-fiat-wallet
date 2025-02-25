@@ -1,7 +1,5 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { RiskCategory, RiskMetric } from "./types";
 
 interface RiskMetricCardProps {
@@ -42,15 +40,6 @@ export function RiskMetricCard({ category, getStatusColor }: RiskMetricCardProps
               </div>
             </div>
           ))}
-        </div>
-        <div className="mt-4 pt-4 border-t flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">
-            Last updated: {new Date(category.lastUpdate || '').toLocaleTimeString()}
-          </span>
-          <Button variant="outline" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-            View Details
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
         </div>
       </CardContent>
     </Card>

@@ -1,4 +1,6 @@
 
+import { LucideIcon } from "lucide-react";
+
 export type RiskMetric = {
   name: string;
   value: string;
@@ -9,7 +11,7 @@ export type RiskMetric = {
 export type RiskCategory = {
   title: string;
   description: string;
-  icon: any;
+  icon: LucideIcon;
   metrics: RiskMetric[];
   lastUpdate?: string;
 };
@@ -17,5 +19,5 @@ export type RiskCategory = {
 export type AdditionalRisk = {
   title: string;
   description: string;
-  icon: any;
+  icon: LucideIcon;
 };
