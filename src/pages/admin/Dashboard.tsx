@@ -1,6 +1,7 @@
-
 import { useQuery } from "@tanstack/react-query";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ModuleProgress } from "@/components/system/ModuleProgress";
+import { AppLayout } from "@/components/layout/app-layout";
 import {
   BarChart,
   Bar,
@@ -45,87 +46,106 @@ export default function AdminDashboard() {
   });
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Panel de Control</h1>
+    <AppLayout>
+      <div className="container mx-auto p-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+          <p className="text-muted-foreground mt-2">
+            Monitor system implementation progress and key metrics
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <Card className="p-6">
-          <div className="flex items-center gap-4">
-            <Users className="h-10 w-10 text-primary" />
-            <div>
-              <p className="text-sm text-muted-foreground">Total Usuarios</p>
-              <h3 className="text-2xl font-bold">{stats?.totalUsers}</h3>
-            </div>
-          </div>
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Implementation Progress</CardTitle>
+            <CardDescription>
+              Track the development progress of each system module
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ModuleProgress />
+          </CardContent>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-4">
-            <CreditCard className="h-10 w-10 text-primary" />
-            <div>
-              <p className="text-sm text-muted-foreground">Total Cuentas</p>
-              <h3 className="text-2xl font-bold">{stats?.totalAccounts}</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <Card className="p-6">
+            <div className="flex items-center gap-4">
+              <Users className="h-10 w-10 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Total Usuarios</p>
+                <h3 className="text-2xl font-bold">{stats?.totalUsers}</h3>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-4">
-            <Building2 className="h-10 w-10 text-primary" />
-            <div>
-              <p className="text-sm text-muted-foreground">Transacciones</p>
-              <h3 className="text-2xl font-bold">{stats?.totalTransactions}</h3>
+          <Card className="p-6">
+            <div className="flex items-center gap-4">
+              <CreditCard className="h-10 w-10 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Total Cuentas</p>
+                <h3 className="text-2xl font-bold">{stats?.totalAccounts}</h3>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-4">
-            <AlertTriangle className="h-10 w-10 text-yellow-500" />
-            <div>
-              <p className="text-sm text-muted-foreground">Pendientes KYC</p>
-              <h3 className="text-2xl font-bold">{stats?.pendingKYC}</h3>
+          <Card className="p-6">
+            <div className="flex items-center gap-4">
+              <Building2 className="h-10 w-10 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Transacciones</p>
+                <h3 className="text-2xl font-bold">{stats?.totalTransactions}</h3>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center gap-4">
+              <AlertTriangle className="h-10 w-10 text-yellow-500" />
+              <div>
+                <p className="text-sm text-muted-foreground">Pendientes KYC</p>
+                <h3 className="text-2xl font-bold">{stats?.pendingKYC}</h3>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">Volumen de Transacciones</h3>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={transactionStats}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="transactions" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">Monto Total</h3>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={transactionStats}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line 
+                    type="monotone" 
+                    dataKey="amount" 
+                    stroke="#82ca9d" 
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
       </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Volumen de Transacciones</h3>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={transactionStats}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="transactions" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Monto Total</h3>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={transactionStats}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Line 
-                  type="monotone" 
-                  dataKey="amount" 
-                  stroke="#82ca9d" 
-                  strokeWidth={2}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-      </div>
-    </div>
+    </AppLayout>
   );
 }

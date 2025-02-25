@@ -120,6 +120,51 @@ export type Database = {
         }
         Relationships: []
       }
+      business_rules: {
+        Row: {
+          actions: Json
+          conditions: Json
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          module_name: string
+          parameters: Json
+          priority: number | null
+          rule_code: string
+          rule_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          actions?: Json
+          conditions?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          module_name: string
+          parameters?: Json
+          priority?: number | null
+          rule_code: string
+          rule_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          actions?: Json
+          conditions?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          module_name?: string
+          parameters?: Json
+          priority?: number | null
+          rule_code?: string
+          rule_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       cards: {
         Row: {
           card_number: string | null
@@ -323,6 +368,47 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      implementation_progress: {
+        Row: {
+          created_at: string | null
+          id: string
+          module_id: string | null
+          notes: string | null
+          phase: string
+          progress_percentage: number | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          module_id?: string | null
+          notes?: string | null
+          phase: string
+          progress_percentage?: number | null
+          status: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          module_id?: string | null
+          notes?: string | null
+          phase?: string
+          progress_percentage?: number | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "implementation_progress_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "system_modules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       kyc_documents: {
         Row: {
@@ -590,6 +676,45 @@ export type Database = {
           title?: string
           updated_at?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      system_modules: {
+        Row: {
+          category: string
+          created_at: string | null
+          dependencies: Json | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          module_code: string
+          name: string
+          settings: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          dependencies?: Json | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          module_code: string
+          name: string
+          settings?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          dependencies?: Json | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          module_code?: string
+          name?: string
+          settings?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }
