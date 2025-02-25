@@ -98,6 +98,10 @@ export function AppRoutes() {
             <Route path="portfolios" element={<Portfolios />} />
             <Route path="portfolios/ai" element={<AIPortfolios />} />
           </Route>
+
+          {/* Additional Commercial Routes */}
+          <Route path="cards" element={<CardsPage />} />
+          <Route path="history" element={<HistoryPage />} />
         </Route>
 
         {/* Private Banking Routes */}
@@ -112,8 +116,6 @@ export function AppRoutes() {
 
         {/* Shared Routes */}
         <Route path="/wallet" element={<WalletPage />} />
-        <Route path="/cards" element={<CardsPage />} />
-        <Route path="/history" element={<HistoryPage />} />
         <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/transfer" element={<TransferPage />} />
