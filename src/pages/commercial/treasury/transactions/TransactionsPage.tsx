@@ -22,6 +22,8 @@ const TransactionsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<TreasuryTransaction | undefined>();
+  const [dateRange, setDateRange] = useState({ from: "", to: "" });
+  const [statusFilter, setStatusFilter] = useState<string>("");
 
   const { data: transactions = [], isLoading, refetch } = useQuery({
     queryKey: ['treasury-transactions'],
@@ -36,11 +38,21 @@ const TransactionsPage = () => {
     }
   });
 
-  const filteredTransactions = transactions.filter(transaction => 
-    transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    transaction.bank_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    transaction.amount.toString().includes(searchTerm)
-  );
+  const filteredTransactions = transactions.filter(transaction => {
+    const matchesSearch = 
+      transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.bank_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.amount.toString().includes(searchTerm);
+
+    const matchesStatus = !statusFilter || transaction.status === statusFilter;
+
+    const transactionDate = new Date(transaction.transaction_date);
+    const matchesDateRange = 
+      (!dateRange.from || transactionDate >= new Date(dateRange.from)) &&
+      (!dateRange.to || transactionDate <= new Date(dateRange.to));
+
+    return matchesSearch && matchesStatus && matchesDateRange;
+  });
 
   const handleEdit = (transaction: TreasuryTransaction) => {
     setSelectedTransaction(transaction);
@@ -57,6 +69,28 @@ const TransactionsPage = () => {
     setSelectedTransaction(undefined);
   };
 
+  const handleExport = () => {
+    const csvContent = [
+      ["Date", "Bank", "Description", "Status", "Amount", "Currency"].join(","),
+      ...filteredTransactions.map(t => [
+        new Date(t.transaction_date).toLocaleDateString(),
+        t.bank_name,
+        t.description || "",
+        t.status,
+        t.amount,
+        t.currency
+      ].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `treasury-transactions-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
@@ -68,7 +102,7 @@ const TransactionsPage = () => {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleExport}>
               <FileDown className="mr-2 h-4 w-4" />
               Export
             </Button>
@@ -84,22 +118,47 @@ const TransactionsPage = () => {
             <CardTitle>Transaction Filters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search transactions..."
-                    className="pl-8"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search transactions..."
+                  className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-              <Button variant="outline">
-                <Filter className="mr-2 h-4 w-4" />
-                More Filters
-              </Button>
+              
+              <div>
+                <Input
+                  type="date"
+                  placeholder="From Date"
+                  value={dateRange.from}
+                  onChange={(e) => setDateRange(prev => ({ ...prev, from: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <Input
+                  type="date"
+                  placeholder="To Date"
+                  value={dateRange.to}
+                  onChange={(e) => setDateRange(prev => ({ ...prev, to: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <select
+                  className="w-full rounded-md border border-input bg-background px-3 py-2"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="">All Statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                  <option value="failed">Failed</option>
+                </select>
+              </div>
             </div>
           </CardContent>
         </Card>
