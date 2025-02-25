@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -30,12 +29,18 @@ import RiskManagement from "@/pages/commercial/RiskManagement";
 import PrivateBankingDashboard from "@/pages/private/Dashboard";
 import DeveloperPortal from "@/pages/developers/Dashboard";
 import TreasuryDashboard from "@/pages/commercial/treasury/Dashboard";
-import TradeFinancePage from "@/pages/commercial/TradeFinance";
+import CashFlowAnalysis from "@/pages/commercial/treasury/CashFlow";
+import TransactionManagement from "@/pages/commercial/treasury/TransactionManagement";
+import InvestmentManagement from "@/pages/commercial/treasury/InvestmentManagement";
+import FXOperations from "@/pages/commercial/treasury/FXOperations";
 import PayrollPage from "@/pages/commercial/Payroll";
 import InvoicesPage from "@/pages/commercial/Invoices";
 import ExpensesPage from "@/pages/commercial/Expenses";
+import TradeFinancePage from "@/pages/commercial/TradeFinance";
 import PaymentProcessorPage from "@/pages/commercial/PaymentProcessor";
-import TreasuryTransactionsPage from "@/pages/commercial/treasury/transactions/TransactionsPage";
+import FundManagement from "@/pages/commercial/fund-management/Dashboard";
+import Portfolios from "@/pages/commercial/fund-management/Portfolios";
+import AIPortfolios from "@/pages/commercial/fund-management/AIPortfolios";
 
 export function AppRoutes() {
   return (
@@ -67,20 +72,29 @@ export function AppRoutes() {
 
         {/* Commercial Routes */}
         <Route path="/commercial">
-          <Route path="dashboard" element={<CommercialDashboard />} />
-          <Route path="risk-management/*" element={<RiskManagement />} />
+          {/* Treasury Routes */}
+          <Route path="treasury">
+            <Route path="" element={<TreasuryDashboard />} />
+            <Route path="cash-flow" element={<CashFlowAnalysis />} />
+            <Route path="transactions" element={<TransactionManagement />} />
+            <Route path="investments" element={<InvestmentManagement />} />
+            <Route path="fx" element={<FXOperations />} />
+          </Route>
+
+          {/* Operations Routes */}
           <Route path="payroll" element={<PayrollPage />} />
           <Route path="invoices" element={<InvoicesPage />} />
           <Route path="expenses" element={<ExpensesPage />} />
-          <Route path="treasury">
-            <Route path="" element={<TreasuryDashboard />} />
-            <Route path="cash-flow" element={<div>Cash Flow - Coming Soon</div>} />
-            <Route path="transactions" element={<TreasuryTransactionsPage />} />
-            <Route path="investments" element={<div>Investments - Coming Soon</div>} />
-            <Route path="fx" element={<div>FX Operations - Coming Soon</div>} />
-          </Route>
           <Route path="trade-finance" element={<TradeFinancePage />} />
+          <Route path="risk-management/*" element={<RiskManagement />} />
           <Route path="payment-processor" element={<PaymentProcessorPage />} />
+
+          {/* Fund Management Routes */}
+          <Route path="fund-management">
+            <Route path="" element={<FundManagement />} />
+            <Route path="portfolios" element={<Portfolios />} />
+            <Route path="portfolios/ai" element={<AIPortfolios />} />
+          </Route>
         </Route>
 
         {/* Private Banking Routes */}
