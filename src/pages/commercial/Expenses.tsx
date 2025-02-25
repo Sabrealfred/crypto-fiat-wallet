@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, DollarSign, TrendingUp, BarChart, Calendar, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
+import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 
 export default function ExpensesPage() {
   const expenseMetrics = [
@@ -60,12 +61,11 @@ export default function ExpensesPage() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Expense Management</h1>
-          <p className="text-muted-foreground">
-            Track, manage, and analyze business expenses efficiently
-          </p>
-        </div>
+        <CommercialHeader 
+          title="Expense Management"
+          description="Track, manage, and analyze business expenses efficiently"
+          showBack={true}
+        />
 
         {/* Métricas de Gastos */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
