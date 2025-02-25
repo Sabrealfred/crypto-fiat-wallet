@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,6 +18,7 @@ import { DateRange } from "react-day-picker";
 export function TransactionTagStats() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [comparisonPeriod, setComparisonPeriod] = useState("previous");
+  const [showPercentages, setShowPercentages] = useState(false);
 
   const { data: transactions = [] } = useQuery({
     queryKey: ['treasury-transactions', dateRange],
@@ -54,7 +54,46 @@ export function TransactionTagStats() {
     }
   });
 
-  // Inicializar estadísticas mensuales
+  const getComparisonDateRange = () => {
+    if (!dateRange?.from || !dateRange?.to) return undefined;
+    
+    const from = new Date(dateRange.from);
+    const to = new Date(dateRange.to);
+    const diffMonths = (to.getFullYear() - from.getFullYear()) * 12 + to.getMonth() - from.getMonth();
+    
+    if (comparisonPeriod === "previous") {
+      return {
+        from: subMonths(from, diffMonths),
+        to: subMonths(to, diffMonths)
+      };
+    } else if (comparisonPeriod === "year") {
+      return {
+        from: new Date(from.setFullYear(from.getFullYear() - 1)),
+        to: new Date(to.setFullYear(to.getFullYear() - 1))
+      };
+    }
+    return undefined;
+  };
+
+  const { data: comparisonTransactions = [] } = useQuery({
+    queryKey: ['treasury-transactions-comparison', dateRange, comparisonPeriod],
+    queryFn: async () => {
+      const comparisonRange = getComparisonDateRange();
+      if (!comparisonRange) return [];
+
+      const { data, error } = await supabase
+        .from('treasury_transactions')
+        .select('id, amount, currency, transaction_date, description, status, tags, metadata, bank_name, bai_code, entity_id')
+        .gte('transaction_date', comparisonRange.from.toISOString())
+        .lte('transaction_date', comparisonRange.to.toISOString())
+        .order('transaction_date', { ascending: false });
+
+      if (error) throw error;
+      return data as TreasuryTransaction[];
+    },
+    enabled: !!dateRange?.from && !!dateRange?.to
+  });
+
   const monthlyStats: Record<string, Record<string, number>> = {};
   for (let i = 0; i < 12; i++) {
     const date = subMonths(new Date(), i);
@@ -62,20 +101,27 @@ export function TransactionTagStats() {
     monthlyStats[monthKey] = {};
   }
 
-  // Calcular estadísticas
-  const tagStats = calculateTagStats(transactions, monthlyStats);
+  const currentStats = calculateTagStats(transactions, monthlyStats);
+  const comparisonStats = calculateTagStats(comparisonTransactions, {});
 
-  const statsArray = Object.values(tagStats)
-    .map(stat => ({
-      ...stat,
-      totalAmount: Number(stat.totalAmount.toFixed(2)),
-      averageAmount: Number((stat.totalAmount / stat.count).toFixed(2))
-    }))
+  const statsArray = Object.values(currentStats)
+    .map(stat => {
+      const comparisonStat = comparisonStats[stat.tag];
+      const percentageChange = comparisonStat 
+        ? ((stat.totalAmount - comparisonStat.totalAmount) / comparisonStat.totalAmount) * 100 
+        : 0;
+
+      return {
+        ...stat,
+        totalAmount: Number(stat.totalAmount.toFixed(2)),
+        averageAmount: Number((stat.totalAmount / stat.count).toFixed(2)),
+        percentageChange: Number(percentageChange.toFixed(2))
+      };
+    })
     .sort((a, b) => b.totalAmount - a.totalAmount);
 
   const top5Tags = statsArray.slice(0, 5).map(stat => stat.tag);
 
-  // Calcular datos mensuales y predicciones
   const monthlyData = Object.entries(monthlyStats)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([month, values]) => ({
@@ -96,7 +142,6 @@ export function TransactionTagStats() {
 
   const combinedData = [...monthlyData, ...predictions];
 
-  // Detectar anomalías
   const anomalies = top5Tags.reduce((acc, tag) => {
     const monthlyValues = Object.values(monthlyStats).map(m => m[tag] || 0);
     const anomalousValues = detectAnomalies(monthlyValues);
@@ -146,24 +191,30 @@ export function TransactionTagStats() {
         onDateRangeChange={setDateRange}
         comparisonPeriod={comparisonPeriod}
         onComparisonPeriodChange={setComparisonPeriod}
+        showPercentages={showPercentages}
+        onShowPercentagesChange={setShowPercentages}
       />
 
       <TagMetricsCards
         totalTags={tags.length}
         taggedTransactions={transactions.filter(t => t.tags?.length > 0).length}
         untaggedTransactions={transactions.filter(t => !t.tags?.length).length}
+        comparisonTransactions={comparisonTransactions}
+        showPercentages={showPercentages}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <TagAmountChart
           statsArray={statsArray}
           anomalies={anomalies}
+          showPercentages={showPercentages}
         />
         
         <TagTrendsChart
           combinedData={combinedData}
           top5Tags={top5Tags}
           anomalies={anomalies}
+          comparisonData={comparisonTransactions}
         />
       </div>
 
@@ -171,6 +222,7 @@ export function TransactionTagStats() {
         statsArray={statsArray}
         top5Tags={top5Tags}
         anomalies={anomalies}
+        showPercentages={showPercentages}
       />
     </Card>
   );
