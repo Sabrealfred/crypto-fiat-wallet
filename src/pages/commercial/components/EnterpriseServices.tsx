@@ -11,7 +11,8 @@ import {
   Globe,
   ShieldCheck,
   CreditCard,
-  Briefcase
+  Briefcase,
+  ArrowRight
 } from "lucide-react";
 
 export function EnterpriseServices() {
@@ -56,26 +57,27 @@ export function EnterpriseServices() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="grid gap-4">
       {services.map((service) => (
-        <Card key={service.title}>
+        <Card key={service.title} className="glass-card transition-all hover:shadow-lg">
           <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <service.icon className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <service.icon className="h-5 w-5 text-primary" />
               {service.title}
             </CardTitle>
+            <p className="text-sm text-muted-foreground">{service.description}</p>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">{service.description}</p>
             <div className="grid gap-2">
               {service.items.map((item) => (
                 <Button
                   key={item.path}
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-between hover:bg-primary hover:text-primary-foreground transition-colors"
                   onClick={() => navigate(item.path)}
                 >
-                  {item.name}
+                  <span>{item.name}</span>
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               ))}
             </div>
