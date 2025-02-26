@@ -3,132 +3,152 @@
 
 Una plataforma bancaria moderna construida con React, TypeScript y Supabase.
 
+## Instalación y Configuración
+
+### Requisitos Previos
+- Node.js (v18 o superior)
+- npm o yarn
+- Docker (opcional, para desarrollo local)
+- Cuenta en Supabase
+
+### Instalación Local
+
+1. Clonar el repositorio:
+```bash
+git clone [url-del-repositorio]
+cd banking-platform
+```
+
+2. Instalar dependencias:
+```bash
+npm install
+# o
+yarn install
+```
+
+3. Configurar variables de entorno:
+```bash
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+4. Iniciar el servidor de desarrollo:
+```bash
+npm run dev
+# o
+yarn dev
+```
+
+### Despliegue con Docker
+
+1. Construir la imagen:
+```bash
+docker build -t banking-platform .
+```
+
+2. Ejecutar el contenedor:
+```bash
+docker run -p 8080:8080 banking-platform
+```
+
+### Configuración de Supabase
+
+#### Tablas Requeridas
+1. **profiles**
+   - Almacena información de usuarios
+   - Gestiona perfiles KYC
+
+2. **accounts**
+   - Gestiona cuentas bancarias
+   - Registra balances y movimientos
+
+3. **transactions**
+   - Registra transacciones
+   - Mantiene histórico de operaciones
+
+4. **wallets**
+   - Gestiona billeteras digitales
+   - Maneja múltiples monedas
+
+#### Políticas de Seguridad (RLS)
+- Implementar políticas por tabla
+- Gestionar permisos por rol
+- Asegurar acceso a datos
+
+#### Edge Functions
+- Procesamiento de pagos
+- Notificaciones
+- Integración con servicios externos
+
+## Modos de Despliegue
+
+### On-Premise
+1. **Requisitos de Hardware**
+   - CPU: 4 cores mínimo
+   - RAM: 8GB mínimo
+   - Almacenamiento: 50GB SSD
+
+2. **Stack Tecnológico**
+   - PostgreSQL
+   - Redis (caché)
+   - Nginx (proxy inverso)
+
+3. **Seguridad**
+   - Firewall configurado
+   - SSL/TLS habilitado
+   - Backups automatizados
+
+### Cloud (SaaS)
+1. **Proveedores Soportados**
+   - Vercel
+   - Netlify
+   - AWS Amplify
+
+2. **Configuración**
+   - CI/CD automatizado
+   - Monitoreo integrado
+   - Escalado automático
+
+3. **Dominios y SSL**
+   - Certificados automáticos
+   - DNS personalizado
+   - CDN incluido
+
 ## Roadmap del Producto
 
-### 1. Personal Banking (Estado: 40% completado)
-- **Dashboard Personal** ✅
-  - Vista general de cuentas
-  - Resumen de transacciones
-  - Métricas financieras personales
-- **Cuentas** ⏳
-  - Cuentas de ahorro
-  - Cuentas corrientes
-  - Cuentas de inversión
-- **Pagos y Transferencias** ⏳
-  - Transferencias entre cuentas
-  - Pagos a terceros
-  - Pagos programados
-- **Tarjetas** ✅
-  - Gestión de tarjetas de crédito
-  - Tarjetas de débito
-  - Control de límites
-- **Inversiones Personales** ⏳
-  - Portafolio de inversiones
-  - Compra/venta de instrumentos
-  - Seguimiento de rendimiento
-
-### 2. Commercial Banking (Estado: 60% completado)
-- **Dashboard Comercial** ✅
-  - KPIs comerciales
-  - Análisis financiero
-  - Vista general de operaciones
-- **Treasury Management** ✅
-  - Gestión de flujo de caja
-  - Operaciones FX
-  - Inversiones de tesorería
-- **Fund Management** ✅
-  - Portfolio Analysis
-  - AI Portfolios
-  - Investment Reports
-  - Trading Platform
-- **Operations** ⏳
-  - Gestión de cuentas comerciales
-  - Procesamiento de pagos
-  - Administración de liquidez
-- **Corporate Cards** ⏳
-  - Emisión de tarjetas
-  - Control de gastos
-  - Reportes de uso
-- **Invoice Management** ⏳
-  - Generación de facturas
-  - Seguimiento de pagos
-  - Reportes de facturación
-- **Payroll Services** ⏳
-  - Procesamiento de nómina
-  - Pagos a empleados
-  - Reportes fiscales
-
-### 3. Business Banking (Estado: 30% completado)
-- **Dashboard Empresarial** ✅
-  - Resumen financiero
-  - Métricas de negocio
-  - Alertas y notificaciones
-- **Cuentas Empresariales** ⏳
-  - Cuentas corrientes
-  - Líneas de crédito
-  - Gestión de autorizaciones
-- **Servicios Empresariales** ⏳
-  - Financiamiento
-  - Inversiones
-  - Seguros
-
-### 4. Private Banking (Estado: 20% completado)
-- **Wealth Management** ⏳
-  - Portafolios personalizados
-  - Asesoría financiera
-  - Inversiones alternativas
-- **Servicios Exclusivos** ⏳
-  - Concierge bancario
-  - Productos premium
-  - Atención personalizada
-
-### 5. Developer Portal (Estado: 10% completado)
-- **API Management** ⏳
-  - Documentación API
-  - Sandbox de desarrollo
-  - Gestión de credenciales
-- **Integrations** ⏳
-  - Webhooks
-  - SDKs
-  - Ejemplos de código
-
-## Etapas de Desarrollo
-
-### MVP (Actual - 60% completado)
-- [x] Autenticación y autorización
-- [x] Dashboard comercial básico
-- [x] Gestión de tesorería
-- [x] Fund Management
-- [ ] Operaciones básicas
-- [ ] Pagos y transferencias
-- [ ] Gestión de tarjetas corporativas
-
-### Beta (Planificado - 0% completado)
-- [ ] Sistema completo de facturación
-- [ ] Nómina empresarial
-- [ ] APIs para desarrolladores
-- [ ] Integración con sistemas externos
-- [ ] Reportes avanzados
-- [ ] Análisis predictivo
-
-### Release 1.0 (Planificado - 0% completado)
-- [ ] Todas las funcionalidades comerciales
-- [ ] Portal de desarrolladores completo
-- [ ] Integraciones con terceros
-- [ ] Sistema de alertas avanzado
-- [ ] Mobile app
+[... keep existing code (Product Roadmap section)]
 
 ## Stack Tecnológico
 
-- Frontend: React + TypeScript
-- UI: Tailwind CSS + Shadcn/UI
-- Backend: Supabase
-- Database: PostgreSQL
-- Authentication: Supabase Auth
-- Analytics: Recharts
-- State Management: TanStack Query
+### Frontend
+- React 18
+- TypeScript
+- Tailwind CSS
+- Shadcn/UI
+- TanStack Query
+- Recharts
+
+### Backend (Supabase)
+- PostgreSQL
+- Row Level Security
+- Edge Functions
+- Real-time subscriptions
+- Storage
+
+### Desarrollo
+- Vite
+- ESLint
+- Prettier
+- Jest
+- Testing Library
 
 ## Integración con Supabase
+
+### Configuración Inicial
+1. Crear proyecto en Supabase
+2. Configurar autenticación
+3. Implementar tablas base
+4. Configurar políticas RLS
 
 ### Tablas Principales
 - profiles
@@ -138,22 +158,45 @@ Una plataforma bancaria moderna construida con React, TypeScript y Supabase.
 - cards
 - notifications
 
-## Próximos Pasos
+### Edge Functions
+1. **payment-processor**
+   - Manejo de pagos
+   - Validación de transacciones
+   - Notificaciones
 
-1. Completar funcionalidades del MVP:
-   - Implementar operaciones básicas
-   - Finalizar sistema de pagos
-   - Integrar gestión de tarjetas
+2. **update-exchange-rates**
+   - Actualización de tasas
+   - Conversión de monedas
+   - Caché de datos
 
-2. Desarrollo de funcionalidades beta:
-   - Sistema de facturación
-   - Módulo de nómina
-   - Portal de desarrolladores
+## Arquitectura del Sistema
 
-3. Preparación para Release 1.0:
-   - Testing completo
-   - Documentación final
-   - Optimización de rendimiento
+### Componentes Core
+1. **Autenticación**
+   - JWT
+   - OAuth 2.0
+   - Multi-factor
+
+2. **Procesamiento de Pagos**
+   - Gateway integration
+   - Validación
+   - Reconciliación
+
+3. **Gestión de Datos**
+   - Cache layer
+   - Real-time updates
+   - Backup strategy
+
+### Microservicios
+1. **Notificaciones**
+   - Email
+   - SMS
+   - Push
+
+2. **Reportes**
+   - Generación
+   - Exportación
+   - Programación
 
 ## Metodología de Desarrollo
 
@@ -169,17 +212,40 @@ Una plataforma bancaria moderna construida con React, TypeScript y Supabase.
 - **En Desarrollo**: 15%
 - **Pendiente**: 40%
 
-## Próximas Funcionalidades a Implementar
+## Monitoreo y Logging
 
-1. Sistema de operaciones comerciales
-2. Módulo de facturación
-3. Gestión de nómina
-4. Portal de desarrolladores básico
-5. Integraciones con sistemas externos
+### Herramientas
+- Sentry para errores
+- Datadog para métricas
+- Supabase Dashboard
+
+### Métricas Clave
+- Tiempo de respuesta
+- Tasa de error
+- Uso de recursos
+
+## Seguridad
+
+### Implementaciones
+- HTTPS forzado
+- Rate limiting
+- WAF configurado
+- Sanitización de datos
+
+### Cumplimiento
+- GDPR
+- PCI DSS
+- ISO 27001
 
 ## Contribuciones y Desarrollo
 
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre cómo contribuir al proyecto.
+
+## Soporte
+
+- Documentación: `/docs`
+- Issues: GitHub Issues
+- Discord: [Link al servidor]
 
 ## Licencia
 
