@@ -10,14 +10,14 @@ interface EmptyTabContentProps {
 
 export function EmptyTabContent({ title, icon: Icon, message }: EmptyTabContentProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+    <Card className="border-blue-100 dark:border-blue-900">
+      <CardHeader className="bg-blue-50 dark:bg-blue-900/20 border-b border-blue-100 dark:border-blue-900">
+        <CardTitle className="text-blue-900 dark:text-blue-100">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="text-center py-8 text-muted-foreground">
-          <Icon className="mx-auto h-12 w-12 mb-4" />
-          <p>{message}</p>
+        <div className="text-center py-12 text-blue-400 dark:text-blue-500">
+          <Icon className="mx-auto h-16 w-16 mb-4 opacity-50" />
+          <p className="text-gray-500 dark:text-gray-400">{message}</p>
         </div>
       </CardContent>
     </Card>

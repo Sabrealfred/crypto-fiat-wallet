@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Wallet2 } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { ProfileSelector } from "@/components/profile/ProfileSelector";
 
 interface LogoProps {
@@ -21,8 +21,8 @@ export function Logo({ isCollapsed }: LogoProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="p-0 h-auto hover:bg-transparent">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-              <Wallet2 className="h-5 w-5 text-white" />
+            <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center shrink-0">
+              <Briefcase className="h-5 w-5 text-white" />
             </div>
           </Button>
         </DropdownMenuTrigger>
@@ -35,7 +35,7 @@ export function Logo({ isCollapsed }: LogoProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <span className={`font-semibold text-lg transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>
-        Waymu Wallet
+        Datacloud AI
       </span>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -42,11 +43,15 @@ import FundManagement from "@/pages/commercial/fund-management/Dashboard";
 import Portfolios from "@/pages/commercial/fund-management/Portfolios";
 import AIPortfolios from "@/pages/commercial/fund-management/AIPortfolios";
 import OperationsDashboard from "@/pages/commercial/operations/Dashboard";
+import CommercialPortal from "@/pages/CommercialPortal";
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
+      
+      {/* Portal Entry Page */}
+      <Route path="/" element={<CommercialPortal />} />
       
       <Route element={<ProtectedRoute />}>
         {/* Admin Routes */}
@@ -63,7 +68,6 @@ export function AppRoutes() {
         </Route>
 
         {/* Regular User Routes */}
-        <Route path="/" element={<PersonalDashboard />} />
         <Route path="/personal" element={<PersonalDashboard />} />
         
         {/* Business Routes */}
