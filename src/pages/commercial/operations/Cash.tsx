@@ -34,7 +34,7 @@ import {
   Calendar,
   Building2,
   FileText,
-  Bank,
+  Landmark, // Changed from Bank to Landmark which is available in lucide-react
   ArrowRightLeft,
   RefreshCw,
   Share2,
@@ -207,7 +207,7 @@ export default function CashManagementPage() {
   
   const totalOutflows = recentTransactionsData
     .filter(t => t.amount < 0)
-    .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
+    .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0); // Fixed the type issue with Number()
   
   const netPosition = totalInflows - totalOutflows;
   

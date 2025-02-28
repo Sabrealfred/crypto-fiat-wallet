@@ -1,8 +1,8 @@
 
-import { Settings, LogOut, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { DarkModeToggle } from "./dark-mode-toggle";
+import { Settings, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface BottomButtonsProps {
   isCollapsed: boolean;
@@ -10,54 +10,40 @@ interface BottomButtonsProps {
   onToggleDarkMode: () => void;
 }
 
-export function BottomButtons({
-  isCollapsed,
-  isDarkMode,
-  onToggleDarkMode
-}: BottomButtonsProps) {
-  const navigate = useNavigate();
-
+export function BottomButtons({ isCollapsed, isDarkMode, onToggleDarkMode }: BottomButtonsProps) {
   return (
-    <div className="mt-auto pt-2 border-t space-y-1">
-      <Button
-        variant="ghost"
-        className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}
-        onClick={() => navigate('/settings')}
-      >
-        <Settings className="h-4 w-4" />
-        <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-          Settings
-        </span>
-      </Button>
+    <div className="fixed bottom-0 left-0 p-4 transition-all duration-300 ease-in-out flex flex-col items-center space-y-2">
+      <DarkModeToggle 
+        isDarkMode={isDarkMode}
+        onToggle={onToggleDarkMode}
+        isCollapsed={isCollapsed}
+      />
       
-      <Button
-        variant="ghost"
-        className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}
-        onClick={() => navigate('/marketplace')}
-      >
-        <ShoppingCart className="h-4 w-4" />
-        <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-          Marketplace
-        </span>
-      </Button>
+      <Link to="/settings">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          className="rounded-full"
+        >
+          <Settings className="h-5 w-5" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Settings
+          </span>
+        </Button>
+      </Link>
       
-      <div className={`flex ${isCollapsed ? 'justify-center' : 'justify-between'} items-center px-2 py-1`}>
-        <DarkModeToggle 
-          isDarkMode={isDarkMode} 
-          onToggle={onToggleDarkMode} 
-          isCollapsed={isCollapsed}
-        />
-        
-        {!isCollapsed && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full text-red-600 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/20"
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+      <Link to="/marketplace">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          className="rounded-full"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Marketplace
+          </span>
+        </Button>
+      </Link>
     </div>
   );
 }
