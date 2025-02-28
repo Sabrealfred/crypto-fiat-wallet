@@ -33,9 +33,6 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
     },
   });
 
-  return currentOrg?.type === 'commercial' ? (
-    <EnterpriseSolutionsNavigation isCollapsed={isCollapsed} />
-  ) : (
-    <PersonalNavigation isCollapsed={isCollapsed} />
-  );
+  // Always display the Enterprise Solutions Navigation instead of checking the org type
+  return <EnterpriseSolutionsNavigation isCollapsed={isCollapsed} />;
 }
