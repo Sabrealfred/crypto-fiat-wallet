@@ -5,7 +5,7 @@ export default function OperationalRiskPage() {
   return (
     <PlaceholderPage 
       title="Operational Risk" 
-      description="Identify and mitigate operational risks"
+      description="Manage risks related to operations and processes"
     />
   );
 }

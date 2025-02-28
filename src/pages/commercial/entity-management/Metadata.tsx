@@ -4,8 +4,8 @@ import { PlaceholderPage } from "../components/PlaceholderPage";
 export default function MetadataPage() {
   return (
     <PlaceholderPage 
-      title="Custom Metadata" 
-      description="Configure custom entity data fields"
+      title="Entity Metadata" 
+      description="Manage custom data attributes for entities"
     />
   );
 }

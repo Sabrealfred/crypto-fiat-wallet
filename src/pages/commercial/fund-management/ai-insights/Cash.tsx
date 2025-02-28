@@ -5,7 +5,7 @@ export default function CashInsightsPage() {
   return (
     <PlaceholderPage 
       title="Cash Insights" 
-      description="AI analysis of cash flow patterns"
+      description="AI-powered cash flow analysis and forecasting"
     />
   );
 }

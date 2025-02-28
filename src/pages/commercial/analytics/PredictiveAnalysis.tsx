@@ -5,7 +5,7 @@ export default function PredictiveAnalysisPage() {
   return (
     <PlaceholderPage 
       title="Predictive Analysis" 
-      description="Use advanced algorithms to predict financial trends"
+      description="AI-powered financial forecasting and predictions"
     />
   );
 }

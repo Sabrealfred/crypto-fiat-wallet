@@ -5,7 +5,7 @@ export default function OperationsAnalyticsPage() {
   return (
     <PlaceholderPage 
       title="Operations Analytics" 
-      description="Analyze operational efficiency and performance"
+      description="Advanced analytics for business operations"
     />
   );
 }

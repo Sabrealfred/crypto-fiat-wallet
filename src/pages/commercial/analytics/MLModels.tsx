@@ -5,7 +5,7 @@ export default function MLModelsPage() {
   return (
     <PlaceholderPage 
       title="Machine Learning Models" 
-      description="Access and manage machine learning models for financial analysis"
+      description="Access and manage financial ML models"
     />
   );
 }

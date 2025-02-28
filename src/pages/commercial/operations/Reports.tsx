@@ -5,7 +5,7 @@ export default function OperationsReportsPage() {
   return (
     <PlaceholderPage 
       title="Operations Reports" 
-      description="Generate and analyze operational reports"
+      description="View and generate operational reports"
     />
   );
 }

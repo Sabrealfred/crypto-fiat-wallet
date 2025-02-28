@@ -5,7 +5,7 @@ export default function RealtimePaymentsPage() {
   return (
     <PlaceholderPage 
       title="Real-time Payments" 
-      description="Process instant payment transactions"
+      description="Process immediate payment transactions"
     />
   );
 }

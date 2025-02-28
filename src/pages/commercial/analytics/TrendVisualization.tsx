@@ -5,7 +5,7 @@ export default function TrendVisualizationPage() {
   return (
     <PlaceholderPage 
       title="Trend Visualization" 
-      description="Visualize financial trends and patterns"
+      description="Visual analytics of financial trends and patterns"
     />
   );
 }

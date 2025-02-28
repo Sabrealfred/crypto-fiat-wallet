@@ -5,7 +5,7 @@ export default function NLPPage() {
   return (
     <PlaceholderPage 
       title="Natural Language Processing" 
-      description="Extract insights from financial text data"
+      description="AI-powered text analysis for financial documents"
     />
   );
 }

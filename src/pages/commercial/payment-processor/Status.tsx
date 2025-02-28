@@ -5,7 +5,7 @@ export default function PaymentStatusPage() {
   return (
     <PlaceholderPage 
       title="Payment Status" 
-      description="Check the status of your payments"
+      description="Check and monitor payment transaction status"
     />
   );
 }

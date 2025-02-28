@@ -2,7 +2,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { EnterpriseSolutionsNavigation } from "./components/enterprise-solutions-navigation";
-import { PersonalNavigation } from "./components/personal-navigation";
 
 interface NavigationItemsProps {
   isCollapsed: boolean;
@@ -33,6 +32,6 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
     },
   });
 
-  // Always display the Enterprise Solutions Navigation instead of checking the org type
+  // Always display the Enterprise Solutions Navigation
   return <EnterpriseSolutionsNavigation isCollapsed={isCollapsed} />;
 }

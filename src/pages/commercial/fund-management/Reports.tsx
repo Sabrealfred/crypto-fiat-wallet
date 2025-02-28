@@ -5,7 +5,7 @@ export default function FundReportsPage() {
   return (
     <PlaceholderPage 
       title="Investment Reports" 
-      description="Access and generate investment portfolio reports"
+      description="Comprehensive reporting on investment performance"
     />
   );
 }

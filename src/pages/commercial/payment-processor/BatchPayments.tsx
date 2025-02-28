@@ -5,7 +5,7 @@ export default function BatchPaymentsPage() {
   return (
     <PlaceholderPage 
       title="Batch Payments" 
-      description="Process multiple payments at once"
+      description="Process multiple payments simultaneously"
     />
   );
 }

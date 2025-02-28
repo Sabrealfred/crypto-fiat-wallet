@@ -5,7 +5,7 @@ export default function RiskReportsPage() {
   return (
     <PlaceholderPage 
       title="Risk Reports" 
-      description="Generate and analyze risk assessment reports"
+      description="Generate comprehensive risk assessment reports"
     />
   );
 }

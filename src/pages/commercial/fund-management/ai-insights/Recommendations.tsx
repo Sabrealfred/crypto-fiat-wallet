@@ -5,7 +5,7 @@ export default function AIRecommendationsPage() {
   return (
     <PlaceholderPage 
       title="AI Recommendations" 
-      description="Get intelligent financial recommendations"
+      description="AI-generated financial strategy recommendations"
     />
   );
 }
