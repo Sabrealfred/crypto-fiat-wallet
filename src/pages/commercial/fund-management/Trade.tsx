@@ -282,7 +282,7 @@ export default function TradePage() {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
-                        <Tooltip formatter={(value) => `$${(value/1000000).toFixed(2)}M`} />
+                        <Tooltip formatter={(value) => `$${(Number(value)/1000000).toFixed(2)}M`} />
                         <Legend />
                         <Bar dataKey="equities" name="Equities" fill="#3b82f6" />
                         <Bar dataKey="bonds" name="Fixed Income" fill="#10b981" />
@@ -312,7 +312,7 @@ export default function TradePage() {
                           outerRadius={100}
                           fill="#8884d8"
                           dataKey="value"
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          label={({ name, percent }) => `${name} ${(Number(percent) * 100).toFixed(0)}%`}
                         >
                           {assetAllocationData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
