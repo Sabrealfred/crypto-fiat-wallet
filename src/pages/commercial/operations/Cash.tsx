@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -228,7 +227,7 @@ export default function CashPage() {
                     ) : (
                       <ArrowDownRight className="h-3 w-3 mr-1" />
                     )}
-                    {Math.abs(currentMonthData.netPosition - previousMonthData.netPosition).toLocaleString()} change
+                    {Math.abs(Number(currentMonthData.netPosition) - Number(previousMonthData.netPosition)).toLocaleString()} change
                   </p>
                 </div>
                 <div className="bg-blue-100 dark:bg-blue-800/50 p-2 rounded-full">
