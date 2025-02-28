@@ -41,7 +41,7 @@ export function QuickAccessSection() {
     {
       title: "Risk Assessment",
       icon: ShieldCheck,
-      path: "/commercial/risk-management/assessment",
+      path: "/commercial/risk-management",
       description: "View and manage risk assessments"
     },
     {

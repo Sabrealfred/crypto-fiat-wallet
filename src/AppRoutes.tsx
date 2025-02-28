@@ -45,6 +45,61 @@ import AIPortfolios from "@/pages/commercial/fund-management/AIPortfolios";
 import OperationsDashboard from "@/pages/commercial/operations/Dashboard";
 import CommercialPortal from "@/pages/CommercialPortal";
 
+// Analytics pages
+import MLModelsPage from "@/pages/commercial/analytics/MLModels";
+import PredictiveAnalysisPage from "@/pages/commercial/analytics/PredictiveAnalysis";
+import TrendVisualizationPage from "@/pages/commercial/analytics/TrendVisualization";
+
+// Fund Management pages
+import FundReportsPage from "@/pages/commercial/fund-management/Reports";
+import TradePage from "@/pages/commercial/fund-management/Trade";
+
+// Operations pages
+import OpAccountsPage from "@/pages/commercial/operations/Accounts";
+import ServicesPage from "@/pages/commercial/operations/Services";
+import OperationsSettingsPage from "@/pages/commercial/operations/Settings";
+import LiquidityPage from "@/pages/commercial/operations/Liquidity";
+import CashPage from "@/pages/commercial/operations/Cash";
+import OperationsCompliancePage from "@/pages/commercial/operations/Compliance";
+import AuditPage from "@/pages/commercial/operations/Audit";
+import OperationsReportsPage from "@/pages/commercial/operations/Reports";
+import OperationsAnalyticsPage from "@/pages/commercial/operations/Analytics";
+import CustomReportsPage from "@/pages/commercial/operations/CustomReports";
+
+// Risk Management pages
+import MarketRiskPage from "@/pages/commercial/risk-management/Market";
+import OperationalRiskPage from "@/pages/commercial/risk-management/Operational";
+import CompliancePage from "@/pages/commercial/risk-management/Compliance";
+import RiskReportsPage from "@/pages/commercial/risk-management/Reports";
+import RiskSettingsPage from "@/pages/commercial/risk-management/Settings";
+import LiquidityRiskPage from "@/pages/commercial/risk-management/Liquidity";
+import CounterpartyRiskPage from "@/pages/commercial/risk-management/Counterparty";
+import CountryRiskPage from "@/pages/commercial/risk-management/Country";
+import LegalRiskPage from "@/pages/commercial/risk-management/Legal";
+import ModelRiskPage from "@/pages/commercial/risk-management/Model";
+import TradingRiskPage from "@/pages/commercial/risk-management/Trading";
+
+// AI Insights pages
+import AIInsightsDashboardPage from "@/pages/commercial/fund-management/ai-insights/Dashboard";
+import NLPPage from "@/pages/commercial/fund-management/ai-insights/NLP";
+import CashInsightsPage from "@/pages/commercial/fund-management/ai-insights/Cash";
+import AIRecommendationsPage from "@/pages/commercial/fund-management/ai-insights/Recommendations";
+
+// Payment Processor pages
+import RealtimePaymentsPage from "@/pages/commercial/payment-processor/Realtime";
+import ACHProcessingPage from "@/pages/commercial/payment-processor/ACH";
+import CrossBorderPage from "@/pages/commercial/payment-processor/CrossBorder";
+import NewPaymentPage from "@/pages/commercial/payment-processor/NewPayment";
+import BatchPaymentsPage from "@/pages/commercial/payment-processor/BatchPayments";
+import PaymentStatusPage from "@/pages/commercial/payment-processor/Status";
+import ReconciliationPage from "@/pages/commercial/payment-processor/Reconciliation";
+
+// Entity Management pages
+import EntityManagementDashboardPage from "@/pages/commercial/entity-management/Dashboard";
+import SubsidiariesPage from "@/pages/commercial/entity-management/Subsidiaries";
+import MetadataPage from "@/pages/commercial/entity-management/Metadata";
+import RelationshipsPage from "@/pages/commercial/entity-management/Relationships";
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -92,9 +147,9 @@ export function AppRoutes() {
           {/* Analytics Routes */}
           <Route path="analytics">
             <Route path="" element={<NotFound />} />
-            <Route path="ml-models" element={<NotFound />} />
-            <Route path="predictive" element={<NotFound />} />
-            <Route path="trends" element={<NotFound />} />
+            <Route path="ml-models" element={<MLModelsPage />} />
+            <Route path="predictive" element={<PredictiveAnalysisPage />} />
+            <Route path="trends" element={<TrendVisualizationPage />} />
           </Route>
 
           {/* Operations Routes */}
@@ -103,14 +158,16 @@ export function AppRoutes() {
             <Route path="integration" element={<NotFound />} />
             <Route path="real-time" element={<NotFound />} />
             <Route path="normalization" element={<NotFound />} />
-            
-            {/* Entity Management */}
-            <Route path="accounts">
-              <Route path="" element={<NotFound />} />
-              <Route path="subsidiaries" element={<NotFound />} />
-              <Route path="metadata" element={<NotFound />} />
-              <Route path="relationships" element={<NotFound />} />
-            </Route>
+            <Route path="accounts" element={<OpAccountsPage />} />
+            <Route path="services" element={<ServicesPage />} />
+            <Route path="settings" element={<OperationsSettingsPage />} />
+            <Route path="liquidity" element={<LiquidityPage />} />
+            <Route path="cash" element={<CashPage />} />
+            <Route path="compliance" element={<OperationsCompliancePage />} />
+            <Route path="audit" element={<AuditPage />} />
+            <Route path="reports" element={<OperationsReportsPage />} />
+            <Route path="analytics" element={<OperationsAnalyticsPage />} />
+            <Route path="custom-reports" element={<CustomReportsPage />} />
           </Route>
           
           <Route path="payroll" element={<PayrollPage />} />
@@ -121,17 +178,29 @@ export function AppRoutes() {
           {/* Risk Management Routes */}
           <Route path="risk-management">
             <Route path="" element={<RiskManagement />} />
-            <Route path="assessment" element={<NotFound />} />
-            <Route path="compliance" element={<NotFound />} />
-            <Route path="market" element={<NotFound />} />
+            <Route path="market" element={<MarketRiskPage />} />
+            <Route path="operational" element={<OperationalRiskPage />} />
+            <Route path="compliance" element={<CompliancePage />} />
+            <Route path="reports" element={<RiskReportsPage />} />
+            <Route path="settings" element={<RiskSettingsPage />} />
+            <Route path="liquidity" element={<LiquidityRiskPage />} />
+            <Route path="counterparty" element={<CounterpartyRiskPage />} />
+            <Route path="country" element={<CountryRiskPage />} />
+            <Route path="legal" element={<LegalRiskPage />} />
+            <Route path="model" element={<ModelRiskPage />} />
+            <Route path="trading" element={<TradingRiskPage />} />
           </Route>
 
           {/* Payment Processor Routes */}
           <Route path="payment-processor">
             <Route path="" element={<PaymentProcessorPage />} />
-            <Route path="real-time" element={<NotFound />} />
-            <Route path="ach" element={<NotFound />} />
-            <Route path="cross-border" element={<NotFound />} />
+            <Route path="real-time" element={<RealtimePaymentsPage />} />
+            <Route path="ach" element={<ACHProcessingPage />} />
+            <Route path="cross-border" element={<CrossBorderPage />} />
+            <Route path="new-payment" element={<NewPaymentPage />} />
+            <Route path="batch" element={<BatchPaymentsPage />} />
+            <Route path="status" element={<PaymentStatusPage />} />
+            <Route path="reconciliation" element={<ReconciliationPage />} />
           </Route>
 
           {/* Fund Management Routes */}
@@ -139,16 +208,24 @@ export function AppRoutes() {
             <Route path="" element={<FundManagement />} />
             <Route path="portfolios" element={<Portfolios />} />
             <Route path="portfolios/ai" element={<AIPortfolios />} />
-            <Route path="opportunities" element={<NotFound />} />
-            <Route path="performance" element={<NotFound />} />
+            <Route path="reports" element={<FundReportsPage />} />
+            <Route path="trade" element={<TradePage />} />
             
             {/* AI Insights */}
             <Route path="ai-insights">
-              <Route path="" element={<NotFound />} />
-              <Route path="nlp" element={<NotFound />} />
-              <Route path="cash" element={<NotFound />} />
-              <Route path="recommendations" element={<NotFound />} />
+              <Route path="" element={<AIInsightsDashboardPage />} />
+              <Route path="nlp" element={<NLPPage />} />
+              <Route path="cash" element={<CashInsightsPage />} />
+              <Route path="recommendations" element={<AIRecommendationsPage />} />
             </Route>
+          </Route>
+
+          {/* Entity Management Routes */}
+          <Route path="entity-management">
+            <Route path="" element={<EntityManagementDashboardPage />} />
+            <Route path="subsidiaries" element={<SubsidiariesPage />} />
+            <Route path="metadata" element={<MetadataPage />} />
+            <Route path="relationships" element={<RelationshipsPage />} />
           </Route>
 
           {/* Additional Commercial Routes */}

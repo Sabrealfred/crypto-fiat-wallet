@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { CommercialNavigation } from "./components/commercial-navigation";
+import { EnterpriseSolutionsNavigation } from "./components/enterprise-solutions-navigation";
 import { PersonalNavigation } from "./components/personal-navigation";
 
 interface NavigationItemsProps {
@@ -34,7 +34,7 @@ export function NavigationItems({ isCollapsed }: NavigationItemsProps) {
   });
 
   return currentOrg?.type === 'commercial' ? (
-    <CommercialNavigation isCollapsed={isCollapsed} />
+    <EnterpriseSolutionsNavigation isCollapsed={isCollapsed} />
   ) : (
     <PersonalNavigation isCollapsed={isCollapsed} />
   );
