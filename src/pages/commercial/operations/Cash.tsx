@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,7 +33,7 @@ import {
   Calendar,
   Building2,
   FileText,
-  Landmark, // Changed from Bank to Landmark which is available in lucide-react
+  Landmark,
   ArrowRightLeft,
   RefreshCw,
   Share2,
@@ -203,7 +202,7 @@ export default function CashManagementPage() {
   // Calculate net position (last 30 days)
   const totalInflows = recentTransactionsData
     .filter(t => t.amount > 0)
-    .reduce((sum, t) => sum + t.amount, 0);
+    .reduce((sum, t) => sum + Number(t.amount), 0);
   
   const totalOutflows = recentTransactionsData
     .filter(t => t.amount < 0)

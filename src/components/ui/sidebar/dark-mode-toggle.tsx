@@ -5,23 +5,26 @@ import { Button } from "@/components/ui/button";
 interface DarkModeToggleProps {
   isDarkMode: boolean;
   onToggle: () => void;
-  isCollapsed?: boolean;
+  isCollapsed: boolean;
 }
 
-export function DarkModeToggle({ isDarkMode, onToggle, isCollapsed = false }: DarkModeToggleProps) {
+export function DarkModeToggle({ isDarkMode, onToggle, isCollapsed }: DarkModeToggleProps) {
   return (
     <Button
+      onClick={onToggle}
       variant="ghost"
       size="icon"
-      onClick={onToggle}
+      className="rounded-full"
       aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-      className={`rounded-full ${isDarkMode ? 'text-blue-300 hover:text-blue-100 hover:bg-blue-900/50' : 'text-blue-800 hover:text-blue-600 hover:bg-blue-200/50'}`}
     >
       {isDarkMode ? (
-        <Sun className="h-5 w-5" />
+        <Sun className="h-5 w-5 text-yellow-400" />
       ) : (
-        <Moon className="h-5 w-5" />
+        <Moon className="h-5 w-5 text-blue-600" />
       )}
+      <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+      </span>
     </Button>
   );
 }

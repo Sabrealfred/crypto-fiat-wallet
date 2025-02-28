@@ -10,8 +10,6 @@ import {
   Building2,
   Brain,
   Code,
-  Settings,
-  ShoppingCart
 } from "lucide-react";
 import { NavItem } from "./commercial/NavItem";
 
@@ -67,7 +65,7 @@ export function EnterpriseSolutionsNavigation({ isCollapsed }: EnterpriseSolutio
       />
 
       <NavItem 
-        path="/commercial/operations/accounts" 
+        path="/commercial/entity-management" 
         icon={Building2} 
         label="Entity Management" 
         isCollapsed={isCollapsed} 
