@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, Wallet, Briefcase, ArrowRight } from "lucide-react";
+import { Building2, Wallet, Briefcase, ArrowRight, Code } from "lucide-react";
 
 export default function CommercialPortal() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function CommercialPortal() {
           </p>
         </header>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {/* Personal Wallet */}
           <Card 
             className={`cursor-pointer transition-all duration-300 border-2 ${
@@ -109,6 +109,34 @@ export default function CommercialPortal() {
                 onClick={() => handleNavigate('/commercial/dashboard')}
               >
                 Enterprise Portal
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Developers */}
+          <Card 
+            className={`cursor-pointer transition-all duration-300 border-2 ${
+              hoveredCard === 'developers' ? 'border-blue-500 shadow-lg transform scale-105' : 'border-transparent'
+            }`}
+            onMouseEnter={() => setHoveredCard('developers')}
+            onMouseLeave={() => setHoveredCard(null)}
+            onClick={() => handleNavigate('/developer/dashboard')}
+          >
+            <CardContent className="p-8 text-center">
+              <div className="bg-purple-100 dark:bg-purple-900 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Code className="h-8 w-8 text-purple-600 dark:text-purple-300" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2">Developers</h2>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
+                API access, documentation, and integration tools for developers
+              </p>
+              <Button 
+                variant="outline" 
+                className="mt-4 group border-purple-200 text-purple-700 hover:bg-purple-50"
+                onClick={() => handleNavigate('/developer/dashboard')}
+              >
+                Developer Portal
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </CardContent>

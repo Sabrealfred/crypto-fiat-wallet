@@ -12,6 +12,7 @@ import {
   DollarSign,
   BriefcaseBusiness,
   BarChart,
+  Code,
 } from "lucide-react";
 
 interface CommercialNavigationProps {
@@ -98,7 +99,7 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
         <Button variant={isActive('/commercial/fund-management') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
           <Wallet className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-            Fund Management
+            Portfolio Management
           </span>
         </Button>
       </Link>
@@ -115,6 +116,16 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           <BarChart className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
             AI Portfolios
+          </span>
+        </Button>
+      </Link>
+
+      {/* Developer Portal */}
+      <Link to="/developer/dashboard">
+        <Button variant={isActive('/developer/dashboard') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''}`}>
+          <Code className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Developer Portal
           </span>
         </Button>
       </Link>

@@ -27,11 +27,11 @@ export function QuickActionCard({
             </div>
             {showDemo && (
               <Badge 
-                variant="outline" 
+                variant="enterprise" 
                 className="absolute -top-1 -right-1 bg-white dark:bg-gray-800 text-xs flex items-center gap-1"
               >
                 <Info className="h-3 w-3" />
-                <span>Demo</span>
+                <span>Enterprise</span>
               </Badge>
             )}
           </div>

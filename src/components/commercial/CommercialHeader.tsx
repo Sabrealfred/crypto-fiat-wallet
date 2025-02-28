@@ -25,9 +25,9 @@ export function CommercialHeader({
         <div className="flex items-center gap-2 mb-2">
           <h1 className="text-2xl font-semibold">{title}</h1>
           {showDemo && (
-            <Badge variant="outline" className="flex items-center gap-1">
+            <Badge variant="enterprise" className="flex items-center gap-1">
               <Info className="h-3.5 w-3.5" />
-              <span>Demo</span>
+              <span>Enterprise</span>
             </Badge>
           )}
         </div>

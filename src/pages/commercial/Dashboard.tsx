@@ -28,7 +28,7 @@ export default function CommercialDashboard() {
   const currentSpending = monthlyData[monthlyData.length - 1].spending;
   const previousSpending = monthlyData[monthlyData.length - 2].spending;
 
-  const demoModules = [
+  const enterpriseFeatures = [
     {
       title: "Treasury & Cash Management",
       icon: Wallet,
@@ -93,10 +93,7 @@ export default function CommercialDashboard() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl font-bold">Commercial Banking Portal</h1>
-            <Badge variant="outline" className="flex items-center gap-1">
-              <Info className="h-3.5 w-3.5" />
-              <span>Demo Data</span>
-            </Badge>
+            <Badge variant="outline" className="bg-blue-50 dark:bg-blue-900/30">Enterprise Portal</Badge>
           </div>
           <p className="text-muted-foreground text-lg">
             Comprehensive overview of your enterprise operations
@@ -108,7 +105,6 @@ export default function CommercialDashboard() {
             <div className="flex items-center gap-2 mb-4">
               <ChartPie className="h-5 w-5 text-primary" />
               <h2 className="text-xl font-semibold">Key Performance Indicators</h2>
-              <Badge variant="outline" size="sm" className="ml-2">Demo</Badge>
             </div>
             <div className="grid gap-4">
               <CommercialMetrics />
@@ -121,7 +117,6 @@ export default function CommercialDashboard() {
                 <div className="flex items-center gap-2 mb-4">
                   <LineChart className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Financial Analytics</h2>
-                  <Badge variant="outline" size="sm" className="ml-2">Demo</Badge>
                 </div>
                 <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg">
                   <StatisticsCards 
@@ -137,7 +132,6 @@ export default function CommercialDashboard() {
                 <div className="flex items-center gap-2 mb-4">
                   <ChartPie className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Area Performance</h2>
-                  <Badge variant="outline" size="sm" className="ml-2">Demo</Badge>
                 </div>
                 <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg p-6">
                   <AreaMetrics />
@@ -150,7 +144,6 @@ export default function CommercialDashboard() {
                 <div className="flex items-center gap-2 mb-4">
                   <FileText className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Financial Highlights</h2>
-                  <Badge variant="outline" size="sm" className="ml-2">Demo</Badge>
                 </div>
                 <FinancialHighlights />
               </div>
@@ -159,7 +152,6 @@ export default function CommercialDashboard() {
                 <div className="flex items-center gap-2 mb-4">
                   <ChartBar className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Monthly Trends</h2>
-                  <Badge variant="outline" size="sm" className="ml-2">Demo</Badge>
                 </div>
                 <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg">
                   <StatisticsChart monthlyData={monthlyData} />
@@ -170,36 +162,35 @@ export default function CommercialDashboard() {
 
           <section className="fade-in animation-delay-300">
             <div className="flex items-center gap-2 mb-4">
-              <Database className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">DataCloud AI Features</h2>
-              <Badge variant="outline" size="sm" className="ml-2">Demo</Badge>
+              <Globe className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">Enterprise Solutions & Services</h2>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {demoModules.map((module, index) => (
-                <Card key={index} className="hover:shadow-md transition-all">
+              {enterpriseFeatures.map((feature, index) => (
+                <Card key={index} className="hover:shadow-md transition-all border-blue-100 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20">
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <module.icon className="h-5 w-5 text-primary" />
+                      <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/40">
+                        <feature.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </div>
-                      <Badge variant="outline" size="sm">Demo</Badge>
+                      <Badge variant="secondary" size="sm" className="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Enterprise</Badge>
                     </div>
-                    <CardTitle className="text-lg mt-3">{module.title}</CardTitle>
-                    <CardDescription>{module.description}</CardDescription>
+                    <CardTitle className="text-lg mt-3 text-blue-900 dark:text-blue-100">{feature.title}</CardTitle>
+                    <CardDescription>{feature.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-1 mb-4">
-                      {module.features.map((feature, i) => (
+                      {feature.features.map((featureItem, i) => (
                         <li key={i} className="text-sm flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary/70"></div>
-                          {feature}
+                          <div className="h-1.5 w-1.5 rounded-full bg-blue-600/70 dark:bg-blue-400/70"></div>
+                          {featureItem}
                         </li>
                       ))}
                     </ul>
                     <Button 
                       variant="outline" 
-                      className="w-full"
-                      onClick={() => navigate(module.path)}
+                      className="w-full border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                      onClick={() => navigate(feature.path)}
                     >
                       Explore
                     </Button>
@@ -207,17 +198,6 @@ export default function CommercialDashboard() {
                 </Card>
               ))}
             </div>
-          </section>
-
-          <section className="fade-in animation-delay-300">
-            <div className="flex items-center gap-2 mb-4">
-              <Globe className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">Enterprise Services</h2>
-              <Badge variant="outline" size="sm" className="ml-2">Demo</Badge>
-            </div>
-            <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg p-6">
-              <EnterpriseServices />
-            </Card>
           </section>
         </div>
       </div>
