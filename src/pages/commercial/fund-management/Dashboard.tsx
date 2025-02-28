@@ -42,7 +42,7 @@ const allocationData = [
   { name: 'Alternative', value: 10 }
 ];
 
-const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
+const COLORS = ['#3b82f6', '#1e40af', '#0ea5e9', '#0369a1'];
 
 const quickActions = [
   {
@@ -73,7 +73,7 @@ const MetricCard = ({ title, value, change, trend }: {
   change: string;
   trend: 'up' | 'down';
 }) => (
-  <Card>
+  <Card className="border-blue-100 dark:border-blue-800">
     <CardContent className="pt-6">
       <p className="text-sm text-muted-foreground">{title}</p>
       <h3 className="text-2xl font-bold mt-2">{value}</h3>
@@ -98,7 +98,7 @@ export default function FundManagement() {
     <AppLayout>
       <div className="container mx-auto p-6">
         <CommercialHeader 
-          title="Fund Management" 
+          title="Investment Management" 
           description="Manage and monitor your investment portfolio"
           showBack={true}
         />
@@ -133,10 +133,10 @@ export default function FundManagement() {
 
         {/* Performance Chart */}
         <div className="grid lg:grid-cols-2 gap-6 mb-6">
-          <Card>
+          <Card className="border-blue-100 dark:border-blue-800">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
+                <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 Portfolio Performance
               </CardTitle>
             </CardHeader>
@@ -151,7 +151,7 @@ export default function FundManagement() {
                     <Line 
                       type="monotone" 
                       dataKey="return" 
-                      stroke="#8b5cf6" 
+                      stroke="#3b82f6" 
                       strokeWidth={2}
                     />
                   </LineChart>
@@ -160,10 +160,10 @@ export default function FundManagement() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-blue-100 dark:border-blue-800">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ChartPie className="h-5 w-5" />
+                <ChartPie className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 Asset Allocation
               </CardTitle>
             </CardHeader>
@@ -207,7 +207,7 @@ export default function FundManagement() {
             <Button
               key={action.title}
               variant="outline"
-              className="h-auto py-4 flex flex-col items-center gap-2"
+              className="h-auto py-4 flex flex-col items-center gap-2 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
               onClick={() => navigate(action.path)}
             >
               <action.icon className="h-5 w-5" />

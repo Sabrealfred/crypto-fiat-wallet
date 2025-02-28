@@ -63,9 +63,9 @@ const quickActions = [
     path: "/commercial/treasury/cash-flow"
   },
   {
-    title: "Investment Management",
+    title: "Transaction Management",
     icon: TrendingUp,
-    path: "/commercial/treasury/investments"
+    path: "/commercial/treasury/transactions"
   }
 ];
 
@@ -76,7 +76,7 @@ const MetricCard = ({ title, value, change, icon: Icon, trend }: {
   icon: any;
   trend: 'up' | 'down';
 }) => (
-  <Card>
+  <Card className="border-blue-100 dark:border-blue-800">
     <CardContent className="pt-6">
       <div className="flex justify-between items-start">
         <div>
@@ -93,8 +93,8 @@ const MetricCard = ({ title, value, change, icon: Icon, trend }: {
             {change}
           </p>
         </div>
-        <div className="p-3 rounded-lg bg-primary/10">
-          <Icon className="h-5 w-5 text-primary" />
+        <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/40">
+          <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
         </div>
       </div>
     </CardContent>
@@ -108,7 +108,7 @@ export default function TreasuryDashboard() {
     <AppLayout>
       <div className="container mx-auto p-6">
         <CommercialHeader 
-          title="Treasury Management"
+          title="Treasury & Cash Management"
           description="Overview of your organization's treasury operations and financial position"
           showBack={true}
         />
@@ -148,10 +148,10 @@ export default function TreasuryDashboard() {
 
           {/* Charts Section */}
           <div className="grid lg:grid-cols-2 gap-6">
-            <Card>
+            <Card className="border-blue-100 dark:border-blue-800">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
+                  <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   Cash Flow Analysis
                 </CardTitle>
               </CardHeader>
@@ -161,12 +161,12 @@ export default function TreasuryDashboard() {
                     <AreaChart data={cashFlowData}>
                       <defs>
                         <linearGradient id="inflow" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                        </linearGradient>
-                        <linearGradient id="outflow" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
                           <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                        <linearGradient id="outflow" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1e40af" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#1e40af" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
@@ -176,14 +176,14 @@ export default function TreasuryDashboard() {
                       <Area
                         type="monotone"
                         dataKey="inflow"
-                        stroke="#8b5cf6"
+                        stroke="#3b82f6"
                         fillOpacity={1}
                         fill="url(#inflow)"
                       />
                       <Area
                         type="monotone"
                         dataKey="outflow"
-                        stroke="#3b82f6"
+                        stroke="#1e40af"
                         fillOpacity={1}
                         fill="url(#outflow)"
                       />
@@ -193,10 +193,10 @@ export default function TreasuryDashboard() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-blue-100 dark:border-blue-800">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5" />
+                  <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   Liquidity Forecast
                 </CardTitle>
               </CardHeader>
@@ -211,7 +211,7 @@ export default function TreasuryDashboard() {
                       <Line
                         type="monotone"
                         dataKey="value"
-                        stroke="#8b5cf6"
+                        stroke="#3b82f6"
                         strokeWidth={2}
                       />
                     </LineChart>
@@ -227,7 +227,7 @@ export default function TreasuryDashboard() {
               <Button
                 key={action.title}
                 variant="outline"
-                className="h-auto py-4 flex flex-col items-center gap-2"
+                className="h-auto py-4 flex flex-col items-center gap-2 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                 onClick={() => navigate(action.path)}
               >
                 <action.icon className="h-5 w-5" />

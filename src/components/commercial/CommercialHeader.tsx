@@ -40,6 +40,7 @@ export function CommercialHeader({
           <Button 
             variant="outline" 
             onClick={() => navigate(-1)}
+            className="border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back
@@ -48,6 +49,7 @@ export function CommercialHeader({
         <Button 
           variant="outline" 
           onClick={() => navigate("/commercial/dashboard")}
+          className="border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
         >
           <Home className="mr-2 h-4 w-4" />
           Dashboard

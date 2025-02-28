@@ -4,11 +4,27 @@ import { StatisticsCards } from "@/components/dashboard/StatisticsCards";
 import { StatisticsChart } from "@/components/dashboard/StatisticsChart";
 import { CommercialMetrics } from "./components/CommercialMetrics";
 import { FinancialHighlights } from "./components/FinancialHighlights";
-import { EnterpriseServices } from "./components/EnterpriseServices";
 import { AreaMetrics } from "./components/AreaMetrics";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Info, ChartBar, Database, FileText, ChartPie, Brain, LineChart, Wallet, Globe, ShieldCheck, FileBarChart, Landmark } from "lucide-react";
+import { 
+  Info, 
+  ChartBar, 
+  Database, 
+  FileText, 
+  ChartPie, 
+  Brain, 
+  LineChart, 
+  Wallet, 
+  Globe, 
+  ShieldCheck, 
+  FileBarChart, 
+  Landmark,
+  History,
+  CreditCard,
+  DollarSign,
+  ArrowRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -34,7 +50,7 @@ export default function CommercialDashboard() {
       icon: Wallet,
       description: "Control integral de liquidez, FX y análisis de cash flow",
       features: ["Cash Flow Analysis", "Transaction Management", "FX Operations"],
-      path: "/commercial/treasury/dashboard"
+      path: "/commercial/treasury"
     },
     {
       title: "Analysis & Forecasting",
@@ -48,14 +64,14 @@ export default function CommercialDashboard() {
       icon: Database,
       description: "Integración multi-banco y actualización automática de datos",
       features: ["Multi-bank Integration", "Real-time Updates", "Data Normalization"],
-      path: "/commercial/operations/accounts"
+      path: "/commercial/operations"
     },
     {
       title: "Investment Management",
       icon: Landmark,
       description: "Gestión y análisis de portafolios de inversión",
       features: ["Portfolio Analysis", "Investment Opportunities", "Performance Tracking"],
-      path: "/commercial/fund-management/dashboard"
+      path: "/commercial/fund-management"
     },
     {
       title: "Risk Management",
@@ -87,13 +103,40 @@ export default function CommercialDashboard() {
     }
   ];
 
+  const quickAccessLinks = [
+    {
+      title: "Transaction History",
+      icon: History,
+      path: "/commercial/history",
+      description: "View and manage all transactions"
+    },
+    {
+      title: "Cash Flow Analysis",
+      icon: LineChart,
+      path: "/commercial/treasury/cash-flow",
+      description: "Monitor and analyze your cash flow"
+    },
+    {
+      title: "Portfolio Management",
+      icon: DollarSign,
+      path: "/commercial/fund-management",
+      description: "Manage investment portfolios"
+    },
+    {
+      title: "Payment Processing",
+      icon: CreditCard,
+      path: "/commercial/payment-processor",
+      description: "Process payments and transfers"
+    }
+  ];
+
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl font-bold">Commercial Banking Portal</h1>
-            <Badge variant="outline" className="bg-blue-50 dark:bg-blue-900/30">Enterprise Portal</Badge>
+            <Badge variant="outline" className="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Enterprise Portal</Badge>
           </div>
           <p className="text-muted-foreground text-lg">
             Comprehensive overview of your enterprise operations
@@ -103,7 +146,7 @@ export default function CommercialDashboard() {
         <div className="grid gap-6">
           <section className="fade-in">
             <div className="flex items-center gap-2 mb-4">
-              <ChartPie className="h-5 w-5 text-primary" />
+              <ChartPie className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               <h2 className="text-xl font-semibold">Key Performance Indicators</h2>
             </div>
             <div className="grid gap-4">
@@ -115,10 +158,10 @@ export default function CommercialDashboard() {
             <div className="space-y-6">
               <div className="fade-in animation-delay-100">
                 <div className="flex items-center gap-2 mb-4">
-                  <LineChart className="h-5 w-5 text-primary" />
+                  <LineChart className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   <h2 className="text-xl font-semibold">Financial Analytics</h2>
                 </div>
-                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg">
+                <Card className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-900/20 border-none shadow-lg">
                   <StatisticsCards 
                     currentEarning={currentEarning}
                     previousEarning={previousEarning}
@@ -130,10 +173,10 @@ export default function CommercialDashboard() {
 
               <div className="fade-in animation-delay-200">
                 <div className="flex items-center gap-2 mb-4">
-                  <ChartPie className="h-5 w-5 text-primary" />
+                  <ChartPie className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   <h2 className="text-xl font-semibold">Area Performance</h2>
                 </div>
-                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg p-6">
+                <Card className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-900/20 border-none shadow-lg p-6">
                   <AreaMetrics />
                 </Card>
               </div>
@@ -142,7 +185,7 @@ export default function CommercialDashboard() {
             <div className="space-y-6">
               <div className="fade-in animation-delay-150">
                 <div className="flex items-center gap-2 mb-4">
-                  <FileText className="h-5 w-5 text-primary" />
+                  <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   <h2 className="text-xl font-semibold">Financial Highlights</h2>
                 </div>
                 <FinancialHighlights />
@@ -150,10 +193,10 @@ export default function CommercialDashboard() {
 
               <div className="fade-in animation-delay-250">
                 <div className="flex items-center gap-2 mb-4">
-                  <ChartBar className="h-5 w-5 text-primary" />
+                  <ChartBar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   <h2 className="text-xl font-semibold">Monthly Trends</h2>
                 </div>
-                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-none shadow-lg">
+                <Card className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-900/20 border-none shadow-lg">
                   <StatisticsChart monthlyData={monthlyData} />
                 </Card>
               </div>
@@ -162,18 +205,27 @@ export default function CommercialDashboard() {
 
           <section className="fade-in animation-delay-300">
             <div className="flex items-center gap-2 mb-4">
-              <Globe className="h-5 w-5 text-primary" />
+              <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               <h2 className="text-xl font-semibold">Enterprise Solutions & Services</h2>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {enterpriseFeatures.map((feature, index) => (
-                <Card key={index} className="hover:shadow-md transition-all border-blue-100 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                <Card 
+                  key={index} 
+                  className="hover:shadow-md transition-all border-blue-100 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  onClick={() => navigate(feature.path)}
+                >
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/40">
                         <feature.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </div>
-                      <Badge variant="secondary" size="sm" className="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Enterprise</Badge>
+                      <Badge 
+                        variant="enterprise" 
+                        className="text-blue-700 dark:text-blue-300"
+                      >
+                        Enterprise
+                      </Badge>
                     </div>
                     <CardTitle className="text-lg mt-3 text-blue-900 dark:text-blue-100">{feature.title}</CardTitle>
                     <CardDescription>{feature.description}</CardDescription>
@@ -194,6 +246,31 @@ export default function CommercialDashboard() {
                     >
                       Explore
                     </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+
+          {/* Easy Access Links */}
+          <section className="mt-8">
+            <div className="flex items-center gap-2 mb-4">
+              <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <h2 className="text-xl font-semibold">Quick Access</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {quickAccessLinks.map((link, index) => (
+                <Card 
+                  key={index} 
+                  className="hover:shadow-md transition-all border-blue-100 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer"
+                  onClick={() => navigate(link.path)}
+                >
+                  <CardContent className="p-4 flex flex-col items-center text-center">
+                    <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/40 mb-3">
+                      <link.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <h3 className="font-medium text-blue-900 dark:text-blue-100">{link.title}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{link.description}</p>
                   </CardContent>
                 </Card>
               ))}
