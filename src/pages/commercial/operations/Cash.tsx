@@ -32,11 +32,12 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   PlusCircle,
-  Bank,
+  Ban,
   RefreshCcw,
   AlertTriangle,
   CircleDollarSign,
-  ArrowRight
+  ArrowRight,
+  Clock as LucideClock
 } from "lucide-react";
 import { useState } from "react";
 
@@ -231,7 +232,7 @@ export default function CashPage() {
                   </p>
                 </div>
                 <div className="bg-blue-100 dark:bg-blue-800/50 p-2 rounded-full">
-                  <Bank className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <Ban className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </CardContent>
@@ -331,7 +332,7 @@ export default function CashPage() {
                         <Bar 
                           dataKey="netPosition" 
                           name="Net Position"
-                          fill={(entry) => entry.netPosition >= 0 ? "#3b82f6" : "#ef4444"}
+                          fill="#3b82f6"
                         />
                       </BarChart>
                     </ResponsiveContainer>
@@ -607,7 +608,7 @@ export default function CashPage() {
                       <CardContent className="pt-6">
                         <h5 className="text-sm font-medium mb-2">Last Sweep</h5>
                         <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <LucideClock className="h-4 w-4 text-muted-foreground" />
                           <span className="text-xl font-bold">Today, 08:00</span>
                         </div>
                         <Button variant="ghost" size="sm" className="mt-2 w-full">

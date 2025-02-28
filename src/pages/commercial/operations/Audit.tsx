@@ -223,7 +223,7 @@ export default function AuditPage() {
                       <TableCell>{log.action}</TableCell>
                       <TableCell>{log.resource}</TableCell>
                       <TableCell>
-                        <Badge variant={log.status === "Success" ? "success" : "destructive"}>
+                        <Badge variant={log.status === "Success" ? "secondary" : "destructive"}>
                           {log.status}
                         </Badge>
                       </TableCell>
