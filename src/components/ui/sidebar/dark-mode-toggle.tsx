@@ -14,7 +14,7 @@ export function DarkModeToggle({ isDarkMode, onToggle, isCollapsed }: DarkModeTo
       onClick={onToggle}
       variant="ghost"
       size="icon"
-      className="rounded-full"
+      className={`rounded-full transition-colors ${isDarkMode ? 'bg-blue-900/20' : 'bg-blue-100/50'}`}
       aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDarkMode ? (
@@ -22,7 +22,7 @@ export function DarkModeToggle({ isDarkMode, onToggle, isCollapsed }: DarkModeTo
       ) : (
         <Moon className="h-5 w-5 text-blue-600" />
       )}
-      <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+      <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>
         {isDarkMode ? 'Light Mode' : 'Dark Mode'}
       </span>
     </Button>

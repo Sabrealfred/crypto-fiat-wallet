@@ -206,7 +206,7 @@ export default function CashManagementPage() {
   
   const totalOutflows = recentTransactionsData
     .filter(t => t.amount < 0)
-    .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0); // Fixed the type issue with Number()
+    .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
   
   const netPosition = totalInflows - totalOutflows;
   
