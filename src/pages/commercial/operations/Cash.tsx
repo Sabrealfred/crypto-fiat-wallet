@@ -228,7 +228,7 @@ export default function CashPage() {
                     ) : (
                       <ArrowDownRight className="h-3 w-3 mr-1" />
                     )}
-                    {/* Fix the type error by ensuring both values are numbers */}
+                    {/* Fix the type error by explicitly converting to numbers and then doing the subtraction */}
                     {Math.abs(Number(currentMonthData.netPosition) - Number(previousMonthData.netPosition)).toLocaleString()} change
                   </p>
                 </div>
