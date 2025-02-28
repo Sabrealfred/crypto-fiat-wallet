@@ -81,6 +81,30 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           </span>
         </Button>
       </Link>
+      <Link to="/commercial/analytics/ml-models">
+        <Button variant={isActive('/commercial/analytics/ml-models') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Brain className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Machine Learning Models
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/analytics/predictive">
+        <Button variant={isActive('/commercial/analytics/predictive') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <LineChart className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Predictive Analysis
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/analytics/trends">
+        <Button variant={isActive('/commercial/analytics/trends') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <BarChart className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Trend Visualization
+          </span>
+        </Button>
+      </Link>
 
       {/* Data Automation & Integration */}
       <Link to="/commercial/operations">
@@ -91,27 +115,27 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           </span>
         </Button>
       </Link>
-      <Link to="/commercial/payroll">
-        <Button variant={isActive('/commercial/payroll') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+      <Link to="/commercial/operations/integration">
+        <Button variant={isActive('/commercial/operations/integration') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Database className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Multi-bank Integration
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/operations/real-time">
+        <Button variant={isActive('/commercial/operations/real-time') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
           <Receipt className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-            Payroll
+            Real-time Updates
           </span>
         </Button>
       </Link>
-      <Link to="/commercial/invoices">
-        <Button variant={isActive('/commercial/invoices') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+      <Link to="/commercial/operations/normalization">
+        <Button variant={isActive('/commercial/operations/normalization') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
           <FileText className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-            Invoicing
-          </span>
-        </Button>
-      </Link>
-      <Link to="/commercial/trade-finance">
-        <Button variant={isActive('/commercial/trade-finance') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
-          <BriefcaseBusiness className="h-4 w-4" />
-          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-            Trade Finance
+            Data Normalization
           </span>
         </Button>
       </Link>
@@ -133,11 +157,19 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           </span>
         </Button>
       </Link>
-      <Link to="/commercial/fund-management/portfolios/ai">
-        <Button variant={isActive('/commercial/fund-management/portfolios/ai') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
-          <Brain className="h-4 w-4" />
+      <Link to="/commercial/fund-management/opportunities">
+        <Button variant={isActive('/commercial/fund-management/opportunities') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <DollarSign className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-            AI Portfolios
+            Investment Opportunities
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/fund-management/performance">
+        <Button variant={isActive('/commercial/fund-management/performance') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <BarChart className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Performance Tracking
           </span>
         </Button>
       </Link>
@@ -151,6 +183,30 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           </span>
         </Button>
       </Link>
+      <Link to="/commercial/risk-management/assessment">
+        <Button variant={isActive('/commercial/risk-management/assessment') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <ShieldCheck className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Risk Assessment
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/risk-management/compliance">
+        <Button variant={isActive('/commercial/risk-management/compliance') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <FileText className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Compliance Reporting
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/risk-management/market">
+        <Button variant={isActive('/commercial/risk-management/market') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <LineChart className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Market Risk Analysis
+          </span>
+        </Button>
+      </Link>
 
       {/* Payment Processing */}
       <Link to="/commercial/payment-processor">
@@ -158,6 +214,30 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           <CreditCard className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
             Payment Processing
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/payment-processor/real-time">
+        <Button variant={isActive('/commercial/payment-processor/real-time') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <CreditCard className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Real-time Payments
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/payment-processor/ach">
+        <Button variant={isActive('/commercial/payment-processor/ach') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Receipt className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            ACH Processing
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/payment-processor/cross-border">
+        <Button variant={isActive('/commercial/payment-processor/cross-border') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Globe className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Cross-border Transfers
           </span>
         </Button>
       </Link>
@@ -171,6 +251,30 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           </span>
         </Button>
       </Link>
+      <Link to="/commercial/operations/accounts/subsidiaries">
+        <Button variant={isActive('/commercial/operations/accounts/subsidiaries') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Building2 className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Subsidiary Management
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/operations/accounts/metadata">
+        <Button variant={isActive('/commercial/operations/accounts/metadata') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Database className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Custom Metadata
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/operations/accounts/relationships">
+        <Button variant={isActive('/commercial/operations/accounts/relationships') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <BriefcaseBusiness className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Relationship Mapping
+          </span>
+        </Button>
+      </Link>
 
       {/* AI Insights */}
       <Link to="/commercial/fund-management/ai-insights">
@@ -178,6 +282,30 @@ export function CommercialNavigation({ isCollapsed }: CommercialNavigationProps)
           <Brain className="h-4 w-4" />
           <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
             AI Insights
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/fund-management/ai-insights/nlp">
+        <Button variant={isActive('/commercial/fund-management/ai-insights/nlp') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Brain className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Natural Language Processing
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/fund-management/ai-insights/cash">
+        <Button variant={isActive('/commercial/fund-management/ai-insights/cash') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <Wallet className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            Cash Insights
+          </span>
+        </Button>
+      </Link>
+      <Link to="/commercial/fund-management/ai-insights/recommendations">
+        <Button variant={isActive('/commercial/fund-management/ai-insights/recommendations') ? 'secondary' : 'ghost'} className={`w-full justify-start ${isCollapsed ? 'px-2' : ''} pl-8`}>
+          <LineChart className="h-4 w-4" />
+          <span className={`ml-2 transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+            AI Recommendations
           </span>
         </Button>
       </Link>

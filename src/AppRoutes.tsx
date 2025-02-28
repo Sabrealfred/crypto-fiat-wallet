@@ -89,20 +89,66 @@ export function AppRoutes() {
             <Route path="fx" element={<FXOperations />} />
           </Route>
 
+          {/* Analytics Routes */}
+          <Route path="analytics">
+            <Route path="" element={<NotFound />} />
+            <Route path="ml-models" element={<NotFound />} />
+            <Route path="predictive" element={<NotFound />} />
+            <Route path="trends" element={<NotFound />} />
+          </Route>
+
           {/* Operations Routes */}
-          <Route path="operations" element={<OperationsDashboard />} />
+          <Route path="operations">
+            <Route path="" element={<OperationsDashboard />} />
+            <Route path="integration" element={<NotFound />} />
+            <Route path="real-time" element={<NotFound />} />
+            <Route path="normalization" element={<NotFound />} />
+            
+            {/* Entity Management */}
+            <Route path="accounts">
+              <Route path="" element={<NotFound />} />
+              <Route path="subsidiaries" element={<NotFound />} />
+              <Route path="metadata" element={<NotFound />} />
+              <Route path="relationships" element={<NotFound />} />
+            </Route>
+          </Route>
+          
           <Route path="payroll" element={<PayrollPage />} />
           <Route path="invoices" element={<InvoicesPage />} />
           <Route path="expenses" element={<ExpensesPage />} />
           <Route path="trade-finance" element={<TradeFinancePage />} />
-          <Route path="risk-management/*" element={<RiskManagement />} />
-          <Route path="payment-processor" element={<PaymentProcessorPage />} />
+          
+          {/* Risk Management Routes */}
+          <Route path="risk-management">
+            <Route path="" element={<RiskManagement />} />
+            <Route path="assessment" element={<NotFound />} />
+            <Route path="compliance" element={<NotFound />} />
+            <Route path="market" element={<NotFound />} />
+          </Route>
+
+          {/* Payment Processor Routes */}
+          <Route path="payment-processor">
+            <Route path="" element={<PaymentProcessorPage />} />
+            <Route path="real-time" element={<NotFound />} />
+            <Route path="ach" element={<NotFound />} />
+            <Route path="cross-border" element={<NotFound />} />
+          </Route>
 
           {/* Fund Management Routes */}
           <Route path="fund-management">
             <Route path="" element={<FundManagement />} />
             <Route path="portfolios" element={<Portfolios />} />
             <Route path="portfolios/ai" element={<AIPortfolios />} />
+            <Route path="opportunities" element={<NotFound />} />
+            <Route path="performance" element={<NotFound />} />
+            
+            {/* AI Insights */}
+            <Route path="ai-insights">
+              <Route path="" element={<NotFound />} />
+              <Route path="nlp" element={<NotFound />} />
+              <Route path="cash" element={<NotFound />} />
+              <Route path="recommendations" element={<NotFound />} />
+            </Route>
           </Route>
 
           {/* Additional Commercial Routes */}

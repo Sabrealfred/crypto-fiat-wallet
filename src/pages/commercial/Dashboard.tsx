@@ -23,7 +23,10 @@ import {
   History,
   CreditCard,
   DollarSign,
-  ArrowRight
+  ArrowRight,
+  BriefcaseBusiness,
+  BarChart,
+  Code
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +60,7 @@ export default function CommercialDashboard() {
       icon: ChartBar,
       description: "Forecasting predictivo y análisis de tendencias en tiempo real",
       features: ["Machine Learning Models", "Predictive Analysis", "Trend Visualization"],
-      path: "/commercial/analytics/dashboard"
+      path: "/commercial/analytics"
     },
     {
       title: "Data Automation & Integration",
@@ -99,7 +102,7 @@ export default function CommercialDashboard() {
       icon: Brain,
       description: "Análisis de cash flow e inversiones con inteligencia artificial",
       features: ["Natural Language Processing", "Cash Insights", "AI Recommendations"],
-      path: "/commercial/fund-management/portfolios/ai"
+      path: "/commercial/fund-management/ai-insights"
     }
   ];
 
@@ -117,9 +120,9 @@ export default function CommercialDashboard() {
       description: "Monitor and analyze your cash flow"
     },
     {
-      title: "Portfolio Management",
+      title: "Portfolio Analysis",
       icon: DollarSign,
-      path: "/commercial/fund-management",
+      path: "/commercial/fund-management/portfolios",
       description: "Manage investment portfolios"
     },
     {
@@ -127,6 +130,30 @@ export default function CommercialDashboard() {
       icon: CreditCard,
       path: "/commercial/payment-processor",
       description: "Process payments and transfers"
+    },
+    {
+      title: "Risk Assessment",
+      icon: ShieldCheck,
+      path: "/commercial/risk-management/assessment",
+      description: "View and manage risk assessments"
+    },
+    {
+      title: "Machine Learning Models",
+      icon: Brain,
+      path: "/commercial/analytics/ml-models",
+      description: "Access ML models and predictions"
+    },
+    {
+      title: "Multi-bank Integration",
+      icon: Database,
+      path: "/commercial/operations/integration",
+      description: "Manage bank connections"
+    },
+    {
+      title: "Developer Portal",
+      icon: Code,
+      path: "/developer/dashboard",
+      description: "Access developer tools and APIs"
     }
   ];
 
@@ -212,7 +239,7 @@ export default function CommercialDashboard() {
               {enterpriseFeatures.map((feature, index) => (
                 <Card 
                   key={index} 
-                  className="hover:shadow-md transition-all border-blue-100 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  className="hover:shadow-md transition-all border-blue-100 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer"
                   onClick={() => navigate(feature.path)}
                 >
                   <CardHeader className="pb-2">
@@ -221,8 +248,8 @@ export default function CommercialDashboard() {
                         <feature.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <Badge 
-                        variant="enterprise" 
-                        className="text-blue-700 dark:text-blue-300"
+                        variant="outline" 
+                        className="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
                       >
                         Enterprise
                       </Badge>
@@ -253,7 +280,7 @@ export default function CommercialDashboard() {
           </section>
 
           {/* Easy Access Links */}
-          <section className="mt-8">
+          <section className="mt-8 fade-in animation-delay-300">
             <div className="flex items-center gap-2 mb-4">
               <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               <h2 className="text-xl font-semibold">Quick Access</h2>
