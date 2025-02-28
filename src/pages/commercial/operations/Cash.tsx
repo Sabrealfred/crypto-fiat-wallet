@@ -1,3 +1,4 @@
+
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -227,6 +228,7 @@ export default function CashPage() {
                     ) : (
                       <ArrowDownRight className="h-3 w-3 mr-1" />
                     )}
+                    {/* Fix the type error by ensuring both values are numbers */}
                     {Math.abs(Number(currentMonthData.netPosition) - Number(previousMonthData.netPosition)).toLocaleString()} change
                   </p>
                 </div>
