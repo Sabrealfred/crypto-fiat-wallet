@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -222,13 +221,12 @@ export default function CashPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Net Position</p>
                   <h3 className="text-2xl font-bold mt-1">${currentMonthData.netPosition.toLocaleString()}</h3>
-                  <p className={`text-xs flex items-center ${currentMonthData.netPosition >= 0 ? 'text-green-600' : 'text-red-600'} mt-1`}>
-                    {currentMonthData.netPosition >= previousMonthData.netPosition ? (
+                  <p className={`text-xs flex items-center ${Number(currentMonthData.netPosition) >= Number(previousMonthData.netPosition) ? 'text-green-600' : 'text-red-600'} mt-1`}>
+                    {Number(currentMonthData.netPosition) >= Number(previousMonthData.netPosition) ? (
                       <ArrowUpRight className="h-3 w-3 mr-1" />
                     ) : (
                       <ArrowDownRight className="h-3 w-3 mr-1" />
                     )}
-                    {/* Fix the type error by explicitly converting to numbers and then doing the subtraction */}
                     {Math.abs(Number(currentMonthData.netPosition) - Number(previousMonthData.netPosition)).toLocaleString()} change
                   </p>
                 </div>
