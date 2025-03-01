@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,8 +16,28 @@ interface EntityCreationFormProps {
   onClose?: () => void;
 }
 
+// Define a type for our form values
+type EntityFormValues = {
+  name: string;
+  type: string;
+  registrationNumber: string;
+  taxId: string;
+  industry: string;
+  country: string;
+  city: string;
+  address: string;
+  createDataIntegration: boolean;
+  integrationPreference: string;
+  erpSystem: string;
+  accountingSystem: string; // Added this field
+  bankingSystem: string; // Added this field
+  setupDataFeeds: boolean;
+  parentEntity: string; // Added this field
+  ownershipPercent: string; // Added this field as string to avoid type issues
+}
+
 export function EntityCreationForm({ onEntityCreated, onClose }: EntityCreationFormProps) {
-  const form = useForm({
+  const form = useForm<EntityFormValues>({
     defaultValues: {
       name: "",
       type: "subsidiary",
@@ -31,11 +50,15 @@ export function EntityCreationForm({ onEntityCreated, onClose }: EntityCreationF
       createDataIntegration: false,
       integrationPreference: "erp",
       erpSystem: "",
-      setupDataFeeds: false
+      accountingSystem: "", // Initialize new field
+      bankingSystem: "", // Initialize new field
+      setupDataFeeds: false,
+      parentEntity: "none", // Initialize new field
+      ownershipPercent: "", // Initialize as empty string
     },
   });
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: EntityFormValues) => {
     console.log("Entity creation data:", data);
     toast.success(`Entity "${data.name}" created successfully`);
     if (onEntityCreated) {
@@ -381,6 +404,37 @@ export function EntityCreationForm({ onEntityCreated, onClose }: EntityCreationF
                           )}
                         />
                       )}
+
+                      {form.watch("integrationPreference") === "banking" && (
+                        <FormField
+                          control={form.control}
+                          name="bankingSystem"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Banking System</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select banking system" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="citi">Citibank</SelectItem>
+                                  <SelectItem value="jpmorgan">JP Morgan Chase</SelectItem>
+                                  <SelectItem value="bankofamerica">Bank of America</SelectItem>
+                                  <SelectItem value="hsbc">HSBC</SelectItem>
+                                  <SelectItem value="barclays">Barclays</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormDescription>
+                                The specific banking system used by this entity
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
                       
                       <FormField
                         control={form.control}
@@ -450,7 +504,13 @@ export function EntityCreationForm({ onEntityCreated, onClose }: EntityCreationF
                         <FormLabel>Ownership Percentage</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <Input type="number" min="0" max="100" {...field} />
+                            <Input 
+                              type="number" 
+                              min="0" 
+                              max="100" 
+                              {...field}
+                              value={field.value.toString()} // Ensure value is a string
+                            />
                             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                               %
                             </div>
