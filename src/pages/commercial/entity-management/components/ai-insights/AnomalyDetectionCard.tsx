@@ -120,7 +120,7 @@ export function AnomalyDetectionCard() {
                     <div className="text-sm text-muted-foreground mt-1">{anomaly.details}</div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <div className="text-xs px-2 py-1 rounded-full mb-2 font-medium whitespace-nowrap 
+                    <div className={`text-xs px-2 py-1 rounded-full mb-2 font-medium whitespace-nowrap 
                       ${anomaly.status === 'pending' 
                         ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300' 
                         : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
