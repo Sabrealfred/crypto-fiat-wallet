@@ -217,6 +217,11 @@ export default function FundManagement() {
     }, 1500);
   };
 
+  // Function to determine bar color based on value
+  const getBarColor = (entry: any) => {
+    return entry.value >= 0 ? "#3b82f6" : "#ef4444";
+  };
+
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
@@ -412,8 +417,14 @@ export default function FundManagement() {
                       <Bar 
                         dataKey="value" 
                         name="Return" 
-                        fill={(entry) => entry.value >= 0 ? "#3b82f6" : "#ef4444"}
-                      />
+                        fill="#3b82f6"
+                        // Fix: Replace function with proper styling approach
+                        fillOpacity={0.8}
+                      >
+                        {sectorPerformanceData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.value >= 0 ? "#3b82f6" : "#ef4444"} />
+                        ))}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
