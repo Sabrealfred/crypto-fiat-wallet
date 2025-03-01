@@ -1,410 +1,430 @@
 
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AreaChart, BarChart, LineChart, PieChart } from "@/components/ui/chart";
 import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  BarChart, 
-  Bar,
-  PieChart as RechartsPieChart,
-  Pie as RechartsPie,
-  Cell,
-  Legend
-} from 'recharts';
-import {
-  AlertCircle,
-  BarChart as BarChartIcon,
-  BrainCircuit,
-  ChevronRight,
-  Clock,
-  Download,
-  Filter,
-  LineChart as LineChartIcon,
-  Plus,
-  RefreshCw,
-  Search,
-  TrendingUp,
-  TrendingDown,
+  BarChart2, 
+  TrendingUp, 
+  AlertTriangle, 
+  BrainCircuit, 
+  LineChart as LineChartIcon, 
+  PieChart as PieChartIcon,
+  ChevronDown,
   ArrowUpRight,
   ArrowDownRight,
-  DollarSign,
-  ShieldCheck,
-  Zap,
-  Eye,
-  PieChart as PieChartIcon
+  Info,
+  Download
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+import { riskCategories, additionalRisks } from "../components/risk-management/data";
+import { RiskMetricCard } from "../components/risk-management/RiskMetricCard";
+import { AdditionalRiskCard } from "../components/risk-management/AdditionalRiskCard";
 import { useState } from "react";
-
-// Sample data for analytics dashboard
-const performanceData = [
-  { month: 'Jan', revenue: 4200, expenses: 3800, profit: 400 },
-  { month: 'Feb', revenue: 4500, expenses: 3900, profit: 600 },
-  { month: 'Mar', revenue: 5100, expenses: 4200, profit: 900 },
-  { month: 'Apr', revenue: 5400, expenses: 4300, profit: 1100 },
-  { month: 'May', revenue: 5200, expenses: 4400, profit: 800 },
-  { month: 'Jun', revenue: 5800, expenses: 4600, profit: 1200 },
-  { month: 'Jul', revenue: 6300, expenses: 4900, profit: 1400 },
-  { month: 'Aug', revenue: 6100, expenses: 5000, profit: 1100 },
-  { month: 'Sep', revenue: 6600, expenses: 5200, profit: 1400 },
-  { month: 'Oct', revenue: 7000, expenses: 5400, profit: 1600 },
-  { month: 'Nov', revenue: 7200, expenses: 5500, profit: 1700 },
-  { month: 'Dec', revenue: 7500, expenses: 5700, profit: 1800 },
-];
-
-const riskExposureData = [
-  { name: 'Market Risk', value: 35 },
-  { name: 'Credit Risk', value: 25 },
-  { name: 'Operational Risk', value: 20 },
-  { name: 'Liquidity Risk', value: 15 },
-  { name: 'Regulatory Risk', value: 5 },
-];
-
-const anomalyData = [
-  { date: '2023-10-01', normal: 120, anomaly: 0 },
-  { date: '2023-10-02', normal: 132, anomaly: 0 },
-  { date: '2023-10-03', normal: 125, anomaly: 0 },
-  { date: '2023-10-04', normal: 130, anomaly: 0 },
-  { date: '2023-10-05', normal: 110, anomaly: 0 },
-  { date: '2023-10-06', normal: 0, anomaly: 220 },
-  { date: '2023-10-07', normal: 145, anomaly: 0 },
-  { date: '2023-10-08', normal: 150, anomaly: 0 },
-  { date: '2023-10-09', normal: 160, anomaly: 0 },
-  { date: '2023-10-10', normal: 140, anomaly: 0 },
-  { date: '2023-10-11', normal: 0, anomaly: 190 },
-  { date: '2023-10-12', normal: 165, anomaly: 0 },
-  { date: '2023-10-13', normal: 170, anomaly: 0 },
-  { date: '2023-10-14', normal: 175, anomaly: 0 },
-];
-
-const COLORS = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444'];
-
-const recentAlerts = [
-  { id: 1, type: 'warning', title: 'Anomaly Detected', description: 'Unusual pattern in cash flow detected', time: '2 hours ago' },
-  { id: 2, type: 'critical', title: 'Risk Threshold Exceeded', description: 'Market risk exposure above threshold', time: '5 hours ago' },
-  { id: 3, type: 'info', title: 'AI Model Updated', description: 'Forecasting model has been recalibrated', time: '1 day ago' },
-  { id: 4, type: 'success', title: 'Forecast Accuracy Improved', description: '5% improvement in prediction accuracy', time: '2 days ago' },
-];
-
-const aiPredictions = [
-  { id: 1, title: 'Cash Flow Forecast', prediction: '+12% next quarter', confidence: 'High (87%)', impact: 'Positive' },
-  { id: 2, title: 'Currency Exchange', prediction: 'EUR/USD depreciation', confidence: 'Medium (72%)', impact: 'Negative' },
-  { id: 3, title: 'Liquidity Risk', prediction: 'Stable for 90 days', confidence: 'Very High (94%)', impact: 'Neutral' },
-  { id: 4, title: 'Market Sentiment', prediction: 'Bullish trend developing', confidence: 'Medium (68%)', impact: 'Positive' },
-];
+import { DetailedRiskAnalysis } from "../components/risk-management/DetailedRiskAnalysis";
+import { RiskMetric } from "../components/risk-management/types";
+import { useNavigate } from "react-router-dom";
 
 export default function AnalyticsDashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedRiskCategory, setSelectedRiskCategory] = useState(null);
+  const navigate = useNavigate();
 
-  // Key performance metrics
-  const metrics = [
-    { title: "Forecast Accuracy", value: "92%", change: "+2.3%", trend: "up", icon: TrendingUp },
-    { title: "Risk Score", value: "Medium", change: "-12 points", trend: "up", icon: ShieldCheck },
-    { title: "ML Model Count", value: "8", change: "+2 models", trend: "up", icon: BrainCircuit },
-    { title: "Anomalies Detected", value: "3", change: "-2 vs last week", trend: "up", icon: AlertCircle }
-  ];
+  const getStatusColor = (status: RiskMetric['status']) => {
+    switch (status) {
+      case 'good':
+        return 'text-green-600';
+      case 'warning':
+        return 'text-yellow-600';
+      case 'critical':
+        return 'text-red-600';
+      default:
+        return 'text-muted-foreground';
+    }
+  };
+
+  const handleRiskCardClick = (index: number) => {
+    setSelectedRiskCategory(riskCategories[index]);
+  };
+
+  const handleAdditionalRiskClick = (title: string) => {
+    // Map additional risk titles to routes
+    const riskRoutes: Record<string, string> = {
+      'Liquidity Risk': '/commercial/risk-management/liquidity',
+      'Counterparty Risk': '/commercial/risk-management/counterparty',
+      'Country Risk': '/commercial/risk-management/country',
+      'Legal & Regulatory Risk': '/commercial/risk-management/legal',
+      'Model Risk': '/commercial/risk-management/model',
+      'Trading Risk': '/commercial/risk-management/trading',
+    };
+    
+    navigate(riskRoutes[title]);
+  };
 
   return (
     <AppLayout>
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 py-8">
         <CommercialHeader 
-          title="Analytics Dashboard" 
-          description="AI-powered analytics and forecasting"
-          showBack={true}
+          title="Analytics & Forecasting"
+          description="Comprehensive analysis tools and predictive models for financial data"
         />
 
-        {/* KPI Metrics */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {metrics.map((metric, index) => (
-            <Card key={index}>
-              <CardContent className="pt-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{metric.title}</p>
-                    <h3 className="text-2xl font-bold mt-2">{metric.value}</h3>
-                    <p className={`text-sm flex items-center mt-1 ${
-                      metric.trend === 'up' ? 'text-green-500' : 'text-red-500'
-                    }`}>
-                      {metric.trend === 'up' ? (
-                        <ArrowUpRight className="h-3 w-3 mr-1" />
-                      ) : (
-                        <ArrowDownRight className="h-3 w-3 mr-1" />
-                      )}
-                      {metric.change}
-                    </p>
-                  </div>
-                  <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/40">
-                    <metric.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Main Analytics Interface */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="risk-analysis">Risk Analysis</TabsTrigger>
-            <TabsTrigger value="ai-predictions">AI Predictions</TabsTrigger>
-            <TabsTrigger value="anomaly-detection">Anomaly Detection</TabsTrigger>
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="risk">Risk Analysis</TabsTrigger>
+            <TabsTrigger value="forecasting">Forecasting</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
-          
-          {/* Overview Tab */}
-          <TabsContent value="overview">
-            <div className="grid lg:grid-cols-2 gap-6">
-              {/* Financial Performance Chart */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Financial Performance</CardTitle>
-                      <CardDescription>Revenue, expenses and profit over time</CardDescription>
-                    </div>
-                    <div className="flex gap-2">
-                      <Select defaultValue="year">
-                        <SelectTrigger className="w-[100px]">
-                          <SelectValue placeholder="Period" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="quarter">Quarter</SelectItem>
-                          <SelectItem value="year">Year</SelectItem>
-                          <SelectItem value="ytd">YTD</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Button variant="outline" size="icon">
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
+
+          <TabsContent value="dashboard">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="lg:col-span-2">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <div className="space-y-1">
+                    <CardTitle>Financial Performance</CardTitle>
+                    <CardDescription>Monthly revenue and expense trends</CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">+12.5% YoY</Badge>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="h-[350px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart
-                        data={performanceData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip formatter={(value) => `$${value}`} />
-                        <Legend />
-                        <Line type="monotone" dataKey="revenue" stroke="#3b82f6" name="Revenue" strokeWidth={2} />
-                        <Line type="monotone" dataKey="expenses" stroke="#ef4444" name="Expenses" strokeWidth={2} />
-                        <Line type="monotone" dataKey="profit" stroke="#10b981" name="Profit" strokeWidth={2} />
-                      </LineChart>
-                    </ResponsiveContainer>
+                <CardContent className="pb-4">
+                  <div className="h-[300px]">
+                    <LineChart 
+                      data={[
+                        { name: 'Jan', revenue: 2400000, expenses: 1800000 },
+                        { name: 'Feb', revenue: 1980000, expenses: 1600000 },
+                        { name: 'Mar', revenue: 2800000, expenses: 2000000 },
+                        { name: 'Apr', revenue: 3080000, expenses: 2200000 },
+                        { name: 'May', revenue: 2780000, expenses: 2100000 },
+                        { name: 'Jun', revenue: 3300000, expenses: 2400000 },
+                        { name: 'Jul', revenue: 3580000, expenses: 2600000 },
+                      ]} 
+                      index="name"
+                      categories={['revenue', 'expenses']}
+                      colors={['blue', 'red']}
+                      valueFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                      showLegend={true}
+                      showXAxis={true}
+                      showYAxis={true}
+                      showGridLines={true}
+                    />
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Risk Exposure */}
               <Card>
                 <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Risk Exposure</CardTitle>
-                      <CardDescription>Distribution by risk category</CardDescription>
+                  <CardTitle>Performance Metrics</CardTitle>
+                  <CardDescription>Current financial KPIs</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Revenue Growth</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-bold">18.2%</span>
+                        <ArrowUpRight className="h-4 w-4 text-green-500" />
+                      </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4 mr-2" />
-                      Risk Details
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full">
+                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '76%' }} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Profit Margin</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-bold">23.5%</span>
+                        <ArrowUpRight className="h-4 w-4 text-green-500" />
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full">
+                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '68%' }} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Expense Ratio</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-bold">14.2%</span>
+                        <ArrowDownRight className="h-4 w-4 text-red-500" />
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full">
+                      <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '42%' }} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Liquidity Ratio</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-bold">1.82</span>
+                        <ArrowUpRight className="h-4 w-4 text-green-500" />
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full">
+                      <div className="bg-blue-500 h-2 rounded-full" style={{ width: '84%' }} />
+                    </div>
+                  </div>
+
+                  <div className="pt-4">
+                    <Button variant="outline" size="sm" className="w-full">
+                      <Download className="h-4 w-4 mr-2" /> Export Report
                     </Button>
                   </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle>Revenue Distribution</CardTitle>
+                  <CardDescription>By product line</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="h-[350px] flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RechartsPieChart>
-                        <RechartsPie
-                          data={riskExposureData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          outerRadius={120}
-                          fill="#8884d8"
-                          dataKey="value"
-                          label={({ name, percent }) => `${name} ${(Number(percent) * 100).toFixed(0)}%`}
-                        >
-                          {riskExposureData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </RechartsPie>
-                        <Tooltip formatter={(value) => `${value}%`} />
-                      </RechartsPieChart>
-                    </ResponsiveContainer>
+                <CardContent className="pb-4">
+                  <div className="h-[250px]">
+                    <PieChart 
+                      data={[
+                        { name: 'Treasury', value: 35 },
+                        { name: 'Cards', value: 25 },
+                        { name: 'Loans', value: 20 },
+                        { name: 'Investments', value: 15 },
+                        { name: 'Other', value: 5 },
+                      ]}
+                      index="name"
+                      category="value"
+                      valueFormatter={(value) => `${value}%`}
+                      showLabel={true}
+                      showLegend={true}
+                      colors={['blue', 'green', 'orange', 'purple', 'gray']}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="lg:col-span-2">
+                <CardHeader className="pb-2">
+                  <CardTitle>Segment Growth Analysis</CardTitle>
+                  <CardDescription>Quarter-over-quarter comparison</CardDescription>
+                </CardHeader>
+                <CardContent className="pb-4">
+                  <div className="h-[250px]">
+                    <BarChart
+                      data={[
+                        { segment: 'Corporate', current: 3200000, previous: 2800000 },
+                        { segment: 'SME', current: 2100000, previous: 1700000 },
+                        { segment: 'Institutional', current: 4300000, previous: 3900000 },
+                        { segment: 'Government', current: 1800000, previous: 1600000 },
+                        { segment: 'International', current: 2600000, previous: 2100000 },
+                      ]}
+                      index="segment"
+                      categories={['previous', 'current']}
+                      colors={['gray', 'blue']}
+                      valueFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                      showLegend={true}
+                      showXAxis={true}
+                      showYAxis={true}
+                    />
                   </div>
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
 
-            {/* Recent Alerts */}
-            <Card className="mt-6">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Recent Alerts</CardTitle>
-                    <CardDescription>Notifications and important alerts</CardDescription>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm">
-                      <Filter className="h-4 w-4 mr-2" />
-                      Filter
-                    </Button>
-                    <Button size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Create Alert
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentAlerts.map((alert) => (
-                    <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/40">
-                      <div className={`p-2 rounded-full flex-shrink-0 ${
-                        alert.type === 'warning' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' :
-                        alert.type === 'critical' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' :
-                        alert.type === 'info' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' :
-                        'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
-                      }`}>
-                        <AlertCircle className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium">{alert.title}</h4>
-                        <p className="text-sm text-muted-foreground mt-1">{alert.description}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{alert.time}</p>
-                      </div>
-                      <Button variant="ghost" size="icon" className="flex-shrink-0">
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
+          <TabsContent value="risk">
+            {!selectedRiskCategory ? (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                  {riskCategories.map((category, index) => (
+                    <div key={index} onClick={() => handleRiskCardClick(index)} className="cursor-pointer">
+                      <RiskMetricCard category={category} getStatusColor={getStatusColor} />
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* Risk Analysis Tab */}
-          <TabsContent value="risk-analysis">
-            <Card>
-              <CardHeader>
-                <CardTitle>Risk Analysis</CardTitle>
-                <CardDescription>Comprehensive risk analysis across all categories</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Detailed risk analysis content will be displayed here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* AI Predictions Tab */}
-          <TabsContent value="ai-predictions">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle>Machine Learning Predictions</CardTitle>
-                <CardDescription>AI-generated forecasts and insights</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {aiPredictions.map((prediction) => (
-                    <div key={prediction.id} className="flex items-start gap-3 p-4 rounded-lg border">
-                      <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-                        <BrainCircuit className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium">{prediction.title}</h4>
-                        <div className="grid grid-cols-3 gap-4 mt-2">
-                          <div>
-                            <p className="text-xs text-muted-foreground">Prediction</p>
-                            <p className="text-sm font-medium">{prediction.prediction}</p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-muted-foreground">Confidence</p>
-                            <p className="text-sm font-medium">{prediction.confidence}</p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-muted-foreground">Impact</p>
-                            <Badge variant={
-                              prediction.impact === 'Positive' ? 'default' : 
-                              prediction.impact === 'Negative' ? 'destructive' : 
-                              'outline'
-                            }>
-                              {prediction.impact}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      <Button variant="outline" size="sm">
-                        Details
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* Anomaly Detection Tab */}
-          <TabsContent value="anomaly-detection">
-            <Card>
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Anomaly Detection</CardTitle>
-                    <CardDescription>ML-powered anomaly detection in financial data</CardDescription>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Refresh Analysis
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[350px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={anomalyData}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="normal" name="Normal Activity" fill="#3b82f6" />
-                      <Bar dataKey="anomaly" name="Anomaly Detected" fill="#ef4444" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
-                      <AlertCircle className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Anomalies Detected</h4>
-                      <p className="text-sm mt-1">The system has detected 2 significant anomalies in the past 14 days. Review the details for more information and recommended actions.</p>
-                      <Button variant="outline" size="sm" className="mt-2">
-                        View Details
-                      </Button>
-                    </div>
+                
+                <Separator className="my-8" />
+                
+                <div>
+                  <h2 className="text-xl font-semibold mb-4">Additional Risk Categories</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {additionalRisks.map((risk, index) => (
+                      <AdditionalRiskCard 
+                        key={index} 
+                        risk={risk} 
+                        onClick={() => handleAdditionalRiskClick(risk.title)} 
+                      />
+                    ))}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                
+                <div className="bg-muted/50 p-8 rounded-lg mt-8 text-center space-y-4">
+                  <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto" />
+                  <h3 className="text-lg font-medium">Detailed Risk Analysis</h3>
+                  <p className="text-muted-foreground max-w-2xl mx-auto">
+                    Select a risk category above to view detailed analysis and metrics.
+                  </p>
+                  <div className="pt-2">
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+                      <Info className="h-3.5 w-3.5 mr-1" />
+                      Enterprise Feature
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Button 
+                  variant="outline" 
+                  className="mb-6" 
+                  onClick={() => setSelectedRiskCategory(null)}
+                >
+                  Back to Risk Categories
+                </Button>
+                
+                <DetailedRiskAnalysis category={selectedRiskCategory} />
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="forecasting">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                    Predictive Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    AI-powered financial forecasting models
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <AreaChart 
+                      data={[
+                        { month: 'Aug', actual: 3400000, forecast: 3400000, range_lower: 3400000, range_upper: 3400000 },
+                        { month: 'Sep', actual: 3600000, forecast: 3600000, range_lower: 3600000, range_upper: 3600000 },
+                        { month: 'Oct', actual: 3300000, forecast: 3300000, range_lower: 3300000, range_upper: 3300000 },
+                        { month: 'Nov', actual: 3700000, forecast: 3700000, range_lower: 3700000, range_upper: 3700000 },
+                        { month: 'Dec', actual: 4100000, forecast: 4100000, range_lower: 4100000, range_upper: 4100000 },
+                        { month: 'Jan', actual: null, forecast: 4300000, range_lower: 4100000, range_upper: 4500000 },
+                        { month: 'Feb', actual: null, forecast: 4500000, range_lower: 4200000, range_upper: 4800000 },
+                        { month: 'Mar', actual: null, forecast: 4800000, range_lower: 4400000, range_upper: 5200000 },
+                      ]} 
+                      index="month"
+                      categories={['actual', 'forecast', 'range_lower', 'range_upper']}
+                      colors={['blue', 'green', 'transparent', 'transparent']}
+                      valueFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                      showLegend={true}
+                      showXAxis={true}
+                      showYAxis={true}
+                      showGridLines={true}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BrainCircuit className="h-5 w-5 text-purple-600" />
+                    AI Model Performance
+                  </CardTitle>
+                  <CardDescription>
+                    Forecast accuracy metrics
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">MAPE (Revenue)</span>
+                      <span className="text-sm font-bold">3.2%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full">
+                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '92%' }} />
+                    </div>
+                    <p className="text-xs text-muted-foreground">Mean Absolute Percentage Error</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">MAE (Cash Flow)</span>
+                      <span className="text-sm font-bold">$124K</span>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full">
+                      <div className="bg-blue-500 h-2 rounded-full" style={{ width: '87%' }} />
+                    </div>
+                    <p className="text-xs text-muted-foreground">Mean Absolute Error</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">Forecast Horizon</span>
+                      <span className="text-sm font-bold">12 months</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1">
+                      <div className="h-2 bg-green-500 rounded-full"></div>
+                      <div className="h-2 bg-green-500 rounded-full"></div>
+                      <div className="h-2 bg-yellow-500 rounded-full"></div>
+                      <div className="h-2 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">3-month accuracy: 94%</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card className="lg:col-span-full">
+                <CardHeader>
+                  <CardTitle>Analytics Reports</CardTitle>
+                  <CardDescription>
+                    Generate and access customized reports
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { title: 'Financial Performance', icon: BarChart2, date: '15 Mar 2024', type: 'Monthly' },
+                      { title: 'Risk Assessment', icon: AlertTriangle, date: '28 Feb 2024', type: 'Quarterly' },
+                      { title: 'Market Trends', icon: TrendingUp, date: '10 Mar 2024', type: 'Weekly' },
+                      { title: 'Forecast Accuracy', icon: LineChartIcon, date: '01 Mar 2024', type: 'Monthly' },
+                      { title: 'Revenue Distribution', icon: PieChartIcon, date: '22 Feb 2024', type: 'Monthly' },
+                      { title: 'Executive Summary', icon: BarChart2, date: '28 Feb 2024', type: 'Monthly' },
+                    ].map((report, index) => (
+                      <Card key={index} className="hover:bg-accent/50 cursor-pointer transition-colors">
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="p-2 rounded-lg bg-primary/10">
+                              <report.icon className="h-5 w-5 text-primary" />
+                            </div>
+                            <Badge variant="outline" className="font-normal">{report.type}</Badge>
+                          </div>
+                          <h3 className="font-medium">{report.title}</h3>
+                          <p className="text-sm text-muted-foreground mt-1">Last updated: {report.date}</p>
+                          <div className="flex items-center justify-between mt-4">
+                            <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                              <Download className="h-3 w-3" /> PDF
+                            </Button>
+                            <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                              <Download className="h-3 w-3" /> Excel
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
