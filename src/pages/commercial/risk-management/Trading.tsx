@@ -12,7 +12,12 @@ import {
   RefreshCw,
   AlertTriangle,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Download,
+  Filter,
+  Settings,
+  Calendar,
+  PieChart
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -25,11 +30,13 @@ import {
   Tooltip,
   ResponsiveContainer,
   AreaChart, 
-  Area
+  Area,
+  Legend
 } from 'recharts';
 
 export default function TradingRiskPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [timeframe, setTimeframe] = useState("1w");
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -58,6 +65,24 @@ export default function TradingRiskPage() {
     { category: 'Derivatives', current: 62, limit: 100 },
   ];
 
+  const tradingVolumeData = [
+    { date: '2023-07-01', fx: 12.5, equity: 8.2, fixedIncome: 15.3, commodities: 5.1, derivatives: 9.7 },
+    { date: '2023-07-02', fx: 13.1, equity: 7.8, fixedIncome: 16.1, commodities: 4.8, derivatives: 10.2 },
+    { date: '2023-07-03', fx: 11.9, equity: 8.5, fixedIncome: 14.7, commodities: 5.3, derivatives: 9.9 },
+    { date: '2023-07-04', fx: 12.8, equity: 9.1, fixedIncome: 15.0, commodities: 5.7, derivatives: 10.5 },
+    { date: '2023-07-05', fx: 14.2, equity: 9.7, fixedIncome: 16.8, commodities: 6.1, derivatives: 11.2 },
+    { date: '2023-07-06', fx: 13.7, equity: 8.9, fixedIncome: 16.2, commodities: 5.4, derivatives: 10.8 },
+    { date: '2023-07-07', fx: 14.5, equity: 9.2, fixedIncome: 17.1, commodities: 5.8, derivatives: 11.5 },
+  ];
+
+  const riskAllocationData = [
+    { name: 'Market Risk', value: 35 },
+    { name: 'Credit Risk', value: 25 },
+    { name: 'Operational Risk', value: 15 },
+    { name: 'Liquidity Risk', value: 15 },
+    { name: 'Legal Risk', value: 10 },
+  ];
+
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
@@ -68,8 +93,64 @@ export default function TradingRiskPage() {
         />
 
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-medium">Trading Risk Dashboard</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-medium">Trading Risk Dashboard</h2>
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+              <Clock className="h-3 w-3 mr-1" />
+              Real-time monitoring
+            </Badge>
+          </div>
           <div className="flex gap-2">
+            <div className="flex bg-muted rounded-md p-0.5">
+              <Button 
+                variant={timeframe === "1d" ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => setTimeframe("1d")}
+                className="text-xs"
+              >
+                1D
+              </Button>
+              <Button 
+                variant={timeframe === "1w" ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => setTimeframe("1w")}
+                className="text-xs"
+              >
+                1W
+              </Button>
+              <Button 
+                variant={timeframe === "1m" ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => setTimeframe("1m")}
+                className="text-xs"
+              >
+                1M
+              </Button>
+              <Button 
+                variant={timeframe === "3m" ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => setTimeframe("3m")}
+                className="text-xs"
+              >
+                3M
+              </Button>
+              <Button 
+                variant={timeframe === "1y" ? "default" : "ghost"} 
+                size="sm"
+                onClick={() => setTimeframe("1y")}
+                className="text-xs"
+              >
+                1Y
+              </Button>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <Filter className="h-3.5 w-3.5" />
+              Filter
+            </Button>
             <Button 
               variant="outline" 
               onClick={handleRefresh}
@@ -78,6 +159,13 @@ export default function TradingRiskPage() {
             >
               <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
               Refresh
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export
             </Button>
             <Button variant="default">Set Alerts</Button>
           </div>
@@ -161,8 +249,8 @@ export default function TradingRiskPage() {
         {/* Risk Exposure Charts */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           <Card className="border-blue-100 dark:border-blue-800">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 Risk Exposure Trend
               </CardTitle>
@@ -185,6 +273,7 @@ export default function TradingRiskPage() {
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip />
+                    <Legend />
                     <Area
                       type="monotone"
                       dataKey="var"
@@ -216,8 +305,8 @@ export default function TradingRiskPage() {
           </Card>
 
           <Card className="border-blue-100 dark:border-blue-800">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 <BarChart className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 Trading Limit Utilization
               </CardTitle>
@@ -253,10 +342,165 @@ export default function TradingRiskPage() {
           </Card>
         </div>
 
+        {/* Trading Volume and Risk Allocation */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <Card className="border-blue-100 dark:border-blue-800">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <BarChart className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                Trading Volume by Category
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={tradingVolumeData}>
+                    <defs>
+                      <linearGradient id="colorFx" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorFixed" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorComm" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorDeriv" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ec4899" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="fx"
+                      name="FX"
+                      stroke="#3b82f6"
+                      fillOpacity={1}
+                      fill="url(#colorFx)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="equity"
+                      name="Equity"
+                      stroke="#10b981"
+                      fillOpacity={1}
+                      fill="url(#colorEquity)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="fixedIncome"
+                      name="Fixed Income"
+                      stroke="#f59e0b"
+                      fillOpacity={1}
+                      fill="url(#colorFixed)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="commodities"
+                      name="Commodities"
+                      stroke="#8b5cf6"
+                      fillOpacity={1}
+                      fill="url(#colorComm)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="derivatives"
+                      name="Derivatives"
+                      stroke="#ec4899"
+                      fillOpacity={1}
+                      fill="url(#colorDeriv)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-blue-100 dark:border-blue-800">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <PieChart className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                Risk Allocation by Type
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  {riskAllocationData.map((item, index) => (
+                    <div key={index} className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium flex items-center gap-2">
+                          <span
+                            className="inline-block w-3 h-3 rounded-full"
+                            style={{ backgroundColor: getColor(index) }}
+                          ></span>
+                          {item.name}
+                        </span>
+                        <span className="text-sm">{item.value}%</span>
+                      </div>
+                      <div className="w-full bg-muted h-1.5 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full"
+                          style={{ 
+                            width: `${item.value}%`,
+                            backgroundColor: getColor(index)
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="relative flex items-center justify-center">
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold">$8.4M</div>
+                        <div className="text-sm text-muted-foreground">Total Risk</div>
+                      </div>
+                    </div>
+                    <svg viewBox="0 0 100 100" className="w-full h-auto">
+                      {riskAllocationData.map((item, index) => {
+                        const startAngle = getStartAngle(index);
+                        const endAngle = startAngle + (item.value * 3.6);
+                        return (
+                          <DonutSegment
+                            key={index}
+                            startAngle={startAngle}
+                            endAngle={endAngle}
+                            color={getColor(index)}
+                          />
+                        );
+                      })}
+                      <circle cx="50" cy="50" r="30" fill="white" className="dark:fill-gray-900" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Active Trading Limits */}
         <Card className="mb-6 border-blue-100 dark:border-blue-800">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle>Active Trading Limits</CardTitle>
+            <Button variant="outline" size="sm" className="flex items-center gap-1">
+              <Settings className="h-3.5 w-3.5" />
+              Configure Limits
+            </Button>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -364,7 +608,122 @@ export default function TradingRiskPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Trading Risk Analytics */}
+        <Card className="mb-6 border-blue-100 dark:border-blue-800">
+          <CardHeader className="pb-2">
+            <CardTitle>Trading Risk Analytics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="border shadow-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Risk Stress Testing</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Run scenario simulations to assess potential losses under market stress.
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    <Button variant="outline" size="sm" className="w-full">Scenario Library</Button>
+                    <Button size="sm" className="w-full">Run Test</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border shadow-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Position Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Analyze risk across different trading positions and products.
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    <Button variant="outline" size="sm" className="w-full">View Positions</Button>
+                    <Button size="sm" className="w-full">Risk Report</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border shadow-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Risk API Integration</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Connect to external data sources and risk assessment systems.
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    <Button variant="outline" size="sm" className="w-full">API Status</Button>
+                    <Button size="sm" className="w-full">Configure</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-end gap-2 mb-8">
+          <Button variant="outline" className="flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            Schedule Report
+          </Button>
+          <Button className="flex items-center gap-2">
+            <BarChart className="h-4 w-4" />
+            Advanced Analytics
+          </Button>
+        </div>
       </div>
     </AppLayout>
   );
 }
+
+// Helper functions for the donut chart
+function getStartAngle(index: number): number {
+  let totalAngle = 0;
+  for (let i = 0; i < index; i++) {
+    totalAngle += riskAllocationData[i].value * 3.6;
+  }
+  return totalAngle;
+}
+
+function getColor(index: number): string {
+  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+  return colors[index % colors.length];
+}
+
+interface DonutSegmentProps {
+  startAngle: number;
+  endAngle: number;
+  color: string;
+}
+
+function DonutSegment({ startAngle, endAngle, color }: DonutSegmentProps) {
+  const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+  
+  // Coordinates for the start and end points
+  const startX = 50 + 40 * Math.cos((startAngle - 90) * Math.PI / 180);
+  const startY = 50 + 40 * Math.sin((startAngle - 90) * Math.PI / 180);
+  const endX = 50 + 40 * Math.cos((endAngle - 90) * Math.PI / 180);
+  const endY = 50 + 40 * Math.sin((endAngle - 90) * Math.PI / 180);
+
+  // Path definition
+  const path = [
+    'M', startX, startY,
+    'A', 40, 40, 0, largeArcFlag, 1, endX, endY,
+    'L', 50, 50,
+    'Z'
+  ].join(' ');
+
+  return <path d={path} fill={color} />;
+}
+
+// Sample data for the risk allocation donut chart
+const riskAllocationData = [
+  { name: 'Market Risk', value: 35 },
+  { name: 'Credit Risk', value: 25 },
+  { name: 'Operational Risk', value: 15 },
+  { name: 'Liquidity Risk', value: 15 },
+  { name: 'Legal Risk', value: 10 },
+];
