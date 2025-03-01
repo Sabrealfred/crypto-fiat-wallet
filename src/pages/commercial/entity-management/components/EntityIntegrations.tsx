@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Share2, Plus, Database, RefreshCw, PlugZap, Bank, Building, Server, CreditCard, Boxes, ChevronRight, X, Check, AlertCircle } from "lucide-react";
+import { Share2, Plus, Database, RefreshCw, PlugZap, Building2, Server, CreditCard, Boxes, ChevronRight, X, Check, AlertCircle } from "lucide-react";
 
 interface EntityIntegrationsProps {
   entityId: number;
@@ -118,11 +117,11 @@ export const EntityIntegrations = ({ entityId, entityName }: EntityIntegrationsP
       case "erp":
         return <Boxes className="h-5 w-5" />;
       case "banking":
-        return <Bank className="h-5 w-5" />;
+        return <Building2 className="h-5 w-5" />;
       case "accounting":
         return <CreditCard className="h-5 w-5" />;
       case "payment":
-        return <Building className="h-5 w-5" />;
+        return <Building2 className="h-5 w-5" />;
       case "custom":
         return <Server className="h-5 w-5" />;
     }
@@ -396,13 +395,13 @@ export const EntityIntegrations = ({ entityId, entityName }: EntityIntegrationsP
                 { 
                   name: "HSBC Banking API", 
                   description: "Connect to HSBC corporate banking",
-                  icon: Bank,
+                  icon: Building2,
                   type: "banking"
                 },
                 { 
                   name: "JP Morgan Treasury API", 
                   description: "Treasury management integration",
-                  icon: Bank,
+                  icon: Building2,
                   type: "banking"
                 },
                 { 
