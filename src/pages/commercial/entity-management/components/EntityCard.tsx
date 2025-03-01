@@ -2,9 +2,10 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Calendar, FileText, Link2, Info, ExternalLink } from "lucide-react";
+import { Building2, MapPin, Calendar, FileText, Link2, Info, ExternalLink, Briefcase, AlertTriangle, Check, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface EntityCardProps {
   entity: {
@@ -25,6 +26,7 @@ interface EntityCardProps {
 
 export function EntityCard({ entity }: EntityCardProps) {
   const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const getStatusBadgeColors = (status: string) => {
     switch (status) {
@@ -41,6 +43,18 @@ export function EntityCard({ entity }: EntityCardProps) {
     }
   };
 
+  const getComplianceStatus = () => {
+    // This would be based on real compliance data in a production app
+    const random = Math.random();
+    if (random > 0.7) {
+      return { status: "issues", label: "Compliance Issues", color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400", icon: <AlertTriangle className="h-3 w-3" /> };
+    } else if (random > 0.3) {
+      return { status: "pending", label: "Review Needed", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400", icon: <Shield className="h-3 w-3" /> };
+    } else {
+      return { status: "compliant", label: "Fully Compliant", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400", icon: <Check className="h-3 w-3" /> };
+    }
+  };
+
   const handleViewDetails = () => {
     toast.info(`Viewing details for ${entity.name}`);
     // This would navigate to entity detail page in a real application
@@ -53,6 +67,10 @@ export function EntityCard({ entity }: EntityCardProps) {
 
   const handleViewRelationships = () => {
     navigate(`/commercial/entity-management/relationships`);
+  };
+
+  const handleToggleExpand = () => {
+    setIsExpanded(!isExpanded);
   };
 
   const getJurisdictionName = (code: string) => {
@@ -78,11 +96,14 @@ export function EntityCard({ entity }: EntityCardProps) {
     return types[type] || type;
   };
 
+  const compliance = getComplianceStatus();
+
   return (
-    <Card className="border-blue-100 dark:border-blue-800 h-full flex flex-col">
+    <Card className="border-blue-100 dark:border-blue-800 h-full flex flex-col transition-all duration-300 hover:shadow-md">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start mb-2">
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 flex items-center gap-1">
+            <Building2 className="h-3 w-3" />
             {getEntityTypeName(entity.type)}
           </Badge>
           <Badge 
@@ -93,7 +114,10 @@ export function EntityCard({ entity }: EntityCardProps) {
           </Badge>
         </div>
         <h3 className="font-semibold text-lg">{entity.name}</h3>
-        <p className="text-sm text-muted-foreground">{entity.industry}</p>
+        <div className="flex items-center gap-2">
+          <Briefcase className="h-4 w-4 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">{entity.industry}</p>
+        </div>
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="space-y-3">
@@ -113,19 +137,61 @@ export function EntityCard({ entity }: EntityCardProps) {
             <Link2 className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
             <span className="text-sm">{entity.subsidiaries} Subsidiaries</span>
           </div>
-          <div className="pt-2">
-            <p className="text-sm text-muted-foreground">{entity.description}</p>
+          
+          {/* Compliance Status */}
+          <div className="flex items-center justify-between pt-2 pb-1 border-t">
+            <span className="text-sm font-medium">Compliance Status:</span>
+            <Badge variant="outline" className={`flex items-center gap-1 ${compliance.color}`}>
+              {compliance.icon} 
+              {compliance.label}
+            </Badge>
           </div>
+          
+          {/* Tax Compliance Progress */}
+          <div className="space-y-1">
+            <div className="flex justify-between text-xs">
+              <span>Tax Compliance</span>
+              <span>82%</span>
+            </div>
+            <div className="w-full bg-blue-100 dark:bg-blue-950 h-1.5 rounded-full">
+              <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: '82%' }} />
+            </div>
+          </div>
+          
+          {isExpanded && (
+            <div className="pt-2 space-y-3 animate-fade-in">
+              <div className="flex items-start gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                <span className="text-sm">Tax ID: {entity.taxId}</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                <span className="text-sm">Address: {entity.address}</span>
+              </div>
+              <div className="pt-1">
+                <p className="text-sm text-muted-foreground">{entity.description}</p>
+              </div>
+            </div>
+          )}
+          
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="w-full text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-950 mt-1"
+            onClick={handleToggleExpand}
+          >
+            {isExpanded ? "Show Less" : "Show More"}
+          </Button>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-2 pt-2">
         <Button 
           variant="outline" 
           size="sm" 
-          className="w-full justify-start" 
+          className="w-full justify-start bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 border-blue-200 dark:border-blue-800" 
           onClick={handleViewDetails}
         >
-          <Info className="h-4 w-4 mr-2" /> View Details
+          <Info className="h-4 w-4 mr-2" /> View Full Profile
         </Button>
         <div className="flex w-full gap-2">
           <Button 
