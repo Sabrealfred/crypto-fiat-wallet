@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -227,7 +226,42 @@ export default function EntityManagementDashboardPage() {
                     <EntityStructureChart entities={entities.slice(0, 5)} />
                   </div>
                   <div className="space-y-6">
-                    <RecentChanges />
+                    <RecentChanges 
+                      relationshipChanges={[
+                        {
+                          id: 1,
+                          date: "2023-03-20",
+                          entity: "Global Finance Corp",
+                          type: "Parent Added",
+                          user: "John Smith",
+                          details: "Added TechVest Inc as parent entity"
+                        },
+                        {
+                          id: 2,
+                          date: "2023-03-18",
+                          entity: "InnoTech Solutions",
+                          type: "Subsidiary Added",
+                          user: "Maria Rodriguez",
+                          details: "Added Digital Systems LLC as subsidiary"
+                        },
+                        {
+                          id: 3,
+                          date: "2023-03-15",
+                          entity: "European Holdings",
+                          type: "Relationship Modified",
+                          user: "David Chen",
+                          details: "Updated ownership percentage to 60%"
+                        },
+                        {
+                          id: 4,
+                          date: "2023-03-10",
+                          entity: "Oceania Partners",
+                          type: "Relationship Removed",
+                          user: "Sarah Johnson",
+                          details: "Removed strategic partnership with Asian Markets Ltd"
+                        }
+                      ]}
+                    />
                     <EntityActivityCard />
                   </div>
                 </div>

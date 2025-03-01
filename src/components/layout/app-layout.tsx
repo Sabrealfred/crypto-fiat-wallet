@@ -15,7 +15,26 @@ export function AppLayout({ children }: AppLayoutProps) {
         <Sidebar />
         <main className="flex-1 relative">
           {children}
-          <AppFooter />
+          <AppFooter 
+            footerSections={[
+              { title: "Quick Links", links: [
+                { label: "Dashboard", url: "/commercial" },
+                { label: "Analytics", url: "/commercial/analytics" },
+                { label: "Risk Management", url: "/commercial/risk-management" },
+                { label: "Entity Management", url: "/commercial/entity-management" }
+              ]},
+              { title: "Resources", links: [
+                { label: "Documentation", url: "#" },
+                { label: "API", url: "#" },
+                { label: "Support", url: "#" }
+              ]},
+              { title: "Legal", links: [
+                { label: "Privacy Policy", url: "#" },
+                { label: "Terms of Service", url: "#" }
+              ]}
+            ]}
+            onToggleSection={(index) => console.log(`Toggled section ${index}`)}
+          />
         </main>
         <AIAssistant />
       </div>

@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,7 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AreaChart, BarChart, LineChart, PieChart } from "@/components/ui/chart";
+import { 
+  ChartContainer, 
+  ChartTooltip, 
+  ChartTooltipContent
+} from "@/components/ui/chart";
 import { 
   BarChart2, 
   TrendingUp, 
@@ -27,6 +30,7 @@ import { useState } from "react";
 import { DetailedRiskAnalysis } from "../components/risk-management/DetailedRiskAnalysis";
 import { RiskMetric } from "../components/risk-management/types";
 import { useNavigate } from "react-router-dom";
+import * as RechartsPrimitive from "recharts";
 
 export default function AnalyticsDashboard() {
   const [selectedRiskCategory, setSelectedRiskCategory] = useState(null);
@@ -93,25 +97,71 @@ export default function AnalyticsDashboard() {
                 </CardHeader>
                 <CardContent className="pb-4">
                   <div className="h-[300px]">
-                    <LineChart 
-                      data={[
-                        { name: 'Jan', revenue: 2400000, expenses: 1800000 },
-                        { name: 'Feb', revenue: 1980000, expenses: 1600000 },
-                        { name: 'Mar', revenue: 2800000, expenses: 2000000 },
-                        { name: 'Apr', revenue: 3080000, expenses: 2200000 },
-                        { name: 'May', revenue: 2780000, expenses: 2100000 },
-                        { name: 'Jun', revenue: 3300000, expenses: 2400000 },
-                        { name: 'Jul', revenue: 3580000, expenses: 2600000 },
-                      ]} 
-                      index="name"
-                      categories={['revenue', 'expenses']}
-                      colors={['blue', 'red']}
-                      valueFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
-                      showLegend={true}
-                      showXAxis={true}
-                      showYAxis={true}
-                      showGridLines={true}
-                    />
+                    <ChartContainer
+                      config={{
+                        revenue: { label: "Revenue", color: "#2563eb" },
+                        expenses: { label: "Expenses", color: "#ef4444" }
+                      }}
+                    >
+                      <RechartsPrimitive.ComposedChart
+                        data={[
+                          { name: 'Jan', revenue: 2400000, expenses: 1800000 },
+                          { name: 'Feb', revenue: 1980000, expenses: 1600000 },
+                          { name: 'Mar', revenue: 2800000, expenses: 2000000 },
+                          { name: 'Apr', revenue: 3080000, expenses: 2200000 },
+                          { name: 'May', revenue: 2780000, expenses: 2100000 },
+                          { name: 'Jun', revenue: 3300000, expenses: 2400000 },
+                          { name: 'Jul', revenue: 3580000, expenses: 2600000 },
+                        ]}
+                        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                      >
+                        <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                        <RechartsPrimitive.XAxis dataKey="name" />
+                        <RechartsPrimitive.YAxis 
+                          tickFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                        />
+                        <RechartsPrimitive.Tooltip
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              return (
+                                <div className="rounded-lg border bg-background p-2 shadow-md">
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {payload.map((entry) => (
+                                      <div key={entry.name} className="flex flex-col">
+                                        <span className="text-xs font-medium" style={{ color: entry.color }}>
+                                          {entry.name === 'revenue' ? 'Revenue' : 'Expenses'}
+                                        </span>
+                                        <span className="text-xs">
+                                          ${(entry.value/1000000).toFixed(1)}M
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
+                        <RechartsPrimitive.Legend />
+                        <RechartsPrimitive.Line
+                          type="monotone"
+                          dataKey="revenue"
+                          stroke="#2563eb"
+                          strokeWidth={2}
+                          dot={{ r: 4 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <RechartsPrimitive.Line
+                          type="monotone"
+                          dataKey="expenses"
+                          stroke="#ef4444"
+                          strokeWidth={2}
+                          dot={{ r: 4 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </RechartsPrimitive.ComposedChart>
+                    </ChartContainer>
                   </div>
                 </CardContent>
               </Card>
@@ -189,21 +239,48 @@ export default function AnalyticsDashboard() {
                 </CardHeader>
                 <CardContent className="pb-4">
                   <div className="h-[250px]">
-                    <PieChart 
-                      data={[
-                        { name: 'Treasury', value: 35 },
-                        { name: 'Cards', value: 25 },
-                        { name: 'Loans', value: 20 },
-                        { name: 'Investments', value: 15 },
-                        { name: 'Other', value: 5 },
-                      ]}
-                      index="name"
-                      category="value"
-                      valueFormatter={(value) => `${value}%`}
-                      showLabel={true}
-                      showLegend={true}
-                      colors={['blue', 'green', 'orange', 'purple', 'gray']}
-                    />
+                    <ChartContainer
+                      config={{
+                        Treasury: { label: "Treasury", color: "#2563eb" },
+                        Cards: { label: "Cards", color: "#16a34a" },
+                        Loans: { label: "Loans", color: "#f97316" },
+                        Investments: { label: "Investments", color: "#9333ea" },
+                        Other: { label: "Other", color: "#6b7280" },
+                      }}
+                    >
+                      <RechartsPrimitive.PieChart>
+                        <RechartsPrimitive.Pie
+                          data={[
+                            { name: 'Treasury', value: 35 },
+                            { name: 'Cards', value: 25 },
+                            { name: 'Loans', value: 20 },
+                            { name: 'Investments', value: 15 },
+                            { name: 'Other', value: 5 },
+                          ]}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={80}
+                          fill="#8884d8"
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {[
+                            { name: 'Treasury', color: "#2563eb" },
+                            { name: 'Cards', color: "#16a34a" },
+                            { name: 'Loans', color: "#f97316" },
+                            { name: 'Investments', color: "#9333ea" },
+                            { name: 'Other', color: "#6b7280" },
+                          ].map((entry, index) => (
+                            <RechartsPrimitive.Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </RechartsPrimitive.Pie>
+                        <RechartsPrimitive.Tooltip 
+                          formatter={(value) => `${value}%`}
+                        />
+                        <RechartsPrimitive.Legend />
+                      </RechartsPrimitive.PieChart>
+                    </ChartContainer>
                   </div>
                 </CardContent>
               </Card>
@@ -215,22 +292,35 @@ export default function AnalyticsDashboard() {
                 </CardHeader>
                 <CardContent className="pb-4">
                   <div className="h-[250px]">
-                    <BarChart
-                      data={[
-                        { segment: 'Corporate', current: 3200000, previous: 2800000 },
-                        { segment: 'SME', current: 2100000, previous: 1700000 },
-                        { segment: 'Institutional', current: 4300000, previous: 3900000 },
-                        { segment: 'Government', current: 1800000, previous: 1600000 },
-                        { segment: 'International', current: 2600000, previous: 2100000 },
-                      ]}
-                      index="segment"
-                      categories={['previous', 'current']}
-                      colors={['gray', 'blue']}
-                      valueFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
-                      showLegend={true}
-                      showXAxis={true}
-                      showYAxis={true}
-                    />
+                    <ChartContainer
+                      config={{
+                        previous: { label: "Previous Quarter", color: "#6b7280" },
+                        current: { label: "Current Quarter", color: "#2563eb" },
+                      }}
+                    >
+                      <RechartsPrimitive.BarChart
+                        data={[
+                          { segment: 'Corporate', current: 3200000, previous: 2800000 },
+                          { segment: 'SME', current: 2100000, previous: 1700000 },
+                          { segment: 'Institutional', current: 4300000, previous: 3900000 },
+                          { segment: 'Government', current: 1800000, previous: 1600000 },
+                          { segment: 'International', current: 2600000, previous: 2100000 },
+                        ]}
+                        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                      >
+                        <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                        <RechartsPrimitive.XAxis dataKey="segment" />
+                        <RechartsPrimitive.YAxis
+                          tickFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                        />
+                        <RechartsPrimitive.Tooltip
+                          formatter={(value) => [`$${(value/1000000).toFixed(1)}M`]}
+                        />
+                        <RechartsPrimitive.Legend />
+                        <RechartsPrimitive.Bar dataKey="previous" fill="#6b7280" />
+                        <RechartsPrimitive.Bar dataKey="current" fill="#2563eb" />
+                      </RechartsPrimitive.BarChart>
+                    </ChartContainer>
                   </div>
                 </CardContent>
               </Card>
@@ -306,26 +396,67 @@ export default function AnalyticsDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="h-[300px]">
-                    <AreaChart 
-                      data={[
-                        { month: 'Aug', actual: 3400000, forecast: 3400000, range_lower: 3400000, range_upper: 3400000 },
-                        { month: 'Sep', actual: 3600000, forecast: 3600000, range_lower: 3600000, range_upper: 3600000 },
-                        { month: 'Oct', actual: 3300000, forecast: 3300000, range_lower: 3300000, range_upper: 3300000 },
-                        { month: 'Nov', actual: 3700000, forecast: 3700000, range_lower: 3700000, range_upper: 3700000 },
-                        { month: 'Dec', actual: 4100000, forecast: 4100000, range_lower: 4100000, range_upper: 4100000 },
-                        { month: 'Jan', actual: null, forecast: 4300000, range_lower: 4100000, range_upper: 4500000 },
-                        { month: 'Feb', actual: null, forecast: 4500000, range_lower: 4200000, range_upper: 4800000 },
-                        { month: 'Mar', actual: null, forecast: 4800000, range_lower: 4400000, range_upper: 5200000 },
-                      ]} 
-                      index="month"
-                      categories={['actual', 'forecast', 'range_lower', 'range_upper']}
-                      colors={['blue', 'green', 'transparent', 'transparent']}
-                      valueFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
-                      showLegend={true}
-                      showXAxis={true}
-                      showYAxis={true}
-                      showGridLines={true}
-                    />
+                    <ChartContainer
+                      config={{
+                        actual: { label: "Actual", color: "#2563eb" },
+                        forecast: { label: "Forecast", color: "#16a34a" },
+                        range_lower: { label: "Lower Range", color: "transparent" },
+                        range_upper: { label: "Upper Range", color: "transparent" },
+                      }}
+                    >
+                      <RechartsPrimitive.ComposedChart
+                        data={[
+                          { month: 'Aug', actual: 3400000, forecast: 3400000, range_lower: 3400000, range_upper: 3400000 },
+                          { month: 'Sep', actual: 3600000, forecast: 3600000, range_lower: 3600000, range_upper: 3600000 },
+                          { month: 'Oct', actual: 3300000, forecast: 3300000, range_lower: 3300000, range_upper: 3300000 },
+                          { month: 'Nov', actual: 3700000, forecast: 3700000, range_lower: 3700000, range_upper: 3700000 },
+                          { month: 'Dec', actual: 4100000, forecast: 4100000, range_lower: 4100000, range_upper: 4100000 },
+                          { month: 'Jan', actual: null, forecast: 4300000, range_lower: 4100000, range_upper: 4500000 },
+                          { month: 'Feb', actual: null, forecast: 4500000, range_lower: 4200000, range_upper: 4800000 },
+                          { month: 'Mar', actual: null, forecast: 4800000, range_lower: 4400000, range_upper: 5200000 },
+                        ]} 
+                        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                      >
+                        <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+                        <RechartsPrimitive.XAxis dataKey="month" />
+                        <RechartsPrimitive.YAxis
+                          tickFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                        />
+                        <RechartsPrimitive.Tooltip
+                          formatter={(value) => [`$${(value/1000000).toFixed(1)}M`]}
+                        />
+                        <RechartsPrimitive.Legend />
+                        <RechartsPrimitive.Area
+                          type="monotone"
+                          dataKey="range_lower"
+                          stackId="1"
+                          stroke="none"
+                          fill="#e5e7eb"
+                        />
+                        <RechartsPrimitive.Area
+                          type="monotone"
+                          dataKey="range_upper"
+                          stackId="1"
+                          stroke="none"
+                          fill="#e5e7eb"
+                        />
+                        <RechartsPrimitive.Line
+                          type="monotone"
+                          dataKey="actual"
+                          stroke="#2563eb"
+                          strokeWidth={2}
+                          dot={{ r: 4 }}
+                        />
+                        <RechartsPrimitive.Line
+                          type="monotone"
+                          dataKey="forecast"
+                          stroke="#16a34a"
+                          strokeWidth={2}
+                          strokeDasharray="5 5"
+                          dot={{ r: 4 }}
+                        />
+                      </RechartsPrimitive.ComposedChart>
+                    </ChartContainer>
                   </div>
                 </CardContent>
               </Card>
