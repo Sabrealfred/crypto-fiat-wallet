@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Button } from "@/components/ui/button";
@@ -129,10 +128,46 @@ const allSubsidiaries = [
 
 // Recent relationship changes
 const relationshipChanges = [
-  { id: 1, date: "2024-02-15", entity: "Acme Financial Services GmbH", change: "Ownership increased to 100%", previousValue: "85%" },
-  { id: 2, date: "2024-01-20", entity: "Acme Manufacturing Ltd", change: "Added as subsidiary", previousValue: "N/A" },
-  { id: 3, date: "2023-12-05", entity: "Acme Investment Vehicles SA", change: "Status changed to Inactive", previousValue: "Active" },
-  { id: 4, date: "2023-11-12", entity: "Acme Asia Pacific Pte Ltd", change: "Relationship type changed to Direct", previousValue: "Indirect" },
+  { 
+    id: 1, 
+    date: "2024-02-15", 
+    entity: "Acme Financial Services GmbH", 
+    type: "Ownership Change", 
+    user: "John Smith", 
+    details: "Ownership percentage updated",
+    change: "Ownership increased to 100%", 
+    previousValue: "85%" 
+  },
+  { 
+    id: 2, 
+    date: "2024-01-20", 
+    entity: "Acme Manufacturing Ltd", 
+    type: "New Entity", 
+    user: "Sarah Johnson", 
+    details: "New subsidiary added to group structure",
+    change: "Added as subsidiary", 
+    previousValue: "N/A" 
+  },
+  { 
+    id: 3, 
+    date: "2023-12-05", 
+    entity: "Acme Investment Vehicles SA", 
+    type: "Status Change", 
+    user: "Michael Wong", 
+    details: "Entity status updated",
+    change: "Status changed to Inactive", 
+    previousValue: "Active" 
+  },
+  { 
+    id: 4, 
+    date: "2023-11-12", 
+    entity: "Acme Asia Pacific Pte Ltd", 
+    type: "Relationship Change", 
+    user: "Emily Chen", 
+    details: "Relationship type modified",
+    change: "Relationship type changed to Direct", 
+    previousValue: "Indirect" 
+  },
 ];
 
 export default function SubsidiariesPage() {
