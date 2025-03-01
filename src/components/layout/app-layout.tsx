@@ -6,7 +6,7 @@ import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/layout/user-menu";
 import { AppFooter } from "@/components/layout/app-footer";
 import { AIAssistant } from "@/components/layout/ai-assistant";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ChevronRight } from "lucide-react";
 
@@ -15,33 +15,10 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showAI, setShowAI] = useState(false);
   
   const location = useLocation();
   const isMobile = useIsMobile();
-  
-  useEffect(() => {
-    function updateSidebarState() {
-      if (window.innerWidth < 1024) {
-        setSidebarCollapsed(true);
-      } else {
-        setSidebarCollapsed(false);
-      }
-    }
-    
-    updateSidebarState();
-    window.addEventListener('resize', updateSidebarState);
-    
-    return () => {
-      window.removeEventListener('resize', updateSidebarState);
-    };
-  }, []);
-  
-  // Parse route to determine the current section
-  const isCommercial = location.pathname.includes("/commercial");
-  const isAdmin = location.pathname.includes("/admin");
-  const isPrivate = location.pathname.includes("/private");
   
   // Reset AI state when changing routes
   useEffect(() => {
@@ -108,7 +85,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   };
   
   return (
-    <div className="flex min-h-screen w-full bg-white dark:bg-gray-900">
+    <div className="flex min-h-screen w-full bg-slate-50 dark:bg-gray-800">
       <SidebarProvider defaultOpen={!isMobile}>
         <Sidebar 
           variant="floating" 
@@ -122,7 +99,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <UserMenu onLogout={handleLogout} />
         </header>
         
-        <div className="flex-1 overflow-auto px-4 py-6 md:px-6 lg:px-8 bg-slate-50 dark:bg-gray-800">
+        <div className="flex-1 overflow-auto px-4 py-6 md:px-6 lg:px-8">
           {children}
         </div>
         
