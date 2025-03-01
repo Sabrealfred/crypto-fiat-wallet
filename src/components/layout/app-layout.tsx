@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sidebar } from "@/components/ui/sidebar";
+import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/layout/user-menu";
 import { AppFooter } from "@/components/layout/app-footer";
 import { AIAssistant } from "@/components/layout/ai-assistant";
@@ -109,8 +109,9 @@ export function AppLayout({ children }: AppLayoutProps) {
   
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Removed section prop from Sidebar since it's not accepted */}
-      <Sidebar />
+      <SidebarProvider defaultCollapsed={sidebarCollapsed}>
+        <Sidebar />
+      </SidebarProvider>
       <main className="flex-1 flex flex-col">
         <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6">
           <div></div>
@@ -133,7 +134,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </Button>
         </div>
         
-        {/* AI Assistant sidebar - removed onClose prop */}
+        {/* AI Assistant sidebar */}
         {showAI && (
           <div className="fixed top-0 right-0 bottom-0 w-full sm:w-96 bg-background border-l shadow-xl z-40 overflow-auto">
             <AIAssistant />

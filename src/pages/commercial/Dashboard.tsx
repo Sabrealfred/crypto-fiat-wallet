@@ -18,7 +18,10 @@ import {
   CreditCard, 
   DollarSign, 
   FileSpreadsheet, 
-  Shield
+  Shield,
+  RefreshCw,
+  Settings,
+  FileText
 } from "lucide-react";
 
 export default function CommercialDashboard() {
@@ -215,6 +218,3 @@ export default function CommercialDashboard() {
     </AppLayout>
   );
 }
-
-// Importaciones faltantes para iconos
-import { RefreshCw, Settings, FileText } from "lucide-react";
