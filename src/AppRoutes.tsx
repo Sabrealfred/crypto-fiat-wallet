@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -190,6 +189,7 @@ export function AppRoutes() {
             <Route path="legal" element={<LegalRiskPage />} />
             <Route path="model" element={<ModelRiskPage />} />
             <Route path="trading" element={<TradingRiskPage />} />
+            <Route path="liquidity-risk" element={<LiquidityRiskPage />} />
           </Route>
 
           {/* Payment Processor Routes */}
