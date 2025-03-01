@@ -13,8 +13,7 @@ export function DarkModeToggle({ isDarkMode, onToggle, isCollapsed }: DarkModeTo
     <Button
       onClick={onToggle}
       variant="ghost"
-      size="icon"
-      className={`rounded-full transition-colors ${isDarkMode ? 'bg-blue-900/20' : 'bg-blue-100/50'}`}
+      className={`rounded-full transition-colors hover:bg-accent ${isDarkMode ? 'bg-blue-900/20' : 'bg-blue-100/50'}`}
       aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDarkMode ? (
