@@ -138,12 +138,12 @@ export const ReportsTabContent = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [timeFrame, setTimeFrame] = useState("quarterly");
 
-  const formatCurrency = (value) => {
+  const formatCurrency = (value: number | string) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0,
-    }).format(value);
+    }).format(Number(value));
   };
 
   return (

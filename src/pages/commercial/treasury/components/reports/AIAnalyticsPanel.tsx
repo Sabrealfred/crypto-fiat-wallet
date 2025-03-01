@@ -46,7 +46,7 @@ interface AIAnalyticsPanelProps {
   riskCorrelationData: any[];
   anomalyDetectionData: any[];
   riskRadarData: any[];
-  formatCurrency: (value: number) => string;
+  formatCurrency: (value: number | string) => string;
 }
 
 export const AIAnalyticsPanel: React.FC<AIAnalyticsPanelProps> = ({ 
@@ -113,7 +113,7 @@ export const AIAnalyticsPanel: React.FC<AIAnalyticsPanelProps> = ({
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
                   <XAxis dataKey="name" />
                   <YAxis tickFormatter={(value) => `$${value/1000}K`} />
-                  <Tooltip formatter={(value) => formatCurrency(value)} />
+                  <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                   <Legend />
                   <defs>
                     <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">

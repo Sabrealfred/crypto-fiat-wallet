@@ -19,7 +19,7 @@ import {
 interface ChartsGridProps {
   transactionReportData: any[];
   cashflowReportData: any[];
-  formatCurrency: (value: number) => string;
+  formatCurrency: (value: number | string) => string;
 }
 
 export const ChartsGrid: React.FC<ChartsGridProps> = ({ 
@@ -85,7 +85,7 @@ export const ChartsGrid: React.FC<ChartsGridProps> = ({
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip formatter={(value) => formatCurrency(value)} />
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                 <Legend />
                 <Bar dataKey="inflow" fill="#22c55e" name="Inflow" />
                 <Bar dataKey="outflow" fill="#ef4444" name="Outflow" />

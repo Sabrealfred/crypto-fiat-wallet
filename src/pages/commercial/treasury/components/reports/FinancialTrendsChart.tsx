@@ -24,7 +24,7 @@ interface FinancialTrendsProps {
   data: any[];
   timeFrame: string;
   setTimeFrame: (value: string) => void;
-  formatCurrency: (value: number) => string;
+  formatCurrency: (value: number | string) => string;
 }
 
 export const FinancialTrendsChart: React.FC<FinancialTrendsProps> = ({ 
@@ -93,7 +93,7 @@ export const FinancialTrendsChart: React.FC<FinancialTrendsProps> = ({
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
               <XAxis dataKey="name" />
               <YAxis tickFormatter={(value) => `$${value/1000}K`} />
-              <Tooltip formatter={(value) => formatCurrency(value)} />
+              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
               <Legend />
               <Area 
                 type="monotone" 
