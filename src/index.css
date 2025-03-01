@@ -25,14 +25,6 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 214 100% 50%;
     --radius: 1.5rem;
-    
-    /* Sidebar variables */
-    --sidebar: 0 0% 100%;
-    --sidebar-foreground: 214 100% 50%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-accent: 210 40% 96.1%;
-    --sidebar-accent-foreground: 214 100% 50%;
-    --sidebar-ring: 214 100% 50%;
   }
 
   .dark {
@@ -55,14 +47,6 @@
     --border: 217 32% 17%;
     --input: 217 32% 17%;
     --ring: 224 76% 48%;
-    
-    /* Sidebar variables */
-    --sidebar: 222 47% 11%;
-    --sidebar-foreground: 217 91% 60%;
-    --sidebar-border: 217 32% 17%;
-    --sidebar-accent: 217 32% 17%;
-    --sidebar-accent-foreground: 217 91% 60%;
-    --sidebar-ring: 224 76% 48%;
   }
 }
  
@@ -121,50 +105,4 @@
   to {
     transform: translateX(0);
   }
-}
-
-/* Estilos de las tablas para dashboards */
-.dashboard-table {
-  @apply w-full border-collapse;
-}
-
-.dashboard-table th {
-  @apply px-4 py-2 text-left text-sm font-medium text-muted-foreground;
-}
-
-.dashboard-table td {
-  @apply px-4 py-2 text-sm border-t border-border;
-}
-
-.dashboard-table tr:hover td {
-  @apply bg-accent/5;
-}
-
-/* Mejoras visuales para cards en dashboards */
-.dashboard-card {
-  @apply border border-border bg-card text-card-foreground rounded-xl shadow-sm hover:shadow-md transition-shadow;
-}
-
-.stat-card {
-  @apply flex flex-col p-6 space-y-2 dashboard-card;
-}
-
-.stat-value {
-  @apply text-2xl font-bold;
-}
-
-.stat-label {
-  @apply text-sm text-muted-foreground;
-}
-
-.stat-trend {
-  @apply flex items-center text-xs;
-}
-
-.stat-trend-up {
-  @apply text-green-500;
-}
-
-.stat-trend-down {
-  @apply text-red-500;
 }

@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -44,8 +45,8 @@ import AIPortfolios from "@/pages/commercial/fund-management/AIPortfolios";
 import OperationsDashboard from "@/pages/commercial/operations/Dashboard";
 import CommercialPortal from "@/pages/CommercialPortal";
 
-// Analytics pages - update to use named export
-import AnalyticsDashboard from "@/pages/commercial/analytics/index";
+// Analytics pages
+import AnalyticsDashboard from "@/pages/commercial/analytics/Dashboard";
 import MLModelsPage from "@/pages/commercial/analytics/MLModels";
 import PredictiveAnalysisPage from "@/pages/commercial/analytics/PredictiveAnalysis";
 import TrendVisualizationPage from "@/pages/commercial/analytics/TrendVisualization";

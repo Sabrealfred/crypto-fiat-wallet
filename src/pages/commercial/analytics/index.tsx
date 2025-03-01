@@ -1,3 +1,4 @@
 
-import { AnalyticsDashboard } from "./Dashboard";
+import AnalyticsDashboard from "./Dashboard";
+
 export default AnalyticsDashboard;

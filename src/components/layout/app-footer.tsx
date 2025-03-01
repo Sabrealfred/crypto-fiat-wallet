@@ -2,42 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Link2 } from "lucide-react";
 import { FooterSection } from "./footer-section";
-import { useState } from "react";
-
-interface FooterLink {
-  label: string;
-  url: string;
-}
-
-interface FooterSectionData {
-  title: string;
-  links: FooterLink[];
-}
 
 interface AppFooterProps {
-  company: boolean;
-  legal: boolean;
-  support: boolean;
-  footerSections: FooterSectionData[];
-  onToggleSection: (index: number) => void;
+  footerSections: {
+    company: boolean;
+    legal: boolean;
+    support: boolean;
+  };
+  onToggleSection: (section: 'company' | 'legal' | 'support') => void;
 }
 
-export function AppFooter({ company, legal, support, footerSections, onToggleSection }: AppFooterProps) {
-  const [openSections, setOpenSections] = useState({
-    company: company,
-    legal: legal,
-    support: support
-  });
-
-  const handleToggleSection = (section: 'company' | 'legal' | 'support') => {
-    setOpenSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-    
-    onToggleSection(section === 'company' ? 0 : section === 'legal' ? 1 : 2);
-  };
-
+export function AppFooter({ footerSections, onToggleSection }: AppFooterProps) {
   return (
     <footer className="mt-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-t dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
@@ -58,15 +33,26 @@ export function AppFooter({ company, legal, support, footerSections, onToggleSec
             </div>
           </div>
 
-          {footerSections.map((section, index) => (
-            <FooterSection
-              key={section.title}
-              title={section.title}
-              isOpen={index === 0 ? openSections.company : index === 1 ? openSections.legal : openSections.support}
-              onToggle={() => handleToggleSection(index === 0 ? 'company' : index === 1 ? 'legal' : 'support')}
-              links={section.links.map(link => link.label)}
-            />
-          ))}
+          <FooterSection
+            title="Company"
+            isOpen={footerSections.company}
+            onToggle={() => onToggleSection('company')}
+            links={["About Us", "Careers", "Press", "Blog"]}
+          />
+
+          <FooterSection
+            title="Legal"
+            isOpen={footerSections.legal}
+            onToggle={() => onToggleSection('legal')}
+            links={["Privacy Policy", "Terms of Service", "Cookie Policy", "Licenses"]}
+          />
+
+          <FooterSection
+            title="Support"
+            isOpen={footerSections.support}
+            onToggle={() => onToggleSection('support')}
+            links={["Help Center", "Contact Us", "Security", "Status"]}
+          />
         </div>
 
         <div className="mt-8 pt-8 border-t dark:border-gray-700 text-center md:text-left">
