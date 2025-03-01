@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RiskCategory, RiskMetric } from "./types";
+import { ChevronRight } from "lucide-react";
 
 interface RiskMetricCardProps {
   category: RiskCategory;
@@ -9,38 +10,32 @@ interface RiskMetricCardProps {
 
 export function RiskMetricCard({ category, getStatusColor }: RiskMetricCardProps) {
   return (
-    <Card className="relative overflow-hidden group hover:shadow-lg transition-all">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <category.icon className="h-5 w-5 text-primary" />
-          {category.title}
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center justify-between text-lg">
+          <div className="flex items-center gap-2">
+            <category.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <span>{category.title}</span>
+          </div>
+          <ChevronRight className="h-5 w-5 text-muted-foreground" />
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">
-          {category.description}
-        </p>
-        <div className="space-y-4">
-          {category.metrics.map((metric, idx) => (
-            <div key={idx} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
-              <span className="text-sm text-muted-foreground">{metric.name}</span>
+        <p className="text-sm text-muted-foreground mb-4">{category.description}</p>
+        <div className="space-y-3">
+          {category.metrics.map((metric, index) => (
+            <div key={index} className="flex justify-between items-center">
+              <span className="text-sm">{metric.name}</span>
               <div className="flex items-center gap-2">
-                <span className={`font-medium ${getStatusColor(metric.status)}`}>
-                  {metric.value}
-                </span>
-                <span className={`text-xs ${
-                  metric.change.includes('+') 
-                    ? 'text-green-500' 
-                    : metric.change.includes('-') 
-                    ? 'text-red-500' 
-                    : 'text-muted-foreground'
-                }`}>
-                  {metric.change}
-                </span>
+                <span className="font-medium">{metric.value}</span>
+                <span className={`text-xs ${getStatusColor(metric.status)}`}>{metric.change}</span>
               </div>
             </div>
           ))}
         </div>
+        {category.lastUpdate && (
+          <p className="text-xs text-muted-foreground mt-4">Last updated: {category.lastUpdate}</p>
+        )}
       </CardContent>
     </Card>
   );

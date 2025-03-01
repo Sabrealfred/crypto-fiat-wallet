@@ -1,29 +1,25 @@
 
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { AdditionalRisk } from "./types";
 
 interface AdditionalRiskCardProps {
   risk: AdditionalRisk;
+  onClick?: () => void;
 }
 
-export function AdditionalRiskCard({ risk }: AdditionalRiskCardProps) {
+export function AdditionalRiskCard({ risk, onClick }: AdditionalRiskCardProps) {
   return (
-    <Card className="hover:bg-accent/50 transition-all cursor-pointer hover:shadow-md">
-      <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-        <div className="flex items-center space-x-4">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <risk.icon className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <CardTitle className="text-sm font-semibold">
-              {risk.title}
-            </CardTitle>
-            <p className="text-xs text-muted-foreground">
-              {risk.description}
-            </p>
-          </div>
+    <Card 
+      className={`hover:bg-accent/50 transition-colors ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <risk.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          <h3 className="font-medium">{risk.title}</h3>
         </div>
-      </CardHeader>
+        <p className="text-sm text-muted-foreground">{risk.description}</p>
+      </CardContent>
     </Card>
   );
 }
