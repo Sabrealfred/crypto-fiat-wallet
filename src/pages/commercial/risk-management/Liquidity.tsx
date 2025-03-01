@@ -5,7 +5,7 @@ export default function LiquidityRiskPage() {
   return (
     <PlaceholderPage 
       title="Liquidity Risk" 
-      description="Monitor and manage liquidity risk positions"
+      description="Monitor and manage liquidity positions"
     />
   );
 }
