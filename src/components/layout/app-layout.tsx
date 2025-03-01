@@ -86,6 +86,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   
   return (
     <div className="flex min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+      {/* Sidebar */}
       <SidebarProvider defaultOpen={!isMobile}>
         <Sidebar 
           variant="floating" 
@@ -93,15 +94,17 @@ export function AppLayout({ children }: AppLayoutProps) {
         />
       </SidebarProvider>
       
-      <main className="flex-1 flex flex-col">
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col">
         <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6 bg-white dark:bg-gray-900 shadow-sm z-10">
           <div></div>
           <UserMenu onLogout={handleLogout} />
         </header>
         
-        <div className="flex-1 overflow-auto px-4 py-6 md:px-6 lg:px-8">
+        {/* Main content wrapper with direct children rendering */}
+        <main className="flex-1 overflow-auto px-4 py-6 md:px-6 lg:px-8">
           {children}
-        </div>
+        </main>
         
         {/* AI Assistant toggle button */}
         <div className="fixed bottom-4 right-4 z-50">
@@ -146,7 +149,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           footerSections={footerSections}
           onToggleSection={handleToggleSection}
         />
-      </main>
+      </div>
     </div>
   );
 }
