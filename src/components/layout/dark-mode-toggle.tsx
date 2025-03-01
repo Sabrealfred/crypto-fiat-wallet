@@ -27,7 +27,7 @@ export function DarkModeToggle({ isDarkMode, onToggle }: DarkModeToggleProps) {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="bg-background border-border">
         <DropdownMenuItem onClick={() => {
           document.documentElement.classList.remove('dark');
           localStorage.setItem('theme', 'light');
@@ -43,9 +43,9 @@ export function DarkModeToggle({ isDarkMode, onToggle }: DarkModeToggleProps) {
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => {
-          localStorage.removeItem('theme');
           const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           document.documentElement.classList.toggle('dark', systemPrefersDark);
+          localStorage.removeItem('theme');
           if (isDarkMode !== systemPrefersDark) onToggle();
         }}>
           System

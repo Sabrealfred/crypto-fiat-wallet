@@ -82,6 +82,19 @@ export default function CommercialDashboard() {
     }
   ];
 
+  // Monthly performance data for the PerformanceSection component
+  const monthlyData = [
+    { month: "Jan", revenue: 45000, expenses: 38000 },
+    { month: "Feb", revenue: 48000, expenses: 42000 },
+    { month: "Mar", revenue: 51000, expenses: 41000 },
+    { month: "Apr", revenue: 53000, expenses: 39000 },
+    { month: "May", revenue: 56000, expenses: 43000 },
+    { month: "Jun", revenue: 62000, expenses: 45000 },
+    { month: "Jul", revenue: 58000, expenses: 47000 },
+    { month: "Aug", revenue: 61000, expenses: 46000 },
+    { month: "Sep", revenue: 64000, expenses: 48000 }
+  ];
+
   // Get icon based on alert type
   const getAlertIcon = (type: string) => {
     switch (type) {
@@ -122,7 +135,7 @@ export default function CommercialDashboard() {
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           <div className="md:col-span-2 space-y-6">
             <MetricsSection />
-            <PerformanceSection />
+            <PerformanceSection monthlyData={monthlyData} />
           </div>
           
           <div className="space-y-6">

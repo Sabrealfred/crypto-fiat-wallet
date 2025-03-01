@@ -28,9 +28,12 @@ import {
   Brain,
   Globe,
   Settings,
-  Code
+  Code,
+  Cpu,
+  Sparkles
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -40,8 +43,6 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   // Toggle dark mode function
   const handleToggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
-    // Aplicar clase dark al elemento HTML
-    document.documentElement.classList.toggle('dark');
   };
   
   // Verificar el tema preferido del usuario al cargar
@@ -139,7 +140,8 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
     { 
       title: "Entity Management", 
       path: "/commercial/entity-management", 
-      icon: Building2 
+      icon: Building2,
+      className: "text-blue-600 dark:text-blue-400 font-medium" 
     },
     { 
       title: "AI Insights", 
@@ -206,6 +208,7 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
                       onClick={() => navigate(item.path)}
                       isActive={isActive(item.path)}
                       tooltip={item.title}
+                      className={item.className}
                     >
                       <item.icon className="mr-2" />
                       <span>{item.title}</span>
@@ -239,7 +242,62 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
               </div>
             </SidebarFooter>
           </Sidebar>
+          
           <main className="flex-1 pb-12 pt-4 overflow-auto">{children}</main>
+          
+          {/* DATACLOUD AI area */}
+          <div className="hidden lg:block w-72 border-l p-4 bg-gradient-to-b from-background to-background/90 dark:from-background/90 dark:to-background/80">
+            <div className="flex items-center gap-2 mb-4">
+              <Cpu className="h-5 w-5 text-blue-500" />
+              <h3 className="font-semibold">DATACLOUD AI</h3>
+              <span className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-xs px-2 py-0.5 rounded-full">New</span>
+            </div>
+            
+            <div className="space-y-4">
+              <Card className="border-blue-100 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="h-4 w-4 text-blue-600" />
+                    <h4 className="font-medium text-sm">AI Insights</h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Custom insights for your current activities and financial trends.
+                  </p>
+                  <Button size="sm" variant="outline" className="w-full text-xs bg-blue-100/80 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 hover:bg-blue-200 dark:hover:bg-blue-900/50">
+                    View Insights
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium">Recent Activities</h4>
+                <div className="text-xs space-y-3">
+                  <div className="flex items-start gap-2">
+                    <div className="p-1.5 rounded-full bg-green-100 dark:bg-green-900/30">
+                      <DollarSign className="h-3 w-3 text-green-700 dark:text-green-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Fund transfer completed</p>
+                      <p className="text-muted-foreground">$45,000 to Account #4872</p>
+                      <p className="text-muted-foreground mt-0.5">10 minutes ago</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2">
+                    <div className="p-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30">
+                      <BarChart className="h-3 w-3 text-blue-700 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Risk analysis completed</p>
+                      <p className="text-muted-foreground">Q3 risk report is ready</p>
+                      <p className="text-muted-foreground mt-0.5">1 hour ago</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <AIAssistant />
         </div>
 

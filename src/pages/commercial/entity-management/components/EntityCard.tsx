@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -277,14 +276,41 @@ export function EntityCard({ entity }: EntityCardProps) {
         <EntityDetails entity={entity} isExpanded={isExpanded} />
       </CardContent>
       <CardFooter className="flex flex-col gap-2 pt-2">
-        <EntityActions 
-          entity={entity}
-          isExpanded={isExpanded}
-          onToggleExpand={handleToggleExpand}
-          onViewDetails={handleViewDetails}
-          onViewMetadata={handleViewMetadata}
-          onViewRelationships={handleViewRelationships}
-        />
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className="w-full text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-950 mt-1"
+          onClick={handleToggleExpand}
+        >
+          {isExpanded ? "Show Less" : "Show More"}
+        </Button>
+      
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="w-full justify-start bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 border-blue-200 dark:border-blue-800" 
+          onClick={handleViewDetails}
+        >
+          <Info className="h-4 w-4 mr-2" /> View Full Profile
+        </Button>
+        <div className="flex w-full gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1" 
+            onClick={handleViewMetadata}
+          >
+            <FileText className="h-4 w-4 mr-2" /> Metadata
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1" 
+            onClick={handleViewRelationships}
+          >
+            <Link2 className="h-4 w-4 mr-2" /> Relationships
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
