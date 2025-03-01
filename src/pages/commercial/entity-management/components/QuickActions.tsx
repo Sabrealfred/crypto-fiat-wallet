@@ -1,56 +1,101 @@
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link2, Network, UserPlus, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { 
+  PlusCircle, 
+  UsersRound, 
+  Building2, 
+  FileText, 
+  Network, 
+  FileCheck, 
+  Download 
+} from "lucide-react";
 
-export const QuickActions = () => {
+export function QuickActions() {
   const navigate = useNavigate();
-  
+
+  const actions = [
+    {
+      title: "Add New Entity",
+      description: "Create a new corporate entity",
+      icon: PlusCircle,
+      action: () => navigate("/commercial/entity-management/create")
+    },
+    {
+      title: "View Subsidiaries",
+      description: "Manage subsidiary relationships",
+      icon: Building2,
+      action: () => navigate("/commercial/entity-management/subsidiaries")
+    },
+    {
+      title: "Entity Relationships",
+      description: "View and manage entity relationships",
+      icon: Network,
+      action: () => navigate("/commercial/entity-management/relationships")
+    },
+    {
+      title: "Representatives",
+      description: "Manage entity representatives",
+      icon: UsersRound,
+      action: () => navigate("/commercial/entity-management/representatives")
+    },
+    {
+      title: "Compliance Documents",
+      description: "Manage entity documentation",
+      icon: FileCheck,
+      action: () => navigate("/commercial/entity-management/compliance")
+    },
+    {
+      title: "Generate Reports",
+      description: "Create entity management reports",
+      icon: FileText,
+      action: () => navigate("/commercial/entity-management/reports")
+    }
+  ];
+
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <Link2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-          Quick Actions
-        </CardTitle>
+    <Card className="border-blue-100 dark:border-blue-800">
+      <CardHeader>
+        <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-3">
+          {actions.map((action, index) => (
+            <Button 
+              key={index}
+              variant="outline" 
+              className="justify-start h-auto py-3 px-4"
+              onClick={action.action}
+            >
+              <div className="flex items-start">
+                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 mr-3">
+                  <action.icon className="h-5 w-5 text-blue-700 dark:text-blue-400" />
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="font-medium">{action.title}</span>
+                  <span className="text-xs text-muted-foreground">{action.description}</span>
+                </div>
+              </div>
+            </Button>
+          ))}
+          
           <Button 
             variant="outline" 
-            className="w-full justify-start"
-            onClick={() => navigate("/commercial/entity-management/relationships")}
+            className="justify-start h-auto py-3 px-4 mt-4 border-dashed"
           >
-            <Network className="mr-2 h-4 w-4" />
-            View Entity Relationships
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => alert("Create entity relationship")}
-          >
-            <Link2 className="mr-2 h-4 w-4" />
-            Create Entity Relationship
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => alert("Add representative")}
-          >
-            <UserPlus className="mr-2 h-4 w-4" />
-            Add Entity Representative
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => alert("Generate relationship report")}
-          >
-            <History className="mr-2 h-4 w-4" />
-            Generate Relationship Report
+            <div className="flex items-start">
+              <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30 mr-3">
+                <Download className="h-5 w-5 text-green-700 dark:text-green-400" />
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="font-medium">Export Entity Data</span>
+                <span className="text-xs text-muted-foreground">Download entity data in various formats</span>
+              </div>
+            </div>
           </Button>
         </div>
       </CardContent>
     </Card>
   );
-};
+}
