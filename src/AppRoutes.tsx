@@ -46,6 +46,7 @@ import OperationsDashboard from "@/pages/commercial/operations/Dashboard";
 import CommercialPortal from "@/pages/CommercialPortal";
 
 // Analytics pages
+import AnalyticsDashboard from "@/pages/commercial/analytics/Dashboard";
 import MLModelsPage from "@/pages/commercial/analytics/MLModels";
 import PredictiveAnalysisPage from "@/pages/commercial/analytics/PredictiveAnalysis";
 import TrendVisualizationPage from "@/pages/commercial/analytics/TrendVisualization";
@@ -146,7 +147,7 @@ export function AppRoutes() {
 
           {/* Analytics Routes */}
           <Route path="analytics">
-            <Route path="" element={<NotFound />} />
+            <Route path="" element={<AnalyticsDashboard />} />
             <Route path="ml-models" element={<MLModelsPage />} />
             <Route path="predictive" element={<PredictiveAnalysisPage />} />
             <Route path="trends" element={<TrendVisualizationPage />} />

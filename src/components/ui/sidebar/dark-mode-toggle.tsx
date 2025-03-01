@@ -15,15 +15,15 @@ export function DarkModeToggle({ isDarkMode, onToggle, isCollapsed }: DarkModeTo
       variant="ghost"
       className={`rounded-full transition-colors hover:bg-accent ${
         isDarkMode 
-          ? 'bg-blue-900/20 dark:bg-blue-800/30' 
-          : 'bg-blue-100/50 dark:bg-blue-900/10'
+          ? 'bg-purple-900/20 dark:bg-purple-800/30' 
+          : 'bg-purple-100/50 dark:bg-purple-900/10'
       }`}
       aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDarkMode ? (
         <Sun className="h-5 w-5 text-yellow-400" />
       ) : (
-        <Moon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <Moon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
       )}
       <span className={`ml-2 transition-opacity duration-300 ${
         isCollapsed 
