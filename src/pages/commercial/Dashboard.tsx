@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -140,7 +139,7 @@ export default function CommercialDashboard() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
+            <Card className="shadow-md">
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <div>
@@ -155,7 +154,7 @@ export default function CommercialDashboard() {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="shadow-md">
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <div>
@@ -170,7 +169,7 @@ export default function CommercialDashboard() {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="shadow-md">
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <div>
@@ -185,7 +184,7 @@ export default function CommercialDashboard() {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="shadow-md">
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <div>
@@ -205,7 +204,7 @@ export default function CommercialDashboard() {
         {/* Financial Highlights & Performance */}
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           <div className="md:col-span-2">
-            <Card className="w-full h-full">
+            <Card className="w-full h-full shadow-md">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg font-medium">Financial Highlights - Monthly Trends</CardTitle>
               </CardHeader>
@@ -216,7 +215,7 @@ export default function CommercialDashboard() {
           </div>
           
           <div>
-            <Card className="w-full h-full">
+            <Card className="w-full h-full shadow-md">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg font-medium">Area Performance</CardTitle>
               </CardHeader>

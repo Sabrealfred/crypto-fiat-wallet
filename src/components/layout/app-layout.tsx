@@ -108,21 +108,21 @@ export function AppLayout({ children }: AppLayoutProps) {
   };
   
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex min-h-screen w-full bg-white dark:bg-gray-900">
       <SidebarProvider defaultOpen={!isMobile}>
         <Sidebar 
           variant="floating" 
-          className="border-r border-blue-100 dark:border-blue-900 bg-white dark:bg-gray-900 shadow-sm"
+          className="border-r border-blue-100 dark:border-blue-900 bg-white dark:bg-gray-900 shadow-sm z-20"
         />
       </SidebarProvider>
       
       <main className="flex-1 flex flex-col">
-        <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6 bg-white dark:bg-gray-900 shadow-sm">
+        <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6 bg-white dark:bg-gray-900 shadow-sm z-10">
           <div></div>
           <UserMenu onLogout={handleLogout} />
         </header>
         
-        <div className="flex-1 overflow-auto px-4 py-6 md:px-8 lg:px-10">
+        <div className="flex-1 overflow-auto px-4 py-6 md:px-6 lg:px-8 bg-slate-50 dark:bg-gray-800">
           {children}
         </div>
         
