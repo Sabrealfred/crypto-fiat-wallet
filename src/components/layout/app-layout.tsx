@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Sidebar } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/layout/user-menu";
 import { AppFooter } from "@/components/layout/app-footer";
@@ -19,7 +19,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const [showAI, setShowAI] = useState(false);
   
   const location = useLocation();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     function updateSidebarState() {
@@ -47,18 +47,75 @@ export function AppLayout({ children }: AppLayoutProps) {
   useEffect(() => {
     setShowAI(false);
   }, [location.pathname]);
+
+  // Set up data for the footer sections
+  const [openSections, setOpenSections] = useState({
+    company: true,
+    legal: false,
+    support: false
+  });
+
+  const footerSections = [
+    {
+      title: "Company",
+      links: [
+        { label: "About Us", url: "#" },
+        { label: "Careers", url: "#" },
+        { label: "Press", url: "#" },
+        { label: "News", url: "#" }
+      ]
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Terms", url: "#" },
+        { label: "Privacy", url: "#" },
+        { label: "Cookies", url: "#" },
+        { label: "Licenses", url: "#" }
+      ]
+    },
+    {
+      title: "Support",
+      links: [
+        { label: "Help Center", url: "#" },
+        { label: "Contact Us", url: "#" },
+        { label: "FAQs", url: "#" },
+        { label: "Community", url: "#" }
+      ]
+    }
+  ];
+
+  const handleToggleSection = (index: number) => {
+    if (index === 0) {
+      setOpenSections(prev => ({ ...prev, company: !prev.company }));
+    } else if (index === 1) {
+      setOpenSections(prev => ({ ...prev, legal: !prev.legal }));
+    } else if (index === 2) {
+      setOpenSections(prev => ({ ...prev, support: !prev.support }));
+    }
+  };
+
+  const handleLogout = async () => {
+    // Implement logout functionality
+    console.log("Logout triggered");
+    try {
+      // Here you would typically call your auth service logout method
+      // await auth.signOut();
+      window.location.href = "/auth";
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar 
-        collapsed={sidebarCollapsed} 
-        onCollapsedChange={setSidebarCollapsed}
         section={isCommercial ? "commercial" : isAdmin ? "admin" : isPrivate ? "private" : "personal"}
       />
       <main className="flex-1 flex flex-col">
         <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6">
           <div></div>
-          <UserMenu />
+          <UserMenu onLogout={handleLogout} />
         </header>
         <div className="flex-1 overflow-auto">
           {children}
@@ -100,7 +157,13 @@ export function AppLayout({ children }: AppLayoutProps) {
           </Card>
         </div>
         
-        <AppFooter />
+        <AppFooter 
+          company={openSections.company}
+          legal={openSections.legal}
+          support={openSections.support}
+          footerSections={footerSections}
+          onToggleSection={handleToggleSection}
+        />
       </main>
     </div>
   );

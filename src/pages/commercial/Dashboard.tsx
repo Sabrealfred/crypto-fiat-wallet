@@ -82,17 +82,17 @@ export default function CommercialDashboard() {
     }
   ];
 
-  // Monthly performance data for the PerformanceSection component
+  // Monthly performance data for the PerformanceSection component - with correct property names
   const monthlyData = [
-    { month: "Jan", revenue: 45000, expenses: 38000 },
-    { month: "Feb", revenue: 48000, expenses: 42000 },
-    { month: "Mar", revenue: 51000, expenses: 41000 },
-    { month: "Apr", revenue: 53000, expenses: 39000 },
-    { month: "May", revenue: 56000, expenses: 43000 },
-    { month: "Jun", revenue: 62000, expenses: 45000 },
-    { month: "Jul", revenue: 58000, expenses: 47000 },
-    { month: "Aug", revenue: 61000, expenses: 46000 },
-    { month: "Sep", revenue: 64000, expenses: 48000 }
+    { month: "Jan", earning: 45000, spending: 38000 },
+    { month: "Feb", earning: 48000, spending: 42000 },
+    { month: "Mar", earning: 51000, spending: 41000 },
+    { month: "Apr", earning: 53000, spending: 39000 },
+    { month: "May", earning: 56000, spending: 43000 },
+    { month: "Jun", earning: 62000, spending: 45000 },
+    { month: "Jul", earning: 58000, spending: 47000 },
+    { month: "Aug", earning: 61000, spending: 46000 },
+    { month: "Sep", earning: 64000, spending: 48000 }
   ];
 
   // Get icon based on alert type
