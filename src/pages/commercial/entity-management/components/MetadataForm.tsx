@@ -4,8 +4,38 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Database, Edit, Save, X } from "lucide-react";
+import { Database, Edit, Save, X, Building2, Archive, ArchiveRestore } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+// Define the field type for better organization
+type MetadataField = {
+  name: string;
+  label: string;
+  defaultValue: string;
+  placeholder?: string;
+};
+
+// Group fields for better organization
+const fieldGroups: Record<string, MetadataField[]> = {
+  primary: [
+    { name: "entityType", label: "Entity Type", defaultValue: "Corporation" },
+    { name: "registrationNumber", label: "Registration Number", defaultValue: "UK1234567" },
+    { name: "taxIdentifier", label: "Tax Identifier", defaultValue: "GB987654321" },
+    { name: "incorporationDate", label: "Incorporation Date", defaultValue: "2010-06-15" },
+  ],
+  classification: [
+    { name: "fiscalYearEnd", label: "Fiscal Year End", defaultValue: "12-31" },
+    { name: "industry", label: "Industry", defaultValue: "Financial Services" },
+    { name: "naicsCode", label: "NAICS Code", defaultValue: "522110" },
+    { name: "sicCode", label: "SIC Code", defaultValue: "6021" },
+  ],
+  contact: [
+    { name: "companyWebsite", label: "Company Website", defaultValue: "https://acme-global.example.com" },
+    { name: "registeredAddress", label: "Registered Address", defaultValue: "123 Financial Street, London, UK" },
+    { name: "operatingAddress", label: "Operating Address", defaultValue: "123 Financial Street, London, UK" },
+  ],
+};
 
 interface MetadataFormProps {
   entityId: number;
@@ -16,37 +46,65 @@ export const MetadataForm = ({ entityId, entityName }: MetadataFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   
   const metadataForm = useForm({
-    defaultValues: {
-      entityType: "Corporation",
-      registrationNumber: "UK1234567",
-      taxIdentifier: "GB987654321",
-      incorporationDate: "2010-06-15",
-      fiscalYearEnd: "12-31",
-      industry: "Financial Services",
-      naicsCode: "522110",
-      sicCode: "6021",
-      companyWebsite: "https://acme-global.example.com",
-      registeredAddress: "123 Financial Street, London, UK",
-      operatingAddress: "123 Financial Street, London, UK",
-    }
+    defaultValues: Object.values(fieldGroups).reduce((acc, group) => {
+      group.forEach(field => {
+        acc[field.name] = field.defaultValue;
+      });
+      return acc;
+    }, {} as Record<string, string>)
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Record<string, string>) => {
     console.log("Metadata updated:", data);
+    toast.success("Entity metadata updated successfully");
     setIsEditing(false);
   };
 
+  const renderFormFields = (fields: MetadataField[]) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {fields.map((field) => (
+        <FormField
+          key={field.name}
+          control={metadataForm.control}
+          name={field.name}
+          render={({ field: formField }) => (
+            <FormItem>
+              <FormLabel>{field.label}</FormLabel>
+              <FormControl>
+                <Input 
+                  {...formField} 
+                  readOnly={!isEditing} 
+                  placeholder={field.placeholder}
+                  className={!isEditing ? "bg-muted" : ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      ))}
+    </div>
+  );
+
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 border border-blue-100 dark:border-blue-800">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg font-medium flex items-center gap-2">
             <Database className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            Entity Metadata: {entityName}
+            <div className="flex flex-col">
+              <span>Entity Metadata</span>
+              <span className="text-sm font-normal text-muted-foreground">{entityName}</span>
+            </div>
           </CardTitle>
           {!isEditing ? (
-            <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-              <Edit className="h-4 w-4 mr-2" /> Edit Metadata
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setIsEditing(true)}
+              className="gap-2"
+            >
+              <Edit className="h-4 w-4" /> Edit Metadata
             </Button>
           ) : (
             <div className="flex gap-2">
@@ -54,15 +112,17 @@ export const MetadataForm = ({ entityId, entityName }: MetadataFormProps) => {
                 variant="outline" 
                 size="sm"
                 onClick={() => setIsEditing(false)}
+                className="gap-2"
               >
-                <X className="h-4 w-4 mr-2" /> Cancel
+                <X className="h-4 w-4" /> Cancel
               </Button>
               <Button 
                 variant="default" 
                 size="sm"
                 onClick={metadataForm.handleSubmit(onSubmit)}
+                className="gap-2"
               >
-                <Save className="h-4 w-4 mr-2" /> Save
+                <Save className="h-4 w-4" /> Save
               </Button>
             </div>
           )}
@@ -70,152 +130,43 @@ export const MetadataForm = ({ entityId, entityName }: MetadataFormProps) => {
       </CardHeader>
       <CardContent>
         <Form {...metadataForm}>
-          <form onSubmit={metadataForm.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={metadataForm.control}
-                name="entityType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Entity Type</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="registrationNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Registration Number</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="taxIdentifier"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tax Identifier</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="incorporationDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Incorporation Date</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="fiscalYearEnd"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fiscal Year End</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="industry"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Industry</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="naicsCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>NAICS Code</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="sicCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>SIC Code</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="companyWebsite"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Website</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="registeredAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Registered Address</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={metadataForm.control}
-                name="operatingAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Operating Address</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly={!isEditing} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <form onSubmit={metadataForm.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-blue-600" />
+                  Primary Information
+                </h3>
+                {renderFormFields(fieldGroups.primary)}
+              </div>
+              
+              <div>
+                <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                  <Archive className="h-4 w-4 text-blue-600" />
+                  Classification
+                </h3>
+                {renderFormFields(fieldGroups.classification)}
+              </div>
+              
+              <div>
+                <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                  <ArchiveRestore className="h-4 w-4 text-blue-600" />
+                  Contact Information
+                </h3>
+                {renderFormFields(fieldGroups.contact)}
+              </div>
             </div>
+            
+            {isEditing && (
+              <div className="flex justify-end">
+                <Button 
+                  type="submit"
+                  className="gap-2"
+                >
+                  <Save className="h-4 w-4" /> Save All Changes
+                </Button>
+              </div>
+            )}
           </form>
         </Form>
       </CardContent>
