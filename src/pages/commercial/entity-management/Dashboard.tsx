@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { EntityMetricsCards } from "./components/EntityMetricsCards";
 import { EntityTable } from "./components/EntityTable";
 import { EntityStructureChart } from "./components/EntityStructureChart";
-import { RecentChanges } from "./components/RecentChanges";
+import { RecentChanges, RelationshipChange } from "./components/RecentChanges";
 import { EntityActivityCard } from "./components/EntityActivityCard";
 import { EntityCard } from "./components/EntityCard";
 import { OnboardingOptions } from "./components/OnboardingOptions";
@@ -29,17 +28,7 @@ type EntityType = {
   description: string;
 };
 
-// Define a custom RelationshipChange type to match what RecentChanges expects
-interface RelationshipChange {
-  id: number;
-  date: string;
-  entity: string;
-  type: string;
-  user: string;
-  details: string;
-  change?: string;      // Added to match the expected interface
-  previousValue?: string; // Added to match the expected interface
-}
+// Using the imported RelationshipChange type now
 
 export default function EntityManagementDashboardPage() {
   const [isOnboarding, setIsOnboarding] = useState(false);
@@ -194,15 +183,6 @@ export default function EntityManagementDashboardPage() {
     setIsOnboarding(true);
   };
 
-  const filteredEntities = entities.filter(entity => {
-    if (entityFilter === "all") return true;
-    if (entityFilter === "active") return entity.status === "active";
-    if (entityFilter === "inactive") return entity.status === "inactive";
-    if (entityFilter === "pending") return entity.status === "pending";
-    if (entityFilter === "dissolving") return entity.status === "dissolving";
-    return true;
-  });
-
   const handleAddNewEntity = () => {
     navigate("/commercial/entity-management/metadata");
   };
@@ -250,6 +230,15 @@ export default function EntityManagementDashboardPage() {
       previousValue: "Asian Markets Ltd"
     }
   ];
+
+  const filteredEntities = entities.filter(entity => {
+    if (entityFilter === "all") return true;
+    if (entityFilter === "active") return entity.status === "active";
+    if (entityFilter === "inactive") return entity.status === "inactive";
+    if (entityFilter === "pending") return entity.status === "pending";
+    if (entityFilter === "dissolving") return entity.status === "dissolving";
+    return true;
+  });
 
   return (
     <AppLayout>

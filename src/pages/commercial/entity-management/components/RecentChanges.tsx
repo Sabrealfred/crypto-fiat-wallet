@@ -1,11 +1,14 @@
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { History } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-interface RelationshipChange {
+export interface RelationshipChange {
   id: number;
   date: string;
   entity: string;
+  type: string;
+  user: string;
+  details: string;
   change: string;
   previousValue: string;
 }
@@ -14,31 +17,36 @@ interface RecentChangesProps {
   relationshipChanges: RelationshipChange[];
 }
 
-export const RecentChanges = ({ relationshipChanges }: RecentChangesProps) => {
+export function RecentChanges({ relationshipChanges }: RecentChangesProps) {
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <History className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-          Recent Relationship Changes
-        </CardTitle>
+      <CardHeader>
+        <CardTitle className="text-lg">Recent Changes</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {relationshipChanges.map((change) => (
-            <div key={change.id} className="border-b pb-3 last:border-0 last:pb-0">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="font-medium">{change.entity}</p>
-                  <p className="text-sm text-muted-foreground">{change.change}</p>
-                  <p className="text-xs text-muted-foreground">Previous: {change.previousValue}</p>
-                </div>
-                <p className="text-sm text-muted-foreground">{new Date(change.date).toLocaleDateString()}</p>
+      <CardContent className="p-0">
+        <div className="space-y-0 overflow-hidden">
+          {relationshipChanges.slice(0, 4).map((change) => (
+            <div key={change.id} className="flex flex-col p-4 border-b last:border-0">
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium">{change.entity}</span>
+                <span className="text-xs text-muted-foreground">{change.date}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-2">{change.details}</p>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 rounded">
+                  {change.type}
+                </span>
+                <span className="text-xs text-muted-foreground">By {change.user}</span>
               </div>
             </div>
           ))}
+          {relationshipChanges.length > 4 && (
+            <div className="p-4 text-center">
+              <Button variant="ghost" size="sm">View All Changes</Button>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
   );
-};
+}
