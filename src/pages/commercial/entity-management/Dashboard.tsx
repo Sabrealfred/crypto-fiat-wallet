@@ -288,7 +288,7 @@ export default function EntityManagementDashboardPage() {
                           <TableCell>{entity.jurisdiction}</TableCell>
                           <TableCell>{entity.registrationNumber}</TableCell>
                           <TableCell>
-                            <Badge variant={entity.status === "Active" ? "success" : "warning"}>
+                            <Badge variant={entity.status === "Active" ? "default" : "outline"} className={entity.status === "Active" ? "bg-green-500 hover:bg-green-600" : ""}>
                               {entity.status}
                             </Badge>
                           </TableCell>
@@ -349,10 +349,11 @@ export default function EntityManagementDashboardPage() {
                         <TableCell>
                           <Badge 
                             variant={
-                              item.status === "Complete" ? "success" : 
+                              item.status === "Complete" ? "default" : 
                               item.status === "Overdue" ? "destructive" : 
-                              "warning"
+                              "outline"
                             }
+                            className={item.status === "Complete" ? "bg-green-500 hover:bg-green-600" : ""}
                           >
                             {item.status}
                           </Badge>

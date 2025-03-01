@@ -269,7 +269,7 @@ export default function SubsidiariesPage() {
                             <TableCell>{subsidiary.jurisdiction}</TableCell>
                             <TableCell>{subsidiary.ownershipPercentage}%</TableCell>
                             <TableCell>
-                              <Badge variant={subsidiary.status === "Active" ? "success" : "warning"}>
+                              <Badge variant={subsidiary.status === "Active" ? "default" : "outline"} className={subsidiary.status === "Active" ? "bg-green-500 hover:bg-green-600" : ""}>
                                 {subsidiary.status}
                               </Badge>
                             </TableCell>

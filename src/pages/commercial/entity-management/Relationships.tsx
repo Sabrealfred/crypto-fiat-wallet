@@ -269,7 +269,7 @@ export default function RelationshipsPage() {
                             )}
                           </td>
                           <td className="py-3 px-4">
-                            <Badge variant={rel.status === "Active" ? "success" : "warning"}>
+                            <Badge variant={rel.status === "Active" ? "default" : "outline"} className={rel.status === "Active" ? "bg-green-500 hover:bg-green-600" : ""}>
                               {rel.status}
                             </Badge>
                           </td>
@@ -365,7 +365,7 @@ export default function RelationshipsPage() {
                         <p className="text-xs text-muted-foreground">{person.entities.join(', ')}</p>
                       </div>
                     </div>
-                    <Badge variant={person.risk === "Low" ? "outline" : "warning"}>
+                    <Badge variant={person.risk === "Low" ? "outline" : "secondary"} className={person.risk !== "Low" ? "bg-yellow-500 hover:bg-yellow-600" : ""}>
                       {person.risk} Risk
                     </Badge>
                   </div>
