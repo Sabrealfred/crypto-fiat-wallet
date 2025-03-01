@@ -1,3 +1,4 @@
+
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,7 +43,8 @@ import {
   Filter,
   Bell,
   ExternalLink,
-  ChevronDown
+  ChevronDown,
+  Plus as PlusIcon
 } from "lucide-react";
 import { useState } from "react";
 
@@ -739,4 +741,145 @@ export default function TreasuryDashboard() {
                               { ref: 'TX-7833', desc: 'Payroll Processing', amount: '$89,450.00', status: 'scheduled', date: '26 Nov 2023' },
                             ].map((tx, i) => (
                               <tr key={i} className="border-b last:border-0">
-                                <td className="py-3 text-sm">{tx.
+                                <td className="py-3 text-sm">{tx.ref}</td>
+                                <td className="py-3 text-sm">{tx.desc}</td>
+                                <td className="py-3 text-sm">{tx.amount}</td>
+                                <td className="py-3 text-sm">
+                                  <Badge variant={
+                                    tx.status === 'completed' ? 'default' :
+                                    tx.status === 'pending' ? 'secondary' :
+                                    tx.status === 'processing' ? 'outline' :
+                                    'secondary'
+                                  }>
+                                    {tx.status}
+                                  </Badge>
+                                </td>
+                                <td className="py-3 text-sm">{tx.date}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-blue-100 dark:border-blue-800">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    Bank Connections
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {bankIntegrations.map((bank, i) => (
+                      <div key={i} className="border rounded-lg p-3">
+                        <div className="flex items-center justify-between">
+                          <div className="font-medium">{bank.system}</div>
+                          <Badge variant="outline" className="capitalize">
+                            {bank.status}
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-2">
+                          Last sync: {bank.lastSync}
+                        </div>
+                        <div className="flex items-center justify-between mt-3">
+                          <div className="text-xs text-muted-foreground">
+                            {bank.frequency}
+                          </div>
+                          <Button variant="ghost" size="sm" className="h-7 px-2">
+                            <RefreshCw className="h-3 w-3 mr-1" />
+                            Sync Now
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    <Button variant="outline" className="w-full">
+                      Add Connection
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="reports" className="mt-4">
+            <div className="grid lg:grid-cols-3 gap-6">
+              <Card className="lg:col-span-3 border-blue-100 dark:border-blue-800">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2">
+                    <Download className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    Reports & Analytics
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <Button
+                      variant="outline"
+                      className="h-auto p-4 flex flex-col items-start text-left gap-2 border-blue-200 dark:border-blue-800"
+                      onClick={() => navigate("/commercial/treasury/reports")}
+                    >
+                      <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full">
+                        <Download className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Cash Position Reports</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Daily cash position by currency and account
+                        </p>
+                      </div>
+                      <div className="mt-2 flex items-center text-blue-600 dark:text-blue-400 text-sm">
+                        Generate Report <ChevronRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      className="h-auto p-4 flex flex-col items-start text-left gap-2 border-blue-200 dark:border-blue-800"
+                      onClick={() => navigate("/commercial/treasury/reports")}
+                    >
+                      <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full">
+                        <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Forecast Reports</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Cash flow forecasts for the next 30/60/90 days
+                        </p>
+                      </div>
+                      <div className="mt-2 flex items-center text-blue-600 dark:text-blue-400 text-sm">
+                        Generate Report <ChevronRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      className="h-auto p-4 flex flex-col items-start text-left gap-2 border-blue-200 dark:border-blue-800"
+                      onClick={() => navigate("/commercial/treasury/reports")}
+                    >
+                      <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full">
+                        <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium">FX Exposure Reports</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Foreign exchange exposure and hedging activities
+                        </p>
+                      </div>
+                      <div className="mt-2 flex items-center text-blue-600 dark:text-blue-400 text-sm">
+                        Generate Report <ChevronRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </AppLayout>
+  );
+}
