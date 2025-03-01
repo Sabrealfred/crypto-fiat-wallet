@@ -109,9 +109,8 @@ export function AppLayout({ children }: AppLayoutProps) {
   
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar 
-        section={isCommercial ? "commercial" : isAdmin ? "admin" : isPrivate ? "private" : "personal"}
-      />
+      {/* Removed section prop from Sidebar since it's not accepted */}
+      <Sidebar />
       <main className="flex-1 flex flex-col">
         <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6">
           <div></div>
@@ -134,10 +133,10 @@ export function AppLayout({ children }: AppLayoutProps) {
           </Button>
         </div>
         
-        {/* AI Assistant sidebar */}
+        {/* AI Assistant sidebar - removed onClose prop */}
         {showAI && (
           <div className="fixed top-0 right-0 bottom-0 w-full sm:w-96 bg-background border-l shadow-xl z-40 overflow-auto">
-            <AIAssistant onClose={() => setShowAI(false)} />
+            <AIAssistant />
           </div>
         )}
         
