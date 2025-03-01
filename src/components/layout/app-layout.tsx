@@ -1,5 +1,5 @@
 
-import { FC, PropsWithChildren, useState } from "react";
+import { FC, PropsWithChildren, useState, useEffect } from "react";
 import { AppFooter } from "./app-footer";
 import { UserMenu } from "./user-menu";
 import { DarkModeToggle } from "./dark-mode-toggle";
@@ -13,7 +13,9 @@ import {
   SidebarMenuButton,
   SidebarHeader,
   SidebarProvider,
-  SidebarTrigger
+  SidebarTrigger,
+  SidebarFooter,
+  SidebarSeparator
 } from "@/components/ui/sidebar";
 import { 
   Home, 
@@ -24,7 +26,9 @@ import {
   CreditCard, 
   Building2,
   Brain,
-  Globe
+  Globe,
+  Settings,
+  Code
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -36,7 +40,21 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   // Toggle dark mode function
   const handleToggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
+    // Aplicar clase dark al elemento HTML
+    document.documentElement.classList.toggle('dark');
   };
+  
+  // Verificar el tema preferido del usuario al cargar
+  useEffect(() => {
+    const isDark = localStorage.getItem('theme') === 'dark' || 
+      (localStorage.getItem('theme') !== 'light' && 
+      window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    setIsDarkMode(isDark);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
   
   // Mock logout function
   const handleLogout = async () => {
@@ -81,8 +99,8 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
     // Implementation would update state to toggle sections
   };
 
-  // Menu items with navigation
-  const menuItems = [
+  // Menu items con navegación
+  const mainMenuItems = [
     { 
       title: "Dashboard", 
       path: "/commercial/dashboard", 
@@ -130,18 +148,38 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
     }
   ];
 
+  // Items adicionales para el menú inferior
+  const bottomMenuItems = [
+    {
+      title: "Marketplace",
+      path: "/marketplace",
+      icon: Globe
+    },
+    {
+      title: "Developer Portal",
+      path: "/developer/dashboard",
+      icon: Code
+    },
+    {
+      title: "Settings",
+      path: "/settings",
+      icon: Settings
+    }
+  ];
+
   // Check if a menu item is active
   const isActive = (path: string) => {
     return location.pathname.startsWith(path);
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex flex-col">
-        <header className="border-b z-10">
+        <header className="border-b z-10 bg-background">
           <div className="container flex justify-between items-center py-3">
-            <div>
+            <div className="flex items-center gap-2">
               <SidebarTrigger />
+              <h2 className="text-lg font-semibold hidden sm:block">WYMU Banking</h2>
             </div>
             <div className="flex items-center gap-4">
               <DarkModeToggle 
@@ -162,7 +200,24 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
             </SidebarHeader>
             <SidebarContent>
               <SidebarMenu>
-                {menuItems.map((item) => (
+                {mainMenuItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      onClick={() => navigate(item.path)}
+                      isActive={isActive(item.path)}
+                      tooltip={item.title}
+                    >
+                      <item.icon className="mr-2" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+              
+              <SidebarSeparator className="my-4" />
+              
+              <SidebarMenu>
+                {bottomMenuItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       onClick={() => navigate(item.path)}
@@ -176,8 +231,15 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
                 ))}
               </SidebarMenu>
             </SidebarContent>
+            
+            <SidebarFooter className="p-4">
+              <div className="text-sm text-muted-foreground">
+                <p>Commercial Banking v1.2.4</p>
+                <p className="mt-1">© 2024 WYMU Banking</p>
+              </div>
+            </SidebarFooter>
           </Sidebar>
-          <main className="flex-1 pb-12 pt-4">{children}</main>
+          <main className="flex-1 pb-12 pt-4 overflow-auto">{children}</main>
           <AIAssistant />
         </div>
 
