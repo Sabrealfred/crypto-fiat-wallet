@@ -4,9 +4,10 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Database, Edit, Save, X, Building2, Archive, ArchiveRestore } from "lucide-react";
+import { Database, Edit, Save, X, Building2, Archive, ArchiveRestore, Link } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { IntegrationMetadataCard } from "./IntegrationMetadataCard";
 
 // Define the field type for better organization
 type MetadataField = {
@@ -36,6 +37,34 @@ const fieldGroups: Record<string, MetadataField[]> = {
     { name: "operatingAddress", label: "Operating Address", defaultValue: "123 Financial Street, London, UK" },
   ],
 };
+
+// Mock data integrations
+const mockIntegrations = [
+  {
+    type: "erp",
+    system: "SAP ERP",
+    status: "active" as const,
+    lastSync: "2023-11-15 14:30:22",
+    frequency: "Daily at midnight",
+    syncCount: 128
+  },
+  {
+    type: "banking",
+    system: "Plaid API",
+    status: "active" as const,
+    lastSync: "2023-11-15 08:15:10",
+    frequency: "Every 6 hours",
+    syncCount: 245
+  },
+  {
+    type: "accounting",
+    system: "QuickBooks",
+    status: "inactive" as const,
+    lastSync: "2023-10-30 10:45:33",
+    frequency: "Manual",
+    syncCount: 56
+  }
+];
 
 interface MetadataFormProps {
   entityId: number;
@@ -87,89 +116,93 @@ export const MetadataForm = ({ entityId, entityName }: MetadataFormProps) => {
   );
 
   return (
-    <Card className="mb-6 border border-blue-100 dark:border-blue-800">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-lg font-medium flex items-center gap-2">
-            <Database className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            <div className="flex flex-col">
-              <span>Entity Metadata</span>
-              <span className="text-sm font-normal text-muted-foreground">{entityName}</span>
-            </div>
-          </CardTitle>
-          {!isEditing ? (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setIsEditing(true)}
-              className="gap-2"
-            >
-              <Edit className="h-4 w-4" /> Edit Metadata
-            </Button>
-          ) : (
-            <div className="flex gap-2">
+    <div className="space-y-6">
+      <Card className="mb-6 border border-blue-100 dark:border-blue-800">
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-lg font-medium flex items-center gap-2">
+              <Database className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <div className="flex flex-col">
+                <span>Entity Metadata</span>
+                <span className="text-sm font-normal text-muted-foreground">{entityName}</span>
+              </div>
+            </CardTitle>
+            {!isEditing ? (
               <Button 
                 variant="outline" 
-                size="sm"
-                onClick={() => setIsEditing(false)}
+                size="sm" 
+                onClick={() => setIsEditing(true)}
                 className="gap-2"
               >
-                <X className="h-4 w-4" /> Cancel
+                <Edit className="h-4 w-4" /> Edit Metadata
               </Button>
-              <Button 
-                variant="default" 
-                size="sm"
-                onClick={metadataForm.handleSubmit(onSubmit)}
-                className="gap-2"
-              >
-                <Save className="h-4 w-4" /> Save
-              </Button>
-            </div>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <Form {...metadataForm}>
-          <form onSubmit={metadataForm.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-blue-600" />
-                  Primary Information
-                </h3>
-                {renderFormFields(fieldGroups.primary)}
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                  <Archive className="h-4 w-4 text-blue-600" />
-                  Classification
-                </h3>
-                {renderFormFields(fieldGroups.classification)}
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
-                  <ArchiveRestore className="h-4 w-4 text-blue-600" />
-                  Contact Information
-                </h3>
-                {renderFormFields(fieldGroups.contact)}
-              </div>
-            </div>
-            
-            {isEditing && (
-              <div className="flex justify-end">
+            ) : (
+              <div className="flex gap-2">
                 <Button 
-                  type="submit"
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setIsEditing(false)}
                   className="gap-2"
                 >
-                  <Save className="h-4 w-4" /> Save All Changes
+                  <X className="h-4 w-4" /> Cancel
+                </Button>
+                <Button 
+                  variant="default" 
+                  size="sm"
+                  onClick={metadataForm.handleSubmit(onSubmit)}
+                  className="gap-2"
+                >
+                  <Save className="h-4 w-4" /> Save
                 </Button>
               </div>
             )}
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Form {...metadataForm}>
+            <form onSubmit={metadataForm.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-blue-600" />
+                    Primary Information
+                  </h3>
+                  {renderFormFields(fieldGroups.primary)}
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <Archive className="h-4 w-4 text-blue-600" />
+                    Classification
+                  </h3>
+                  {renderFormFields(fieldGroups.classification)}
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <ArchiveRestore className="h-4 w-4 text-blue-600" />
+                    Contact Information
+                  </h3>
+                  {renderFormFields(fieldGroups.contact)}
+                </div>
+              </div>
+              
+              {isEditing && (
+                <div className="flex justify-end">
+                  <Button 
+                    type="submit"
+                    className="gap-2"
+                  >
+                    <Save className="h-4 w-4" /> Save All Changes
+                  </Button>
+                </div>
+              )}
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+      <IntegrationMetadataCard integrations={mockIntegrations} />
+    </div>
   );
 };
