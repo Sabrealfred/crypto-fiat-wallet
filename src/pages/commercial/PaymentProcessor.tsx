@@ -15,6 +15,7 @@ import { QuickActionCard } from "./payment-processor/QuickActionCard";
 import { PaymentsList } from "./payment-processor/PaymentsList";
 import { EmptyTabContent } from "./payment-processor/EmptyTabContent";
 import { Payment } from "./types/payments";
+import { useNavigate } from "react-router-dom";
 
 const recentPayments: Payment[] = [
   {
@@ -43,11 +44,55 @@ const recentPayments: Payment[] = [
     type: "swift",
     date: "2024-03-16",
     recipient: "European Services Co."
+  },
+  {
+    id: "PAY004",
+    amount: 3200,
+    currency: "USD",
+    status: "completed",
+    type: "wire",
+    date: "2024-03-14",
+    recipient: "Office Supplies Corp."
+  },
+  {
+    id: "PAY005",
+    amount: 9500,
+    currency: "USD",
+    status: "failed",
+    type: "ach",
+    date: "2024-03-13",
+    recipient: "Global Logistics Inc."
+  }
+];
+
+const scheduledPayments: Payment[] = [
+  {
+    id: "SCHD001",
+    amount: 8500,
+    currency: "USD",
+    status: "pending",
+    type: "wire",
+    date: "2024-03-25",
+    recipient: "Vendor Services LLC"
+  },
+  {
+    id: "SCHD002",
+    amount: 4200,
+    currency: "EUR",
+    status: "pending",
+    type: "sepa",
+    date: "2024-03-28",
+    recipient: "European Distributor SA"
   }
 ];
 
 export default function PaymentProcessorPage() {
   const [selectedTab, setSelectedTab] = useState("payments");
+  const navigate = useNavigate();
+
+  const handleActionClick = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <AppLayout>
@@ -65,28 +110,32 @@ export default function PaymentProcessorPage() {
               title="New Payment"
               icon={SendHorizontal}
               description="Create a new payment"
+              onClick={() => handleActionClick("/commercial/payment-processor/new-payment")}
             />
             <QuickActionCard
               title="Batch Payments"
               icon={List}
               description="Process multiple payments"
+              onClick={() => handleActionClick("/commercial/payment-processor/batch")}
             />
             <QuickActionCard
               title="Payment Status"
               icon={FileSearch}
               description="Check payment status"
+              onClick={() => handleActionClick("/commercial/payment-processor/status")}
             />
             <QuickActionCard
               title="Reconciliation"
               icon={RefreshCw}
               description="Reconcile payments"
+              onClick={() => handleActionClick("/commercial/payment-processor/reconciliation")}
             />
           </div>
 
           {/* Main Content */}
           <Tabs defaultValue="payments" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="payments">Payments</TabsTrigger>
+              <TabsTrigger value="payments">Recent Payments</TabsTrigger>
               <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
               <TabsTrigger value="recurring">Recurring</TabsTrigger>
               <TabsTrigger value="reports">Reports</TabsTrigger>
@@ -97,11 +146,15 @@ export default function PaymentProcessorPage() {
             </TabsContent>
 
             <TabsContent value="scheduled">
-              <EmptyTabContent
-                title="Scheduled Payments"
-                icon={Clock}
-                message="No scheduled payments found"
-              />
+              {scheduledPayments.length > 0 ? (
+                <PaymentsList payments={scheduledPayments} />
+              ) : (
+                <EmptyTabContent
+                  title="Scheduled Payments"
+                  icon={Clock}
+                  message="No scheduled payments found"
+                />
+              )}
             </TabsContent>
 
             <TabsContent value="recurring">

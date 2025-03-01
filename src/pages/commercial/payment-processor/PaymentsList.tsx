@@ -1,62 +1,108 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard, DollarSign, SendHorizontal } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { 
+  CheckCircle, 
+  Clock, 
+  RefreshCw, 
+  XCircle,
+  ChevronRight
+} from "lucide-react";
 import { Payment } from "../types/payments";
+import { useNavigate } from "react-router-dom";
 
 interface PaymentsListProps {
   payments: Payment[];
 }
 
 export function PaymentsList({ payments }: PaymentsListProps) {
+  const navigate = useNavigate();
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return (
+          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 flex items-center gap-1">
+            <CheckCircle className="h-3 w-3" />
+            <span>Completed</span>
+          </Badge>
+        );
+      case 'pending':
+        return (
+          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            <span>Pending</span>
+          </Badge>
+        );
+      case 'processing':
+        return (
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
+            <RefreshCw className="h-3 w-3" />
+            <span>Processing</span>
+          </Badge>
+        );
+      case 'failed':
+        return (
+          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 flex items-center gap-1">
+            <XCircle className="h-3 w-3" />
+            <span>Failed</span>
+          </Badge>
+        );
+      default:
+        return <Badge>{status}</Badge>;
+    }
+  };
+
   return (
-    <Card className="border-blue-100 dark:border-blue-900">
-      <CardHeader className="bg-blue-50 dark:bg-blue-900/20 border-b border-blue-100 dark:border-blue-900">
-        <CardTitle className="text-blue-900 dark:text-blue-100">Recent Payments</CardTitle>
-      </CardHeader>
+    <Card>
       <CardContent className="p-0">
-        <div className="divide-y divide-blue-100 dark:divide-blue-900">
-          {payments.map((payment) => (
-            <div
-              key={payment.id}
-              className="flex items-center justify-between p-4 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors"
-            >
-              <div className="flex items-center gap-4">
-                {payment.type === 'wire' && 
-                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-full">
-                    <SendHorizontal className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                }
-                {payment.type === 'ach' && 
-                  <div className="bg-green-100 dark:bg-green-900/40 p-2 rounded-full">
-                    <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  </div>
-                }
-                {payment.type === 'swift' && 
-                  <div className="bg-purple-100 dark:bg-purple-900/40 p-2 rounded-full">
-                    <CreditCard className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                  </div>
-                }
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-gray-100">{payment.recipient}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{payment.date}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-medium text-gray-900 dark:text-gray-100">
-                  {payment.currency} {payment.amount.toLocaleString()}
-                </p>
-                <p className={`text-sm rounded-full px-2 py-0.5 inline-block ${
-                  payment.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                  payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
-                  payment.status === 'processing' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                  'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-                }`}>
-                  {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Recipient</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {payments.map((payment) => (
+              <TableRow key={payment.id}>
+                <TableCell className="font-medium">{payment.id}</TableCell>
+                <TableCell>{payment.date}</TableCell>
+                <TableCell>{payment.currency} {payment.amount.toLocaleString()}</TableCell>
+                <TableCell>{payment.recipient}</TableCell>
+                <TableCell>
+                  <Badge variant="outline">
+                    {payment.type.toUpperCase()}
+                  </Badge>
+                </TableCell>
+                <TableCell>{getStatusBadge(payment.status)}</TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => navigate(`/commercial/payment-processor/status?id=${payment.id}`)}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
