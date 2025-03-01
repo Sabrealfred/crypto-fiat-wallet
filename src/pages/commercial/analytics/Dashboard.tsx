@@ -394,5 +394,5 @@ export function AnalyticsDashboard() {
   );
 }
 
-// Default export using the named export
+// Default export
 export default AnalyticsDashboard;
