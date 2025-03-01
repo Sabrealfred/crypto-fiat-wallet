@@ -29,15 +29,17 @@ type EntityType = {
   description: string;
 };
 
-// Updated RelationshipChange to include 'type' property
-type RelationshipChange = {
+// Define a custom RelationshipChange type to match what RecentChanges expects
+interface RelationshipChange {
   id: number;
   date: string;
   entity: string;
-  type: string; // Adding this missing property
+  type: string;
   user: string;
   details: string;
-};
+  change?: string;      // Added to match the expected interface
+  previousValue?: string; // Added to match the expected interface
+}
 
 export default function EntityManagementDashboardPage() {
   const [isOnboarding, setIsOnboarding] = useState(false);
@@ -213,7 +215,9 @@ export default function EntityManagementDashboardPage() {
       entity: "Global Finance Corp",
       type: "Parent Added",
       user: "John Smith",
-      details: "Added TechVest Inc as parent entity"
+      details: "Added TechVest Inc as parent entity",
+      change: "Parent Entity",
+      previousValue: "None"
     },
     {
       id: 2,
@@ -221,7 +225,9 @@ export default function EntityManagementDashboardPage() {
       entity: "InnoTech Solutions",
       type: "Subsidiary Added",
       user: "Maria Rodriguez",
-      details: "Added Digital Systems LLC as subsidiary"
+      details: "Added Digital Systems LLC as subsidiary",
+      change: "Subsidiary Entity",
+      previousValue: "None"
     },
     {
       id: 3,
@@ -229,7 +235,9 @@ export default function EntityManagementDashboardPage() {
       entity: "European Holdings",
       type: "Relationship Modified",
       user: "David Chen",
-      details: "Updated ownership percentage to 60%"
+      details: "Updated ownership percentage to 60%",
+      change: "Ownership Percentage",
+      previousValue: "51%"
     },
     {
       id: 4,
@@ -237,7 +245,9 @@ export default function EntityManagementDashboardPage() {
       entity: "Oceania Partners",
       type: "Relationship Removed",
       user: "Sarah Johnson",
-      details: "Removed strategic partnership with Asian Markets Ltd"
+      details: "Removed strategic partnership with Asian Markets Ltd",
+      change: "Strategic Partnership",
+      previousValue: "Asian Markets Ltd"
     }
   ];
 
