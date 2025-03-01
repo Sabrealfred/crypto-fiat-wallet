@@ -6,7 +6,7 @@ import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/layout/user-menu";
 import { AppFooter } from "@/components/layout/app-footer";
 import { AIAssistant } from "@/components/layout/ai-assistant";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ChevronRight } from "lucide-react";
 
@@ -109,7 +109,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   
   return (
     <div className="flex min-h-screen bg-background">
-      <SidebarProvider defaultCollapsed={sidebarCollapsed}>
+      <SidebarProvider defaultOpen={!sidebarCollapsed}>
         <Sidebar />
       </SidebarProvider>
       <main className="flex-1 flex flex-col">
