@@ -16,6 +16,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         <main className="flex-1 relative">
           {children}
           <AppFooter 
+            company={true}
+            legal={true}
+            support={true}
             footerSections={[
               { title: "Quick Links", links: [
                 { label: "Dashboard", url: "/commercial" },
