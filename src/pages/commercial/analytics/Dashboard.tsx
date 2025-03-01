@@ -2,207 +2,257 @@
 import { AppLayout } from "@/components/layout/app-layout";
 import { CommercialHeader } from "@/components/commercial/CommercialHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  BarChart,
-  LineChart,
-  PieChart,
-  Pie,
-  Bar,
+import { Button } from "@/components/ui/button";
+import { 
+  LineChart, 
   Line, 
+  BarChart,
+  Bar,
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
   Legend, 
   ResponsiveContainer,
+  PieChart,
+  Pie,
   Cell
 } from 'recharts';
-import {
-  BarChart2,
-  PieChart as PieChartIcon,
+import { 
+  FileText, 
+  Download,
   TrendingUp,
+  PieChart as PieChartIcon,
+  BarChart as BarChartIcon,
+  Calendar,
+  RefreshCw,
   Brain,
-  Calculator,
+  AlertTriangle,
+  ListFilter,
   ArrowUpRight,
-  ArrowDownRight,
-  FileText,
-  FilePlus
+  ArrowDownRight
 } from "lucide-react";
 import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 
-const performanceData = [
-  { month: 'Jan', revenue: 6500000, expenses: 4200000 },
-  { month: 'Feb', revenue: 5900000, expenses: 4300000 },
-  { month: 'Mar', revenue: 6700000, expenses: 4500000 },
-  { month: 'Apr', revenue: 7200000, expenses: 4800000 },
-  { month: 'May', revenue: 7800000, expenses: 5100000 },
-  { month: 'Jun', revenue: 8100000, expenses: 5300000 },
-  { month: 'Jul', revenue: 8500000, expenses: 5400000 },
-  { month: 'Aug', revenue: 8900000, expenses: 5700000 },
+// Sample data for analytics
+const monthlyPerformanceData = [
+  { month: 'Jan', revenue: 4500000, expenses: 3200000, profit: 1300000 },
+  { month: 'Feb', revenue: 4700000, expenses: 3300000, profit: 1400000 },
+  { month: 'Mar', revenue: 5100000, expenses: 3400000, profit: 1700000 },
+  { month: 'Apr', revenue: 4900000, expenses: 3300000, profit: 1600000 },
+  { month: 'May', revenue: 5300000, expenses: 3500000, profit: 1800000 },
+  { month: 'Jun', revenue: 5600000, expenses: 3600000, profit: 2000000 },
+  { month: 'Jul', revenue: 5900000, expenses: 3700000, profit: 2200000 },
+  { month: 'Aug', revenue: 6200000, expenses: 3800000, profit: 2400000 },
+  { month: 'Sep', revenue: 6400000, expenses: 3900000, profit: 2500000 },
+  { month: 'Oct', revenue: 6300000, expenses: 3800000, profit: 2500000 },
+  { month: 'Nov', revenue: 6500000, expenses: 4000000, profit: 2500000 },
+  { month: 'Dec', revenue: 6800000, expenses: 4100000, profit: 2700000 },
 ];
 
-const marketAnalysisData = [
-  { name: 'Market Share', value: 42 },
-  { name: 'Competitors', value: 58 },
+const departmentPerformanceData = [
+  { name: 'Treasury', value: 35 },
+  { name: 'Operations', value: 25 },
+  { name: 'Risk Mgmt', value: 15 },
+  { name: 'Investment', value: 25 },
 ];
 
-const COLORS = ['#3b82f6', '#e5e7eb'];
-
-const quickLinks = [
-  { title: "ML Models", path: "/commercial/analytics/ml-models", icon: Brain },
-  { title: "Predictive Analysis", path: "/commercial/analytics/predictive", icon: Calculator },
-  { title: "Trend Visualization", path: "/commercial/analytics/trends", icon: TrendingUp },
-  { title: "New Analysis", path: "/commercial/analytics/custom", icon: FilePlus },
+const keyMetricsData = [
+  { title: 'Overall ROI', value: '18.5%', change: '+2.3%', status: 'increase' },
+  { title: 'Liquidity Ratio', value: '2.4', change: '+0.3', status: 'increase' },
+  { title: 'Cash Conversion', value: '22 days', change: '-3 days', status: 'increase' },
+  { title: 'Operational Efficiency', value: '81%', change: '+4%', status: 'increase' },
+  { title: 'Risk Exposure', value: 'Moderate', change: 'Stable', status: 'neutral' },
+  { title: 'Cost of Capital', value: '4.8%', change: '-0.3%', status: 'increase' },
 ];
+
+const riskMetricsData = [
+  { category: 'Market', current: 68, target: 50, status: 'warning' },
+  { category: 'Credit', current: 42, target: 40, status: 'good' },
+  { category: 'Operational', current: 35, target: 30, status: 'good' },
+  { category: 'Liquidity', current: 55, target: 40, status: 'warning' },
+  { category: 'Compliance', current: 28, target: 30, status: 'good' },
+];
+
+const anomalyAlerts = [
+  { 
+    id: 'ANO-001', 
+    description: 'Unusual spike in treasury transactions',
+    severity: 'medium',
+    date: '2024-03-15',
+    status: 'unresolved'
+  },
+  { 
+    id: 'ANO-002', 
+    description: 'Unexpected drop in liquidity ratio',
+    severity: 'high',
+    date: '2024-03-14',
+    status: 'investigating'
+  },
+  { 
+    id: 'ANO-003', 
+    description: 'Unusual pattern in trading activity',
+    severity: 'medium',
+    date: '2024-03-13',
+    status: 'resolved'
+  }
+];
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 export default function AnalyticsDashboard() {
-  const [tab, setTab] = useState("overview");
+  const [timeframe, setTimeframe] = useState('year');
   const navigate = useNavigate();
+  
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      notation: 'compact',
+      compactDisplay: 'short',
+      maximumFractionDigits: 1
+    }).format(value);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'increase':
+        return 'text-green-600';
+      case 'decrease':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
+    }
+  };
+
+  const getRiskStatusColor = (status: string) => {
+    switch (status) {
+      case 'good':
+        return 'bg-green-500';
+      case 'warning':
+        return 'bg-amber-500';
+      case 'critical':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
 
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
         <CommercialHeader 
-          title="Analysis & Forecasting"
-          description="AI-powered financial analytics and data visualization"
+          title="Financial Analytics"
+          description="Comprehensive analysis and insights for intelligent decision making"
           showBack={true}
         />
-
-        {/* Key Metrics */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Revenue Growth</p>
-                  <h3 className="text-2xl font-bold mt-1">+15.8%</h3>
-                  <p className="text-xs flex items-center text-green-600 mt-1">
-                    <ArrowUpRight className="h-3 w-3 mr-1" />
-                    +3.2% vs last month
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/30">
-                  <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Expense Ratio</p>
-                  <h3 className="text-2xl font-bold mt-1">64.2%</h3>
-                  <p className="text-xs flex items-center text-red-600 mt-1">
-                    <ArrowDownRight className="h-3 w-3 mr-1" />
-                    -1.5% from target
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30">
-                  <BarChart2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Market Share</p>
-                  <h3 className="text-2xl font-bold mt-1">42.5%</h3>
-                  <p className="text-xs flex items-center text-green-600 mt-1">
-                    <ArrowUpRight className="h-3 w-3 mr-1" />
-                    +1.8% vs last quarter
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900/30">
-                  <PieChartIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Active Models</p>
-                  <h3 className="text-2xl font-bold mt-1">12</h3>
-                  <p className="text-xs flex items-center text-blue-600 mt-1">
-                    <ArrowUpRight className="h-3 w-3 mr-1" />
-                    3 new this month
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-amber-100 dark:bg-amber-900/30">
-                  <Brain className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        
+        {/* Key Metrics Section */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+          {keyMetricsData.map((metric, index) => (
+            <Card key={index}>
+              <CardContent className="p-4">
+                <p className="text-sm text-muted-foreground">{metric.title}</p>
+                <h3 className="text-2xl font-bold mt-1">{metric.value}</h3>
+                <p className={`text-sm flex items-center mt-1 ${getStatusColor(metric.status)}`}>
+                  {metric.status === 'increase' && <ArrowUpRight className="h-3 w-3 mr-1" />}
+                  {metric.status === 'decrease' && <ArrowDownRight className="h-3 w-3 mr-1" />}
+                  {metric.change}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Main Content */}
-        <Tabs value={tab} onValueChange={setTab} className="space-y-6">
-          <TabsList className="grid grid-cols-3 w-full md:w-auto md:inline-flex">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
-            <TabsTrigger value="models">AI Models</TabsTrigger>
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="performance" className="space-y-6">
+          <TabsList className="grid grid-cols-4 w-full max-w-md mx-auto">
+            <TabsTrigger value="performance">Performance</TabsTrigger>
+            <TabsTrigger value="risk">Risk Analytics</TabsTrigger>
+            <TabsTrigger value="prediction">Predictions</TabsTrigger>
+            <TabsTrigger value="anomalies">Anomalies</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid lg:grid-cols-2 gap-6">
-              {/* Financial Performance Chart */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Financial Performance</CardTitle>
-                  <CardDescription>Revenue vs Expenses (Monthly)</CardDescription>
+          {/* Performance Tab */}
+          <TabsContent value="performance" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Financial Performance</h2>
+              <div className="flex gap-2">
+                <Select value={timeframe} onValueChange={setTimeframe}>
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue placeholder="Select timeframe" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="year">Last 12 months</SelectItem>
+                    <SelectItem value="quarter">Last quarter</SelectItem>
+                    <SelectItem value="month">Last month</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button variant="outline" size="icon">
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+
+                <Button variant="outline" size="icon">
+                  <Download className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="md:col-span-2">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <LineChart className="h-5 w-5 text-muted-foreground" />
+                    Revenue & Expenses Trend
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-[350px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={performanceData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                      >
+                      <LineChart data={monthlyPerformanceData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip formatter={(value) => `$${(Number(value)/1000000).toFixed(2)}M`} />
+                        <YAxis tickFormatter={(value) => formatCurrency(value)} />
+                        <Tooltip 
+                          formatter={(value) => formatCurrency(Number(value))}
+                          labelFormatter={(label) => `Month: ${label}`}
+                        />
                         <Legend />
-                        <Bar dataKey="revenue" name="Revenue" fill="#3b82f6" />
-                        <Bar dataKey="expenses" name="Expenses" fill="#cbd5e1" />
-                      </BarChart>
+                        <Line type="monotone" dataKey="revenue" stroke="#3b82f6" name="Revenue" strokeWidth={2} />
+                        <Line type="monotone" dataKey="expenses" stroke="#ef4444" name="Expenses" strokeWidth={2} />
+                        <Line type="monotone" dataKey="profit" stroke="#10b981" name="Profit" strokeWidth={2} />
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Market Analysis Chart */}
               <Card>
-                <CardHeader>
-                  <CardTitle>Market Analysis</CardTitle>
-                  <CardDescription>Market Share Analysis</CardDescription>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <PieChartIcon className="h-5 w-5 text-muted-foreground" />
+                    Department Performance
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-[350px] flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
-                          data={marketAnalysisData}
+                          data={departmentPerformanceData}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
-                          outerRadius={120}
+                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                          outerRadius={130}
                           fill="#8884d8"
                           dataKey="value"
-                          label={({ name, percent }) => `${name} ${(Number(percent) * 100).toFixed(0)}%`}
                         >
-                          {marketAnalysisData.map((entry, index) => (
+                          {departmentPerformanceData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
@@ -214,90 +264,378 @@ export default function AnalyticsDashboard() {
               </Card>
             </div>
 
-            {/* Quick Links */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {quickLinks.map((link) => (
-                <Button
-                  key={link.title}
-                  variant="outline"
-                  className="h-auto py-4 flex flex-col items-center gap-2"
-                  onClick={() => navigate(link.path)}
-                >
-                  <link.icon className="h-6 w-6" />
-                  <span>{link.title}</span>
-                </Button>
-              ))}
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                    Growth Analysis
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 rounded-md bg-blue-50 dark:bg-blue-900/20">
+                      <p className="text-sm text-muted-foreground">Revenue Growth (YoY)</p>
+                      <h3 className="text-2xl font-bold text-blue-600 dark:text-blue-400">+15.8%</h3>
+                    </div>
+                    <div className="p-4 rounded-md bg-green-50 dark:bg-green-900/20">
+                      <p className="text-sm text-muted-foreground">Profit Growth (YoY)</p>
+                      <h3 className="text-2xl font-bold text-green-600 dark:text-green-400">+21.2%</h3>
+                    </div>
+                    <div className="p-4 rounded-md bg-purple-50 dark:bg-purple-900/20">
+                      <p className="text-sm text-muted-foreground">Asset Growth</p>
+                      <h3 className="text-2xl font-bold text-purple-600 dark:text-purple-400">+9.4%</h3>
+                    </div>
+                    <div className="p-4 rounded-md bg-amber-50 dark:bg-amber-900/20">
+                      <p className="text-sm text-muted-foreground">Customer Growth</p>
+                      <h3 className="text-2xl font-bold text-amber-600 dark:text-amber-400">+7.5%</h3>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-muted-foreground" />
+                    Forecasted Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[230px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={[
+                        { quarter: 'Q1', actual: 1300000, forecast: 1300000 },
+                        { quarter: 'Q2', actual: 1800000, forecast: 1800000 },
+                        { quarter: 'Q3', actual: 2500000, forecast: 2700000 },
+                        { quarter: 'Q4', actual: 0, forecast: 3200000 }
+                      ]}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="quarter" />
+                        <YAxis tickFormatter={(value) => formatCurrency(value)} />
+                        <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                        <Legend />
+                        <Bar dataKey="actual" name="Actual Profit" fill="#3b82f6" />
+                        <Bar dataKey="forecast" name="Forecasted Profit" fill="#9ca3af" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
-          <TabsContent value="reports">
-            <Card>
-              <CardHeader>
-                <CardTitle>Analysis Reports</CardTitle>
-                <CardDescription>
-                  Access and generate financial analysis reports
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <Button variant="outline" className="justify-start h-auto py-4 px-4">
-                    <FileText className="h-5 w-5 mr-3" />
-                    <div className="text-left">
-                      <p className="font-medium">Monthly Performance</p>
-                      <p className="text-xs text-muted-foreground">Updated 3 days ago</p>
-                    </div>
-                  </Button>
-                  
-                  <Button variant="outline" className="justify-start h-auto py-4 px-4">
-                    <FileText className="h-5 w-5 mr-3" />
-                    <div className="text-left">
-                      <p className="font-medium">Quarterly Review</p>
-                      <p className="text-xs text-muted-foreground">Updated 2 weeks ago</p>
-                    </div>
-                  </Button>
-                  
-                  <Button variant="outline" className="justify-start h-auto py-4 px-4">
-                    <FileText className="h-5 w-5 mr-3" />
-                    <div className="text-left">
-                      <p className="font-medium">Market Analysis</p>
-                      <p className="text-xs text-muted-foreground">Updated 1 week ago</p>
-                    </div>
-                  </Button>
-                  
-                  <Button variant="outline" className="justify-start h-auto py-4 px-4">
-                    <FileText className="h-5 w-5 mr-3" />
-                    <div className="text-left">
-                      <p className="font-medium">Financial Projections</p>
-                      <p className="text-xs text-muted-foreground">Updated yesterday</p>
-                    </div>
-                  </Button>
-                </div>
-                
-                <Button className="w-full mt-4">
-                  <FilePlus className="h-4 w-4 mr-2" />
-                  Generate New Report
-                </Button>
-              </CardContent>
-            </Card>
+          {/* Risk Analytics Tab */}
+          <TabsContent value="risk" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Risk Analytics</h2>
+              <Button variant="outline" size="sm" onClick={() => navigate("/commercial/risk-management")}>
+                View Risk Management
+              </Button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Risk Metrics</CardTitle>
+                  <CardDescription>Current risk exposure by category</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {riskMetricsData.map((risk, index) => (
+                      <div key={index} className="space-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-sm font-medium">{risk.category} Risk</span>
+                          <span className="text-sm text-muted-foreground">
+                            {risk.current}/{risk.target}
+                          </span>
+                        </div>
+                        <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${getRiskStatusColor(risk.status)}`} 
+                            style={{ width: `${(risk.current / 100) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Risk Alerts</CardTitle>
+                  <CardDescription>Recently identified anomalies</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {anomalyAlerts.map((alert) => (
+                      <div key={alert.id} className="flex items-start space-x-3 p-3 rounded-md border">
+                        <div className={`p-2 rounded-full ${
+                          alert.severity === 'high' ? 'bg-red-100 text-red-600' : 
+                          alert.severity === 'medium' ? 'bg-amber-100 text-amber-600' : 
+                          'bg-blue-100 text-blue-600'
+                        }`}>
+                          <AlertTriangle className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between">
+                            <h4 className="font-medium">{alert.description}</h4>
+                            <span className="text-xs font-mono text-muted-foreground">{alert.id}</span>
+                          </div>
+                          <div className="flex justify-between mt-1">
+                            <span className="text-xs text-muted-foreground">{alert.date}</span>
+                            <span className={`text-xs ${
+                              alert.status === 'resolved' ? 'text-green-600' : 
+                              alert.status === 'investigating' ? 'text-amber-600' : 
+                              'text-red-600'
+                            }`}>
+                              {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
-          <TabsContent value="models">
+          {/* Predictions Tab */}
+          <TabsContent value="prediction" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">AI-Powered Predictions</h2>
+              <Button variant="outline" size="sm" onClick={() => navigate("/commercial/analytics/ml-models")}>
+                <Brain className="h-4 w-4 mr-2" />
+                View ML Models
+              </Button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Cash Flow Prediction</CardTitle>
+                  <CardDescription>Next 90 days forecasted cash positions</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart 
+                        data={[
+                          { day: '30', actual: 8500000, predicted: 8500000, lower: 8500000, upper: 8500000 },
+                          { day: '60', actual: 0, predicted: 9200000, lower: 8900000, upper: 9500000 },
+                          { day: '90', actual: 0, predicted: 9800000, lower: 9300000, upper: 10300000 }
+                        ]}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="day" label={{ value: 'Days', position: 'insideBottom', offset: -5 }} />
+                        <YAxis tickFormatter={(value) => formatCurrency(value)} />
+                        <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                        <Legend />
+                        <Line type="monotone" dataKey="actual" stroke="#3b82f6" name="Actual" strokeWidth={2} />
+                        <Line type="monotone" dataKey="predicted" stroke="#10b981" name="Predicted" strokeWidth={2} strokeDasharray="5 5" />
+                        <Line type="monotone" dataKey="upper" stroke="#d1d5db" name="Upper Bound" strokeWidth={1} strokeDasharray="3 3" />
+                        <Line type="monotone" dataKey="lower" stroke="#d1d5db" name="Lower Bound" strokeWidth={1} strokeDasharray="3 3" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md mt-4">
+                    <p className="text-sm">
+                      <span className="font-medium">AI Insight:</span> Based on historical patterns and current trends, we predict a 15.3% increase in cash reserves over the next 90 days with 92% confidence.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Risk Prediction</CardTitle>
+                  <CardDescription>Forecasted risk exposure</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart 
+                        data={[
+                          { category: 'Market', current: 68, forecasted: 65 },
+                          { category: 'Credit', current: 42, forecasted: 45 },
+                          { category: 'Operational', current: 35, forecasted: 32 },
+                          { category: 'Liquidity', current: 55, forecasted: 48 },
+                          { category: 'Compliance', current: 28, forecasted: 30 }
+                        ]}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="category" />
+                        <YAxis label={{ value: 'Risk Score', angle: -90, position: 'insideLeft' }} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="current" name="Current Risk" fill="#ef4444" />
+                        <Bar dataKey="forecasted" name="Forecasted Risk (90 days)" fill="#f59e0b" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-md mt-4">
+                    <p className="text-sm">
+                      <span className="font-medium">AI Insight:</span> Market risk is predicted to decrease by 4.4% due to expected market stabilization. Liquidity risk shows significant improvement from implemented treasury strategies.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Anomalies Tab */}
+          <TabsContent value="anomalies" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Anomaly Detection</h2>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <ListFilter className="h-4 w-4 mr-2" />
+                  Filter
+                </Button>
+                <Button variant="outline" size="sm">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Export Report
+                </Button>
+              </div>
+            </div>
+
             <Card>
-              <CardHeader>
-                <CardTitle>AI Models</CardTitle>
-                <CardDescription>
-                  Manage and deploy machine learning models for financial analysis
-                </CardDescription>
+              <CardHeader className="pb-2">
+                <CardTitle>Identified Anomalies</CardTitle>
+                <CardDescription>ML-detected patterns requiring investigation</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button onClick={() => navigate('/commercial/analytics/ml-models')}>
-                  <Brain className="h-4 w-4 mr-2" />
-                  View ML Models
-                </Button>
+                <div className="rounded-md border overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-muted/50">
+                        <th className="text-left p-3 font-medium">ID</th>
+                        <th className="text-left p-3 font-medium">Description</th>
+                        <th className="text-left p-3 font-medium">Detection Date</th>
+                        <th className="text-left p-3 font-medium">Confidence</th>
+                        <th className="text-left p-3 font-medium">Status</th>
+                        <th className="text-left p-3 font-medium">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-t">
+                        <td className="p-3 font-mono text-xs">ANO-2024-001</td>
+                        <td className="p-3">Unusual spike in treasury transactions</td>
+                        <td className="p-3">Mar 15, 2024</td>
+                        <td className="p-3">87%</td>
+                        <td className="p-3">
+                          <span className="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+                            Investigating
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <Button variant="ghost" size="sm">Review</Button>
+                        </td>
+                      </tr>
+                      <tr className="border-t">
+                        <td className="p-3 font-mono text-xs">ANO-2024-002</td>
+                        <td className="p-3">Unexpected drop in liquidity ratio</td>
+                        <td className="p-3">Mar 14, 2024</td>
+                        <td className="p-3">93%</td>
+                        <td className="p-3">
+                          <span className="px-2 py-1 rounded-full text-xs bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">
+                            Critical
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <Button variant="ghost" size="sm">Review</Button>
+                        </td>
+                      </tr>
+                      <tr className="border-t">
+                        <td className="p-3 font-mono text-xs">ANO-2024-003</td>
+                        <td className="p-3">Unusual pattern in trading activity</td>
+                        <td className="p-3">Mar 13, 2024</td>
+                        <td className="p-3">79%</td>
+                        <td className="p-3">
+                          <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
+                            Resolved
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <Button variant="ghost" size="sm">View</Button>
+                        </td>
+                      </tr>
+                      <tr className="border-t">
+                        <td className="p-3 font-mono text-xs">ANO-2024-004</td>
+                        <td className="p-3">Abnormal payment processor activity</td>
+                        <td className="p-3">Mar 12, 2024</td>
+                        <td className="p-3">85%</td>
+                        <td className="p-3">
+                          <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
+                            Resolved
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <Button variant="ghost" size="sm">View</Button>
+                        </td>
+                      </tr>
+                      <tr className="border-t">
+                        <td className="p-3 font-mono text-xs">ANO-2024-005</td>
+                        <td className="p-3">Potential duplicate transactions detected</td>
+                        <td className="p-3">Mar 10, 2024</td>
+                        <td className="p-3">91%</td>
+                        <td className="p-3">
+                          <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
+                            In review
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <Button variant="ghost" size="sm">Review</Button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Quick Actions */}
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Button 
+              variant="outline" 
+              className="h-auto py-4 flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800"
+              onClick={() => navigate("/commercial/analytics/ml-models")}
+            >
+              <Brain className="h-5 w-5 mb-2" />
+              <span>ML Models</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-auto py-4 flex flex-col items-center justify-center text-green-700 dark:text-green-400 border-green-200 dark:border-green-800"
+              onClick={() => navigate("/commercial/analytics/predictive")}
+            >
+              <TrendingUp className="h-5 w-5 mb-2" />
+              <span>Predictive Analysis</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-auto py-4 flex flex-col items-center justify-center text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800"
+              onClick={() => navigate("/commercial/analytics/trends")}
+            >
+              <BarChartIcon className="h-5 w-5 mb-2" />
+              <span>Trend Visualization</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-auto py-4 flex flex-col items-center justify-center text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800"
+              onClick={() => navigate("/commercial/operations/reports")}
+            >
+              <FileText className="h-5 w-5 mb-2" />
+              <span>Generate Reports</span>
+            </Button>
+          </div>
+        </div>
       </div>
     </AppLayout>
   );
