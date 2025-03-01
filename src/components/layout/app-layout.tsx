@@ -112,17 +112,17 @@ export function AppLayout({ children }: AppLayoutProps) {
       <SidebarProvider defaultOpen={!isMobile}>
         <Sidebar 
           variant="floating" 
-          className="border-r border-purple-100 dark:border-purple-900 bg-gradient-to-b from-white to-purple-50 dark:from-gray-900 dark:to-purple-950"
+          className="border-r border-blue-100 dark:border-blue-900 bg-white dark:bg-gray-900 shadow-sm"
         />
       </SidebarProvider>
       
       <main className="flex-1 flex flex-col">
-        <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6">
+        <header className="h-14 border-b flex items-center justify-between px-4 lg:px-6 bg-white dark:bg-gray-900 shadow-sm">
           <div></div>
           <UserMenu onLogout={handleLogout} />
         </header>
         
-        <div className="flex-1 overflow-auto px-4 py-6 md:px-6">
+        <div className="flex-1 overflow-auto px-4 py-6 md:px-8 lg:px-10">
           {children}
         </div>
         
@@ -132,7 +132,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             onClick={() => setShowAI(prev => !prev)}
             variant="default"
             size="sm"
-            className="bg-purple-600 hover:bg-purple-700 text-white rounded-full p-3 h-12 w-12 shadow-lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 h-12 w-12 shadow-lg"
           >
             <Sparkles className="h-5 w-5" />
             <span className="sr-only">Toggle AI Assistant</span>
@@ -148,14 +148,14 @@ export function AppLayout({ children }: AppLayoutProps) {
         
         {/* DATACLOUD AI Banner */}
         <div className="fixed bottom-20 right-4 z-40 w-64 sm:w-80">
-          <Card className="bg-gradient-to-r from-purple-600 to-indigo-600 border-0 text-white shadow-lg">
+          <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0 text-white shadow-lg">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="h-5 w-5" />
                 <h3 className="font-semibold">DATACLOUD AI</h3>
               </div>
               <p className="text-sm mb-3">Unlock advanced insights with our AI-powered analytics platform</p>
-              <Button size="sm" variant="secondary" className="w-full text-purple-700 hover:text-purple-800">
+              <Button size="sm" variant="secondary" className="w-full text-blue-700 hover:text-blue-800">
                 Explore Features <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </CardContent>
