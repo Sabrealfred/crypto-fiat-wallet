@@ -4,8 +4,10 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 interface MonthlyData {
   month: string;
-  earning: number;
-  spending: number;
+  earning?: number;
+  spending?: number;
+  revenue?: number;
+  expenses?: number;
 }
 
 interface StatisticsChartProps {
@@ -13,6 +15,13 @@ interface StatisticsChartProps {
 }
 
 export function StatisticsChart({ monthlyData }: StatisticsChartProps) {
+  // Transform data if needed - handle both revenue/expenses and earning/spending formats
+  const transformedData = monthlyData.map(item => ({
+    month: item.month,
+    earning: item.earning || item.revenue || 0,
+    spending: item.spending || item.expenses || 0
+  }));
+
   return (
     <div className="relative bg-background/95 p-6 rounded-xl shadow-md">
       <div className="flex justify-between items-center mb-6">
@@ -31,7 +40,7 @@ export function StatisticsChart({ monthlyData }: StatisticsChartProps) {
       </div>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={monthlyData}>
+          <AreaChart data={transformedData}>
             <defs>
               <linearGradient id="earning" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
