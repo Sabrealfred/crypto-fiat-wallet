@@ -16,13 +16,13 @@ export const HeroSection: React.FC<{ scrollToFeatures: () => void }> = ({ scroll
       transition={{ duration: 0.8 }}
     >
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-indigo-900/80"></div>
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-indigo-900/90"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-40"></div>
         
         {/* Enhanced 3D animated gradient orbs */}
-        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-500/20 rounded-full filter blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full filter blur-3xl animate-pulse animation-delay-200"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-purple-500/10 rounded-full filter blur-3xl animate-pulse animation-delay-300"></div>
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-500/30 rounded-full filter blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/30 rounded-full filter blur-3xl animate-pulse animation-delay-200"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-purple-500/20 rounded-full filter blur-3xl animate-pulse animation-delay-300"></div>
       </div>
 
       <div className="container mx-auto px-6 z-10 text-center">
@@ -32,10 +32,10 @@ export const HeroSection: React.FC<{ scrollToFeatures: () => void }> = ({ scroll
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-200 via-white to-blue-200 text-transparent bg-clip-text">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
             Revolucione la Gestión de Tesorería con IA
           </h1>
-          <p className="text-xl md:text-2xl text-blue-200 mb-10 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto">
             Centralice la liquidez, optimice inversiones y mitigue riesgos con nuestra plataforma empresarial integrada
           </p>
 
@@ -48,7 +48,7 @@ export const HeroSection: React.FC<{ scrollToFeatures: () => void }> = ({ scroll
             </Button>
             <Button 
               variant="outline" 
-              className="border-2 border-blue-400 text-blue-200 hover:text-white hover:bg-blue-800/30 text-lg font-medium px-8 py-6 rounded-full shadow-lg transition-all duration-300"
+              className="border-2 border-blue-300 text-white hover:text-white hover:bg-blue-800/30 text-lg font-medium px-8 py-6 rounded-full shadow-lg transition-all duration-300"
               onClick={scrollToFeatures}
             >
               Explorar Soluciones
@@ -64,7 +64,7 @@ export const HeroSection: React.FC<{ scrollToFeatures: () => void }> = ({ scroll
         >
           <div className="grid grid-cols-5 gap-8 items-center max-w-3xl">
             {['Goldman Sachs', 'JP Morgan', 'Morgan Stanley', 'BlackRock', 'Citi'].map((company) => (
-              <div key={company} className="text-gray-400 text-sm font-medium">
+              <div key={company} className="text-gray-200 text-sm font-medium">
                 {company}
               </div>
             ))}

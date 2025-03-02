@@ -8,7 +8,7 @@ import RelationshipsPage from "@/pages/commercial/entity-management/Relationship
 export const EntityManagementRoutes = () => {
   return (
     <Route path="entity-management">
-      <Route path="" element={<EntityManagementDashboardPage />} />
+      <Route index element={<EntityManagementDashboardPage />} />
       <Route path="subsidiaries" element={<SubsidiariesPage />} />
       <Route path="metadata" element={<MetadataPage />} />
       <Route path="relationships" element={<RelationshipsPage />} />

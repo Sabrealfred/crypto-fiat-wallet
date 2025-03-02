@@ -17,14 +17,14 @@ export const CtaSection: React.FC = () => {
       className="relative py-20 bg-gradient-to-r from-blue-900 to-indigo-800"
     >
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 right-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1639322537228-f710d846310a?ixlib=rb-1.2.1&auto=format&fit=crop&w=2232&q=80')] bg-cover bg-center opacity-10"></div>
+        <div className="absolute top-0 right-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1639322537228-f710d846310a?ixlib=rb-1.2.1&auto=format&fit=crop&w=2232&q=80')] bg-cover bg-center opacity-20"></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
           ¿Listo para Transformar sus Operaciones de Tesorería?
         </h2>
-        <p className="text-xl text-blue-200 max-w-3xl mx-auto mb-8">
+        <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
           Únase a organizaciones líderes que han reducido costos en un 35% y aumentado la eficiencia del capital de trabajo en un 28% utilizando Datacloud AI
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -36,7 +36,7 @@ export const CtaSection: React.FC = () => {
           </Button>
           <Button 
             variant="outline" 
-            className="border-2 border-white/30 bg-white/10 text-white hover:bg-white/20 text-lg font-medium px-8 py-6 rounded-full shadow-lg transition-all duration-300"
+            className="border-2 border-white bg-white/10 text-white hover:bg-white/20 text-lg font-medium px-8 py-6 rounded-full shadow-lg transition-all duration-300"
           >
             Contactar Equipo de Ventas
           </Button>
