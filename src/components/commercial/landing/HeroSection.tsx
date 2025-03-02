@@ -33,10 +33,10 @@ export const HeroSection: React.FC<{ scrollToFeatures: () => void }> = ({ scroll
           className="max-w-4xl mx-auto"
         >
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-200 via-white to-blue-200 text-transparent bg-clip-text">
-            Revolutionize Treasury Management with AI
+            Revolucione la Gestión de Tesorería con IA
           </h1>
           <p className="text-xl md:text-2xl text-blue-200 mb-10 max-w-3xl mx-auto">
-            Centralize liquidity, optimize investments, and mitigate risks with our integrated enterprise platform
+            Centralice la liquidez, optimice inversiones y mitigue riesgos con nuestra plataforma empresarial integrada
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -44,14 +44,14 @@ export const HeroSection: React.FC<{ scrollToFeatures: () => void }> = ({ scroll
               className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-medium px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               onClick={() => navigate("/commercial/dashboard")}
             >
-              Request a Demo <ArrowRight className="ml-2 h-5 w-5" />
+              Solicitar Demostración <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button 
               variant="outline" 
               className="border-2 border-blue-400 text-blue-200 hover:text-white hover:bg-blue-800/30 text-lg font-medium px-8 py-6 rounded-full shadow-lg transition-all duration-300"
               onClick={scrollToFeatures}
             >
-              Explore Solutions
+              Explorar Soluciones
             </Button>
           </div>
         </motion.div>

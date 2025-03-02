@@ -26,10 +26,10 @@ export const CTASection: React.FC = () => {
       >
         <div className="max-w-3xl mx-auto text-center animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-            {t('cta.title')}
+            Lleve su Tesorería al Siguiente Nivel
           </h2>
           <p className="text-xl text-blue-100 mb-10">
-            {t('cta.description')}
+            Únase a las organizaciones líderes que han optimizado sus operaciones financieras y aumentado su rentabilidad con nuestra plataforma integrada
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link to="/request-demo">
@@ -37,7 +37,7 @@ export const CTASection: React.FC = () => {
                 size="lg" 
                 className="bg-white text-blue-900 hover:bg-gray-100 px-8 group"
               >
-                {t('cta.demo')}
+                Solicitar Demostración
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -47,7 +47,7 @@ export const CTASection: React.FC = () => {
                 variant="outline" 
                 className="border-white text-white hover:bg-white/10 px-8"
               >
-                {t('cta.contact')}
+                Hablar con un Especialista
               </Button>
             </Link>
           </div>

@@ -22,23 +22,23 @@ export const CtaSection: React.FC = () => {
 
       <div className="container mx-auto px-6 relative z-10 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-          Ready to Transform Your Treasury Operations?
+          ¿Listo para Transformar sus Operaciones de Tesorería?
         </h2>
         <p className="text-xl text-blue-200 max-w-3xl mx-auto mb-8">
-          Join leading organizations that have reduced costs by 35% and increased working capital efficiency by 28% using Datacloud AI
+          Únase a organizaciones líderes que han reducido costos en un 35% y aumentado la eficiencia del capital de trabajo en un 28% utilizando Datacloud AI
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
             className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-medium px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             onClick={() => navigate("/commercial/dashboard")}
           >
-            Schedule a Demo Today <ArrowRight className="ml-2 h-5 w-5" />
+            Agende una Demostración Hoy <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <Button 
             variant="outline" 
             className="border-2 border-white/30 bg-white/10 text-white hover:bg-white/20 text-lg font-medium px-8 py-6 rounded-full shadow-lg transition-all duration-300"
           >
-            Contact Sales Team
+            Contactar Equipo de Ventas
           </Button>
         </div>
       </div>

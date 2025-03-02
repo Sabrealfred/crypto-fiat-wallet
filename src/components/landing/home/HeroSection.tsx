@@ -33,10 +33,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scrollToFeatures }) =>
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-gradient animate-on-scroll">
-            {t('hero.title')}
+            Transformando la Gestión Financiera Empresarial con IA Avanzada
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 mb-10 animate-on-scroll">
-            {t('hero.subtitle')}
+            Plataforma integral para optimizar la tesorería, gestionar inversiones y mitigar riesgos financieros en tiempo real
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16 animate-on-scroll">
             <Button 
@@ -44,7 +44,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scrollToFeatures }) =>
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 group"
               onClick={() => scrollToFeatures()}
             >
-              {t('hero.demo')}
+              Solicitar Demostración
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
@@ -52,7 +52,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scrollToFeatures }) =>
               variant="outline" 
               className="border-blue-500 text-blue-400 hover:bg-blue-950 px-8"
             >
-              {t('hero.contact')}
+              Contactar Ventas
             </Button>
           </div>
           
@@ -61,7 +61,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scrollToFeatures }) =>
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-sm"></div>
             <img 
               src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80" 
-              alt="Advanced Financial Dashboard" 
+              alt="Plataforma Financiera Avanzada" 
               className="w-full h-auto object-cover"
             />
             {/* Interactive elements overlay */}
@@ -76,7 +76,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scrollToFeatures }) =>
                   size="sm" 
                   className="bg-blue-600/80 hover:bg-blue-600 text-white"
                 >
-                  Live Demo
+                  Demostración en Vivo
                 </Button>
               </div>
             </div>
@@ -84,7 +84,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ scrollToFeatures }) =>
 
           {/* Clients logos */}
           <div className="mt-20 animate-on-scroll">
-            <p className="text-sm text-gray-400 mb-6">TRUSTED BY LEADING FINANCIAL INSTITUTIONS</p>
+            <p className="text-sm text-gray-400 mb-6">CONFÍAN EN NOSOTROS LAS PRINCIPALES INSTITUCIONES FINANCIERAS</p>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-70">
               {['Goldman Sachs', 'JP Morgan', 'Morgan Stanley', 'BlackRock', 'Citi', 'Bank of America'].map((name, i) => (
                 <div key={i} className="flex justify-center">

@@ -15,33 +15,33 @@ export const FeaturesSection = React.forwardRef<HTMLDivElement>((props, ref) => 
   const features = [
     {
       icon: <LineChart className="h-6 w-6 text-white" />,
-      title: "Real-time Cash Management",
-      description: "Monitor global cash positions across all your banks and accounts with real-time dashboards and automated reconciliation."
+      title: "Gestión de Efectivo en Tiempo Real",
+      description: "Monitoree posiciones de efectivo globales en todos sus bancos y cuentas con paneles en tiempo real y conciliación automatizada."
     },
     {
       icon: <BrainCircuit className="h-6 w-6 text-white" />,
-      title: "AI-Powered Forecasting",
-      description: "Leverage machine learning algorithms to predict cash flows with unprecedented accuracy and visibility up to 180 days ahead."
+      title: "Previsión Impulsada por IA",
+      description: "Aproveche algoritmos de aprendizaje automático para predecir flujos de efectivo con precisión sin precedentes y visibilidad hasta 180 días por adelantado."
     },
     {
       icon: <BarChart3 className="h-6 w-6 text-white" />,
-      title: "Investment Analytics",
-      description: "Optimize your investment portfolio with advanced analytics and scenario modeling to maximize returns within your risk parameters."
+      title: "Analítica de Inversiones",
+      description: "Optimice su cartera de inversiones con análisis avanzados y modelado de escenarios para maximizar rendimientos dentro de sus parámetros de riesgo."
     },
     {
       icon: <Globe className="h-6 w-6 text-white" />,
-      title: "Multi-Currency Management",
-      description: "Manage FX risk with real-time exposure tracking, hedging recommendations, and automated execution across 137 currencies."
+      title: "Gestión Multi-Divisa",
+      description: "Gestione riesgos de divisas con seguimiento de exposición en tiempo real, recomendaciones de cobertura y ejecución automatizada en 137 monedas."
     },
     {
       icon: <CreditCard className="h-6 w-6 text-white" />,
-      title: "Integrated Payments",
-      description: "Streamline payment workflows with multi-bank connectivity, advanced approval workflows, and AI-powered fraud prevention."
+      title: "Pagos Integrados",
+      description: "Optimice flujos de trabajo de pagos con conectividad multi-banco, flujos de aprobación avanzados y prevención de fraude potenciada por IA."
     },
     {
       icon: <ShieldCheck className="h-6 w-6 text-white" />,
-      title: "Risk Management",
-      description: "Identify and mitigate financial risks with comprehensive monitoring, analysis, and reporting tools that meet regulatory standards."
+      title: "Gestión de Riesgos",
+      description: "Identifique y mitigue riesgos financieros con herramientas completas de monitoreo, análisis e informes que cumplen con estándares regulatorios."
     }
   ];
 
@@ -60,10 +60,10 @@ export const FeaturesSection = React.forwardRef<HTMLDivElement>((props, ref) => 
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white">
-              Powerful Features for Modern Treasury
+              Funcionalidades Potentes para Tesorería Moderna
             </h2>
             <p className="text-xl text-blue-300 max-w-3xl mx-auto">
-              Our comprehensive suite of tools helps finance executives make better decisions with real-time data and AI insights
+              Nuestro conjunto completo de herramientas ayuda a los ejecutivos financieros a tomar mejores decisiones con datos en tiempo real e insights de IA
             </p>
           </motion.div>
         </div>

@@ -14,46 +14,46 @@ export const SolutionsSection = React.forwardRef<HTMLDivElement>((props, ref) =>
   const solutions = [
     {
       icon: <Building2 className="h-10 w-10 text-blue-400" />,
-      title: "Corporate Treasury",
-      description: "Complete treasury workstation for multinational corporations and mid-market companies",
+      title: "Tesorería Corporativa",
+      description: "Estación de tesorería completa para corporaciones multinacionales y empresas de mediano mercado",
       features: [
-        "Global cash visibility and pooling",
-        "Advanced cash forecasting and scenario analysis",
-        "Bank account management and reconciliation",
-        "Working capital optimization"
+        "Visibilidad y agrupación de efectivo global",
+        "Previsión avanzada de efectivo y análisis de escenarios",
+        "Gestión y conciliación de cuentas bancarias",
+        "Optimización de capital de trabajo"
       ]
     },
     {
       icon: <DollarSign className="h-10 w-10 text-blue-400" />,
-      title: "Investment Management",
-      description: "Sophisticated tools for managing corporate investments and optimizing returns",
+      title: "Gestión de Inversiones",
+      description: "Herramientas sofisticadas para gestionar inversiones corporativas y optimizar rendimientos",
       features: [
-        "Investment portfolio tracking and analytics",
-        "Yield optimization and maturity analysis",
-        "Compliance monitoring and policy enforcement",
-        "Real-time market data integration"
+        "Seguimiento y análisis de cartera de inversiones",
+        "Optimización de rendimientos y análisis de vencimientos",
+        "Monitoreo de cumplimiento y aplicación de políticas",
+        "Integración de datos de mercado en tiempo real"
       ]
     },
     {
       icon: <Globe className="h-10 w-10 text-blue-400" />,
-      title: "FX and Exposure Management",
-      description: "Comprehensive currency risk management and trading capabilities",
+      title: "Gestión de Divisas y Exposición",
+      description: "Gestión integral de riesgos de divisas y capacidades de trading",
       features: [
-        "Real-time FX exposure tracking",
-        "Automated hedging recommendations",
-        "Multi-bank execution platform",
-        "Performance analytics and benchmarking"
+        "Seguimiento de exposición a divisas en tiempo real",
+        "Recomendaciones de cobertura automatizadas",
+        "Plataforma de ejecución multi-banco",
+        "Análisis de rendimiento y benchmarking"
       ]
     },
     {
       icon: <Shield className="h-10 w-10 text-blue-400" />,
-      title: "Risk Management & Compliance",
-      description: "Proactive financial risk monitoring and regulatory compliance",
+      title: "Gestión de Riesgos y Cumplimiento",
+      description: "Monitoreo proactivo de riesgos financieros y cumplimiento normativo",
       features: [
-        "Counterparty risk assessment",
-        "Liquidity risk management",
-        "Regulatory reporting automation",
-        "Policy compliance monitoring"
+        "Evaluación de riesgo de contraparte",
+        "Gestión de riesgo de liquidez",
+        "Automatización de informes regulatorios",
+        "Monitoreo de cumplimiento de políticas"
       ]
     }
   ];
@@ -77,10 +77,10 @@ export const SolutionsSection = React.forwardRef<HTMLDivElement>((props, ref) =>
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white">
-              Comprehensive Treasury Solutions
+              Soluciones Integrales de Tesorería
             </h2>
             <p className="text-xl text-blue-300 max-w-3xl mx-auto">
-              Discover how our platform addresses all aspects of modern treasury management
+              Descubra cómo nuestra plataforma aborda todos los aspectos de la gestión moderna de tesorería
             </p>
           </motion.div>
         </div>

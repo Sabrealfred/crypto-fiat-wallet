@@ -17,20 +17,20 @@ export const SuccessStoriesSection: React.FC<{ reference: React.RefObject<HTMLDi
   const cases = [
     {
       icon: <Briefcase className="h-10 w-10 mb-6" />,
-      title: "Global Manufacturing Corporation",
-      description: "Reduced cash buffer by 30% and improved forecasting accuracy to 95%, freeing up $120M in working capital",
+      title: "Corporación Global de Manufactura",
+      description: "Redujo el amortiguador de efectivo en un 30% y mejoró la precisión de la previsión al 95%, liberando $120M en capital de trabajo",
       link: "manufacturing"
     },
     {
       icon: <BarChart3 className="h-10 w-10 mb-6" />,
-      title: "Leading Private Equity Firm",
-      description: "Automated 85% of treasury operations across 45 portfolio companies, saving $3.2M annually in operational costs",
+      title: "Firma Líder de Capital Privado",
+      description: "Automatizó el 85% de las operaciones de tesorería en 45 empresas de cartera, ahorrando $3.2M anuales en costos operativos",
       link: "equity"
     },
     {
       icon: <Shield className="h-10 w-10 mb-6" />,
-      title: "Multinational Fintech Enterprise",
-      description: "Achieved real-time visibility across 24 countries and 37 currencies, reducing FX hedging costs by 15%",
+      title: "Empresa Multinacional Fintech",
+      description: "Logró visibilidad en tiempo real en 24 países y 37 monedas, reduciendo los costos de cobertura de divisas en un 15%",
       link: "fintech"
     }
   ];
@@ -45,10 +45,10 @@ export const SuccessStoriesSection: React.FC<{ reference: React.RefObject<HTMLDi
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">
-            {t('success.title')}
+            Empresas que Transformaron su Tesorería
           </h2>
           <p className="text-xl text-gray-300">
-            {t('success.subtitle')}
+            Descubra cómo organizaciones líderes han revolucionado su gestión financiera con nuestra plataforma
           </p>
         </div>
         
@@ -72,7 +72,7 @@ export const SuccessStoriesSection: React.FC<{ reference: React.RefObject<HTMLDi
               </p>
               <div className="mt-auto">
                 <Link to={`/client-experience#${item.link}`} className="text-white/90 flex items-center text-sm hover:text-white transition-colors group">
-                  <span>Read case study</span>
+                  <span>Leer caso de estudio</span>
                   <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
@@ -87,7 +87,7 @@ export const SuccessStoriesSection: React.FC<{ reference: React.RefObject<HTMLDi
               variant="outline" 
               className="border-blue-500 text-blue-400 hover:bg-blue-950 px-8"
             >
-              {t('success.cta')}
+              Ver Todos Los Casos De Éxito
             </Button>
           </Link>
         </div>

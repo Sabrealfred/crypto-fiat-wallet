@@ -17,21 +17,21 @@ export const FeaturesSection: React.FC<{ reference: React.RefObject<HTMLDivEleme
   const features = [
     {
       icon: <BarChart3 className="h-7 w-7 text-blue-500" />,
-      title: "Advanced Liquidity Management",
-      description: "Comprehensive real-time visibility into your cash positions across multiple currencies and accounts",
-      checks: ["Real-time cash visibility", "Multi-currency management", "AI-powered forecasting"]
+      title: "Gestión de Liquidez Avanzada",
+      description: "Visibilidad integral en tiempo real de sus posiciones de efectivo en múltiples divisas y cuentas",
+      checks: ["Visibilidad de efectivo en tiempo real", "Gestión multi-divisa", "Previsión impulsada por IA"]
     },
     {
       icon: <LineChart className="h-7 w-7 text-purple-500" />,
-      title: "Intelligent Investment Analytics",
-      description: "Optimize your investment portfolio with advanced analytics and AI-driven recommendations",
-      checks: ["Portfolio optimization", "Custom reporting engine", "Risk analytics dashboard"]
+      title: "Análisis Inteligente de Inversiones",
+      description: "Optimice su cartera de inversiones con análisis avanzados y recomendaciones basadas en IA",
+      checks: ["Optimización de cartera", "Motor de informes personalizados", "Panel de análisis de riesgos"]
     },
     {
       icon: <Terminal className="h-7 w-7 text-cyan-500" />,
-      title: "Enterprise-Grade Security",
-      description: "Bank-level security with advanced encryption and comprehensive integration capabilities",
-      checks: ["Bank-grade security", "ERP/API integrations", "Regulatory compliance"]
+      title: "Seguridad de Nivel Empresarial",
+      description: "Seguridad bancaria con encriptación avanzada y capacidades integrales de integración",
+      checks: ["Seguridad de nivel bancario", "Integraciones ERP/API", "Cumplimiento normativo"]
     }
   ];
 
@@ -45,10 +45,10 @@ export const FeaturesSection: React.FC<{ reference: React.RefObject<HTMLDivEleme
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">
-            {t('features.title')}
+            Soluciones Financieras del Futuro, Disponibles Hoy
           </h2>
           <p className="text-xl text-gray-300">
-            {t('features.subtitle')}
+            Nuestra plataforma integra las últimas tecnologías para transformar la gestión financiera de su empresa
           </p>
         </div>
         
@@ -81,7 +81,7 @@ export const FeaturesSection: React.FC<{ reference: React.RefObject<HTMLDivEleme
                 ))}
               </ul>
               <Link to={`/solutions#${feature.title.toLowerCase().replace(/\s+/g, '-')}`} className="text-blue-400 flex items-center text-sm hover:text-blue-300 transition-colors group">
-                <span>Learn more</span>
+                <span>Más información</span>
                 <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>

@@ -14,33 +14,33 @@ export const HowItWorksSection: React.FC<{ reference: React.RefObject<HTMLDivEle
 
   const steps = [
     {
-      title: "Connect Your Financial Ecosystem",
-      description: "Seamlessly integrate with your existing banking infrastructure, ERPs, and financial systems with our secure API connections",
+      title: "Conecte Su Ecosistema Financiero",
+      description: "Integración perfecta con su infraestructura bancaria existente, ERPs y sistemas financieros a través de nuestras conexiones API seguras",
       icon: <Key className="h-7 w-7 text-white" />,
       image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80",
-      alt: "Connect Accounts"
+      alt: "Conectar Cuentas"
     },
     {
-      title: "Centralize Global Liquidity",
-      description: "Gain instant visibility into cash positions across all entities, regions, and currencies in a unified dashboard",
+      title: "Centralice la Liquidez Global",
+      description: "Obtenga visibilidad instantánea de las posiciones de efectivo en todas las entidades, regiones y monedas en un panel unificado",
       icon: <Globe className="h-7 w-7 text-white" />,
       image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80",
-      alt: "Centralize Liquidity",
+      alt: "Centralización de Liquidez",
       reverse: true
     },
     {
-      title: "Leverage AI-Powered Analytics",
-      description: "Our machine learning algorithms analyze your financial data to provide actionable insights, forecasts, and recommendations",
+      title: "Aproveche la Analítica Potenciada por IA",
+      description: "Nuestros algoritmos de aprendizaje automático analizan sus datos financieros para proporcionar perspectivas accionables, pronósticos y recomendaciones",
       icon: <PieChart className="h-7 w-7 text-white" />,
       image: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80",
-      alt: "Analyze Data"
+      alt: "Análisis de Datos"
     },
     {
-      title: "Optimize Operations & Execute Strategies",
-      description: "Implement investment strategies, execute payments, manage FX exposure, and track performance in real-time",
+      title: "Optimice Operaciones y Ejecute Estrategias",
+      description: "Implemente estrategias de inversión, ejecute pagos, gestione exposición a divisas y realice seguimiento del rendimiento en tiempo real",
       icon: <Zap className="h-7 w-7 text-white" />,
       image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80",
-      alt: "Execute & Track",
+      alt: "Ejecución y Seguimiento",
       reverse: true
     }
   ];
@@ -54,10 +54,10 @@ export const HowItWorksSection: React.FC<{ reference: React.RefObject<HTMLDivEle
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">
-            {t('how.title')}
+            Cómo Transformamos su Tesorería
           </h2>
           <p className="text-xl text-gray-300">
-            {t('how.subtitle')}
+            Un enfoque completo para modernizar todas las operaciones de su departamento financiero
           </p>
         </div>
         
