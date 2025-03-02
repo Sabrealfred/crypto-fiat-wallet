@@ -1,13 +1,15 @@
 
-import { 
-  Building, 
-  LineChart, 
-  Banknote,
-  Briefcase,
-  BarChart3,
+import { useNavigate } from "react-router-dom";
+import {
+  Globe,
+  BarChart,
+  Database,
+  DollarSign,
+  ShieldCheck,
   CreditCard,
-  Users,
-  LayoutDashboard
+  Building2,
+  Brain,
+  Code,
 } from "lucide-react";
 import { NavItem } from "./commercial/NavItem";
 
@@ -16,56 +18,72 @@ interface EnterpriseSolutionsNavigationProps {
 }
 
 export function EnterpriseSolutionsNavigation({ isCollapsed }: EnterpriseSolutionsNavigationProps) {
+  const navigate = useNavigate();
+  
   return (
-    <div className="space-y-1 py-2">
-      <NavItem
-        path="/commercial/dashboard"
-        icon={LayoutDashboard}
-        label="Dashboard"
-        isCollapsed={isCollapsed}
+    <nav className="space-y-2">
+      <NavItem 
+        path="/commercial/treasury" 
+        icon={Globe} 
+        label="Treasury & Cash Management" 
+        isCollapsed={isCollapsed} 
       />
-      <NavItem
-        path="/treasury"
-        icon={Banknote}
-        label="Treasury Management"
-        isCollapsed={isCollapsed}
+      
+      <NavItem 
+        path="/commercial/analytics" 
+        icon={BarChart} 
+        label="Analysis & Forecasting" 
+        isCollapsed={isCollapsed} 
       />
-      <NavItem
-        path="/entity-management"
-        icon={Building}
-        label="Entity Management"
-        isCollapsed={isCollapsed}
+      
+      <NavItem 
+        path="/commercial/operations" 
+        icon={Database} 
+        label="Data Automation & Integration" 
+        isCollapsed={isCollapsed} 
       />
-      <NavItem
-        path="/investments"
-        icon={LineChart}
-        label="Investments"
-        isCollapsed={isCollapsed}
+
+      <NavItem 
+        path="/commercial/fund-management" 
+        icon={DollarSign} 
+        label="Investment Management" 
+        isCollapsed={isCollapsed} 
       />
-      <NavItem
-        path="/payment-processor"
-        icon={CreditCard}
-        label="Payment Processor"
-        isCollapsed={isCollapsed}
+
+      <NavItem 
+        path="/commercial/risk-management" 
+        icon={ShieldCheck} 
+        label="Risk Management" 
+        isCollapsed={isCollapsed} 
       />
-      <NavItem
-        path="/operations"
-        icon={Briefcase}
-        label="Operations"
-        isCollapsed={isCollapsed}
+
+      <NavItem 
+        path="/commercial/payment-processor" 
+        icon={CreditCard} 
+        label="Payment Processing" 
+        isCollapsed={isCollapsed} 
       />
-      <NavItem
-        path="/risk-management"
-        icon={BarChart3}
-        label="Risk Management"
-        isCollapsed={isCollapsed}
+
+      <NavItem 
+        path="/commercial/entity-management" 
+        icon={Building2} 
+        label="Entity Management" 
+        isCollapsed={isCollapsed} 
       />
-      <NavItem
-        path="/landing"
-        icon={Users}
-        label="Back to Home"
-        isCollapsed={isCollapsed}
+
+      <NavItem 
+        path="/commercial/fund-management/ai-insights" 
+        icon={Brain} 
+        label="AI Insights" 
+        isCollapsed={isCollapsed} 
       />
-    </div>
+
+      <NavItem 
+        path="/developer/dashboard" 
+        icon={Code} 
+        label="Developer Portal" 
+        isCollapsed={isCollapsed} 
+      />
+    </nav>
   );
 }
