@@ -8,6 +8,8 @@ import ExpensesPage from "@/pages/commercial/Expenses";
 import TradeFinancePage from "@/pages/commercial/TradeFinance";
 import PaymentProcessorPage from "@/pages/commercial/PaymentProcessor";
 import CommercialLandingPage from "@/pages/CommercialLandingPage";
+import CardsPage from "@/pages/Cards"; // Added import
+import HistoryPage from "@/pages/History"; // Added import
 
 // Treasury routes
 import TreasuryDashboard from "@/pages/commercial/treasury/Dashboard";

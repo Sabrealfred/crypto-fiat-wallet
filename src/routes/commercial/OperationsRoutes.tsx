@@ -11,7 +11,7 @@ import AuditPage from "@/pages/commercial/operations/Audit";
 import OperationsReportsPage from "@/pages/commercial/operations/Reports";
 import OperationsAnalyticsPage from "@/pages/commercial/operations/Analytics";
 import CustomReportsPage from "@/pages/commercial/operations/CustomReports";
-import { NotFound } from "@/pages/NotFound";
+import NotFound from "@/pages/NotFound"; // Fixed import
 
 export const OperationsRoutes = () => {
   return (

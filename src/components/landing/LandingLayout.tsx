@@ -60,7 +60,7 @@ export const LandingLayout: React.FC<LandingLayoutProps> = ({ children }) => {
     };
     
     tiltElements.forEach(element => {
-      element.addEventListener('mousemove', (e) => handleTilt(e, element));
+      element.addEventListener('mousemove', (e: MouseEvent) => handleTilt(e, element));
       element.addEventListener('mouseleave', () => resetTilt(element));
     });
     
@@ -71,7 +71,7 @@ export const LandingLayout: React.FC<LandingLayoutProps> = ({ children }) => {
       document.removeEventListener('mouseover', magnifyCursor);
       
       tiltElements.forEach(element => {
-        element.removeEventListener('mousemove', (e) => handleTilt(e, element));
+        element.removeEventListener('mousemove', (e: MouseEvent) => handleTilt(e, element));
         element.removeEventListener('mouseleave', () => resetTilt(element));
       });
       
