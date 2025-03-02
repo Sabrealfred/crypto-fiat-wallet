@@ -1,12 +1,12 @@
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ResponsiveContainer } from "recharts";
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 
 interface RiskChartProps {
   title: string;
   description?: string;
-  children: ReactNode;
+  children: ReactElement; // Changed from ReactNode to ReactElement
   height?: number;
 }
 
