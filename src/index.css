@@ -106,3 +106,38 @@
     transform: translateX(0);
   }
 }
+
+/* Adding new futuristic styles for the landing page */
+.perspective {
+  transform: perspective(1000px) rotateX(2deg);
+  transition: transform 0.3s ease;
+}
+
+.perspective:hover {
+  transform: perspective(1000px) rotateX(0deg);
+}
+
+.glassmorphism {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
+}
+
+.text-gradient {
+  @apply bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent;
+}
+
+.animate-pulse {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.hover-scale {
+  @apply transition-transform duration-200 hover:scale-105;
+}
