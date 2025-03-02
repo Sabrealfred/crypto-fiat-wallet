@@ -43,6 +43,7 @@ import Portfolios from "@/pages/commercial/fund-management/Portfolios";
 import AIPortfolios from "@/pages/commercial/fund-management/AIPortfolios";
 import OperationsDashboard from "@/pages/commercial/operations/Dashboard";
 import CommercialPortal from "@/pages/CommercialPortal";
+import CommercialLandingPage from "./pages/CommercialLandingPage";
 
 // Analytics pages
 import AnalyticsDashboard from "@/pages/commercial/analytics/Dashboard";
