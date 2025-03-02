@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import PersonalDashboard from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -101,10 +102,16 @@ import SubsidiariesPage from "@/pages/commercial/entity-management/Subsidiaries"
 import MetadataPage from "@/pages/commercial/entity-management/Metadata";
 import RelationshipsPage from "@/pages/commercial/entity-management/Relationships";
 
+// Import the landing page
+import LandingPage from "@/pages/landing/HomePage";
+
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
+      
+      {/* Landing Page Route */}
+      <Route path="/landing" element={<LandingPage />} />
       
       {/* Portal Entry Page */}
       <Route path="/" element={<CommercialPortal />} />
