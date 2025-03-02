@@ -13,7 +13,13 @@ import {
 import { BrainCircuit } from "lucide-react";
 
 interface ForecastPanelProps {
-  forecastData: any[];
+  forecastData: Array<{
+    name: string;
+    actual?: number;
+    forecast?: number;
+    ci_upper?: number;
+    ci_lower?: number;
+  }>;
   formatCurrency: (value: number | string) => string;
 }
 
@@ -31,7 +37,7 @@ export const ForecastPanel: React.FC<ForecastPanelProps> = ({
           >
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
             <XAxis dataKey="name" />
-            <YAxis tickFormatter={(value) => `$${value/1000}K`} />
+            <YAxis tickFormatter={(value) => `$${Number(value)/1000}K`} />
             <Tooltip formatter={(value) => formatCurrency(Number(value))} />
             <Legend />
             <defs>

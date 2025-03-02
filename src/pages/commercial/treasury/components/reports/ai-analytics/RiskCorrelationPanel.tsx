@@ -13,7 +13,12 @@ import {
 import { BrainCircuit } from "lucide-react";
 
 interface RiskCorrelationPanelProps {
-  riskCorrelationData: any[];
+  riskCorrelationData: Array<{
+    x: number;
+    y: number;
+    z: number;
+    name: string;
+  }>;
 }
 
 export const RiskCorrelationPanel: React.FC<RiskCorrelationPanelProps> = ({ riskCorrelationData }) => {
@@ -30,18 +35,38 @@ export const RiskCorrelationPanel: React.FC<RiskCorrelationPanelProps> = ({ risk
             }}
           >
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
-            <XAxis type="number" dataKey="x" name="Risk Level" unit="%" />
-            <YAxis type="number" dataKey="y" name="Correlation" unit="%" />
-            <ZAxis type="number" dataKey="z" range={[100, 1000]} name="Impact" unit="k" />
+            <XAxis 
+              type="number" 
+              dataKey="x" 
+              name="Risk Level" 
+              unit="%" 
+            />
+            <YAxis 
+              type="number" 
+              dataKey="y" 
+              name="Correlation" 
+              unit="%" 
+            />
+            <ZAxis 
+              type="number" 
+              dataKey="z" 
+              range={[100, 1000]} 
+              name="Impact" 
+              unit="k" 
+            />
             <Tooltip 
               cursor={{ strokeDasharray: '3 3' }}
               formatter={(value, name, props) => {
-                if (props.name === 'Impact') return [`$${value}k`, name];
+                if (name === 'Impact') return [`$${value}k`, name];
                 return [`${value}%`, name];
               }} 
             />
             <Legend />
-            <Scatter name="Risk Factors" data={riskCorrelationData} fill="#8884d8" />
+            <Scatter 
+              name="Risk Factors" 
+              data={riskCorrelationData} 
+              fill="#8884d8" 
+            />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
