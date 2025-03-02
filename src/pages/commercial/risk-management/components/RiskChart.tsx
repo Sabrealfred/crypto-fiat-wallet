@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { ResponsiveContainer } from "recharts";
 import { ReactElement, ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
-import { InfoCircle } from "lucide-react";
+import { Info } from "lucide-react";
 import { Tooltip } from "@/components/ui/tooltip";
 
 interface RiskChartProps {
@@ -55,7 +55,7 @@ export function RiskChart({
         
         {aiInsight && (
           <div className="mt-4 flex items-start gap-2 p-3 rounded-md bg-blue-50 dark:bg-blue-950 text-sm">
-            <InfoCircle className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
+            <Info className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
             <p>{aiInsight}</p>
           </div>
         )}
