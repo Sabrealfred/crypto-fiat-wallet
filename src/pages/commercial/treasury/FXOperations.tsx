@@ -67,7 +67,7 @@ export default function FXOperations() {
           description="Manage foreign exchange operations"
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
             <TabsTrigger value="spot">Spot Exchange</TabsTrigger>
             <TabsTrigger value="forward">Forward Contracts</TabsTrigger>

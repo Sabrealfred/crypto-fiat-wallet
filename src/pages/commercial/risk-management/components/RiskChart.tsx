@@ -6,7 +6,7 @@ import { ReactElement } from "react";
 interface RiskChartProps {
   title: string;
   description?: string;
-  children: ReactElement; // Changed from ReactNode to ReactElement
+  children: ReactElement;
   height?: number;
 }
 

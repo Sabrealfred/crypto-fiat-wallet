@@ -12,7 +12,8 @@ import {
   Pie, 
   Cell,
   BarChart,
-  Bar
+  Bar,
+  TooltipProps
 } from "recharts";
 
 const liquidityRatioData = [
@@ -49,6 +50,21 @@ interface LiquidityOverviewProps {
 }
 
 export function LiquidityOverview({ formatRatio, formatCurrency }: LiquidityOverviewProps) {
+  // Tooltip formatter functions with correct type handling
+  const formatRatioTooltip = (value: number | string | Array<number | string>) => {
+    if (Array.isArray(value)) {
+      return formatRatio(value[0] as number | string);
+    }
+    return formatRatio(value);
+  };
+
+  const formatCurrencyTooltip = (value: number | string | Array<number | string>) => {
+    if (Array.isArray(value)) {
+      return formatCurrency(value[0] as number | string);
+    }
+    return formatCurrency(value);
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -65,7 +81,7 @@ export function LiquidityOverview({ formatRatio, formatCurrency }: LiquidityOver
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
               <XAxis dataKey="month" />
               <YAxis domain={[1, 2]} tickFormatter={value => `${value.toFixed(1)}x`} />
-              <Tooltip formatter={value => [formatRatio(value), "Ratio"]} />
+              <Tooltip formatter={formatRatioTooltip} />
               <Legend />
               <Line 
                 type="monotone" 
@@ -128,7 +144,7 @@ export function LiquidityOverview({ formatRatio, formatCurrency }: LiquidityOver
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" />
           <XAxis dataKey="month" />
           <YAxis tickFormatter={(value) => `$${value/1000000}M`} />
-          <Tooltip formatter={(value) => [formatCurrency(value), "Amount"]} />
+          <Tooltip formatter={formatCurrencyTooltip} />
           <Bar dataKey="amount" fill="#8884d8" name="Maturity Amount" />
         </BarChart>
       </RiskChart>
